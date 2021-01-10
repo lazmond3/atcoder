@@ -8,6 +8,7 @@ using namespace std;
 #define ALL(x) x.begin(), x.end()
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 
+const bool debug = false;
 int main()
 {
     int N;
@@ -15,12 +16,12 @@ int main()
     std::cin >> N;
     std::vector<int> A(N + 1);
     std::vector<int> B(N + 1);
-    std::vector<int> IDX(N + 1);
-    iota(ALL(IDX), 0);                // 0スタートのiota
-    std::vector<int> piece(N + 1, 0); // ポイントを溜めていく。
+    std::vector<int> which_is_older_index(N + 1);
+    iota(ALL(which_is_older_index), 0); // 0スタートのiota
+    std::vector<int> piece(N + 1, 0);   // ポイントを溜めていく。
     std::vector<std::vector<int>> childs_of_V(N + 1, std::vector<int>());
     std::vector<std::vector<int>> connectivity(N + 1, std::vector<int>());
-    std::vector<int> parent(N + 1);
+    std::vector<int> parent(N + 1, 0);
 
     REP(_i, N - 1)
     {
@@ -66,6 +67,7 @@ int main()
                 みたいになっている場合は、どうするの？親にはなれないけど...
        */
     }
+    // cout << "---- after edge reading" << endl;
 
     // 数が小さい方が親なので、不要。
     // 1を頂点にして、エッジを繋ぎなおしたい ( type で親に行くか/子に行くか の判定のため )
@@ -73,16 +75,19 @@ int main()
         std::queue<int> mQ;
         std::set<int> done_v;
         mQ.push(1); // 1からスタート
+        int kazoeage_now = 1;
         while (!mQ.empty())
         {
-            int _e = mQ.front();
             // _e に対して、その子供を全部見る。
+            int _e = mQ.front();
             mQ.pop();
+
             for (auto v : connectivity[_e])
             {
                 if (done_v.find(v) != done_v.end())
                 {
                     // もし見つけた場合 | すでにつなぎなおしをやった。
+                    // 親である。
                     continue;
                 }
                 else
@@ -90,11 +95,15 @@ int main()
                     mQ.push(v);
                     childs_of_V[_e].push_back(v);
                     parent[v] = _e;
+                    // どちらが親かを数字の順番で高速に判定できる。
+                    which_is_older_index[v] = ++kazoeage_now;
                 }
             }
             done_v.insert(_e);
         }
     }
+
+    // cout << "after つなぎなおし" << endl;
 
     int Q;
     cin >> Q;
@@ -103,52 +112,66 @@ int main()
         int t, e, x;
         cin >> t >> e >> x; // Ai が親、 Bi が
 
+        int a, b;
+        a = A[e];
+        b = B[e];
         // t = 1 のとき、
         // 頂点aeiから辺をたどって頂点beiを通らずに到達できるような全ての頂点vに対して、cvをcv+xiに書き換える。
-        if (t == 1)
+        bool is_to_upper = false;
+        bool is_start_from_a = t == 1;
+        // a からスタートできるようにswapする。
+        if (!is_start_from_a)
         {
-            int a, b;
-            a = A[e];
-            b = B[e]; // B を通らない。 B は親か？
-            // 問題: どっちが親かすぐ判定できないと、困る
-            if (a < b)
-            {
-                // a が親のとき、 b を通らずに到達できるのは
-                // a の一番のroot まで戻り、足し算をして、
-                // b 以下に対しては、マイナスする。
-                // int now_e = a;
-                // while (parent[now_e] != 0)
-                // {
-                //     now_e = parent[now_e];
-                // }
-                // この時点で、now_e にはrootが入っている。 (1のことでは？)
-                // 1なので計算は不要
-                piece[1] += x;
-                piece[b] -= x;
-            }
-            else
-            {
-                // b が親のとき、 a を通らずに到達できるのは
-                // b の子供だけ
-                piece[b] += x;
-            }
+            swap(a, b);
         }
-        else
+        // a からスタートするとき、bを通らないようにいく。
+        // b のほうが数が大きければ、子 なので、子を通らないということは、上に行くということ。
+        // a の他の子供にも与える必要があるが、打ち消しは b 以降で大丈夫。
+        is_to_upper = (which_is_older_index[a] < which_is_older_index[b]);
+
+        // 実際の処理
+        if (is_to_upper)
         {
-            // t=2のとき
-            // // 頂点beiから辺をたどって頂点aeiを通らずに到達できるような全ての頂点vに対して、cvをcv+xiに書き換える。
-            int a, b;
-            a = A[e];
-            b = B[e]; // B を通らない。 B は親か？
-            if (a < b)
+            piece[1] += x;
+            // 打ち消しは b 以降で大丈夫。
+            piece[b] -= x;
+        }
+        else if (!is_to_upper)
+        {
+            piece[a] += x;
+        }
+    }
+
+    if (debug)
+    {
+
+        cout << "parent:" << endl;
+        REP(i, N + 1)
+        {
+            cout << "parent of[" << i << "] : " << parent[i] << endl;
+        }
+
+        cout << "childs:" << endl;
+        REP(i, N + 1)
+        {
+            cout << "children of [" << i << "] : ";
+            for (auto v : childs_of_V[i])
             {
-                piece[b] += x;
+                cout << v << ", ";
             }
-            else
-            {
-                piece[b] -= x;
-                piece[1] += x;
-            }
+            cout << endl;
+        }
+
+        // cout << "IDX: " << endl;
+        REP(i, N + 1)
+        {
+            cout << "IDX for " << i << " = " << which_is_older_index[i] << endl;
+        }
+
+        cout << "pieces: " << endl;
+        REP(i, N + 1)
+        {
+            cout << "piece[" << i << "] = " << piece[i] << endl;
         }
     }
 
@@ -160,8 +183,40 @@ int main()
         while (parent[now_e] != 0)
         {
             score += piece[now_e];
+            now_e = parent[now_e];
         }
         score += piece[now_e];
         cout << score << endl;
     }
 }
+
+/*
+ミスったっぽい。
+sample: case 2 について
+
+    
+           1
+        2     6
+      3  4
+    7      5
+
+木の情報取得はうまくいったようだ。
+
+wrong:
+8
+26
+31
+26
+58
+8
+23
+
+true:
+72
+8
+13
+26
+58
+72
+5
+*/
