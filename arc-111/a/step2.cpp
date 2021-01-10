@@ -251,6 +251,8 @@ void test_long_div_me()
     // 0588235294117647 0588235294117647 0588235294117647 を 17 で割ったあまりは？
     // まず、 shou を割ったあまりは何か
     const vector<int> warareru{5, 8, 8, 2, 3, 5, 2, 9, 4, 1, 1, 7, 6, 4, 7};
+    // ❌ これはダメ。先頭にゼロが入ってはいけない。
+    // const vector<int> warareru{0, 5, 8, 8, 2, 3, 5, 2, 9, 4, 1, 1, 7, 6, 4, 7};
     vector<int> shou;
     int amari; //  (answer)
     int b = 17;
@@ -287,6 +289,7 @@ void test_long_div_me()
     assert(amari == 8);
 }
 
+// サポート関数
 void set_vec_from_num(const int num, /*out*/ vector<int> &out)
 {
     out.resize(0);
@@ -344,6 +347,7 @@ int step2(/*ref in*/ const vector<int> &repeated,
     return times;
 }
 
+// ✅ checked
 void test_step2()
 {
     int M = 17;
@@ -380,7 +384,7 @@ void test_step2()
 
 int main(int argc, char *argv[])
 {
-    test_step2();
+    // test_step2();
 
-    // test_long_div_me();
+    test_long_div_me();
 }
