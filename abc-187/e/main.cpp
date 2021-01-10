@@ -3,72 +3,133 @@
 #include <algorithm>
 #include <numeric>
 using namespace std;
-/*  
-問題文 N 頂点 N − 1 辺から成る木があり、 (木は全てそう)
-頂点には 1 , 2 , … , N の番号が、辺には 1 , 2 , … , N − 1 の番号がついています。
-辺 i は頂点 a i と頂点 b i を結びます。 この木の各頂点には 1 つの整数が書かれています。
-頂点 i に書かれている整数を c i とします。はじめ、 c i = 0 です。 Q 個のクエリが与えられます。 
-i 番目のクエリでは、整数 t i , e i , x i が与えられます。クエリの内容は以下の通りです。 
-t i = 1 のとき : 頂点 a e i から辺をたどって頂点 b e i を通らずに到達できるような全ての頂点 v に対して、 c v を c v + x i に書き換える。
-t i = 2 のとき : 頂点 b e i から辺をたどって頂点 a e i を通らずに到達できるような全ての頂点 v に対して、 c v を c v + x i に書き換える。 
-すべてのクエリを処理した後、各頂点に書かれた整数を出力してください。
-*/
-
-/* 
-疑問としては、
-2≤N≤2×10^5
-1≤ai,bi≤N与えられるグラフは木である
-1≤Q≤2×10^5
-という制約的に、最悪ケースでは10^10 になるから、TLEしない？と思った
-(1クエリに対して O(N)で更新できるとしても、(簡単にどの頂点をスキップすればいいかがO(1) で取得できたとして ) *Q するので、O(NQ)になる。 )
-合計とかじゃなくて 個別に 追加する時点で、結局どのクエリに対しては省かれるとかあるから、
-逆に加算しないものだけを積み上げる戦略で行ったとしても、失敗しうる
-
-事前にいける場所のリストを作成しておく。 
-*/
-
-/*
- 木のグラフ
- http://www.isc.meiji.ac.jp/~mizutani/python/image/tree.png 
-*/
-
-#define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
-/*
-    ソートの基準を簡単に描けるようになりたい。
-    ラムダを書くmakuro とかないかな。
-    テストデータの作成 ( TLE の判定など )
-*/
-
-/*
-    問題の勘違いで、高橋派は必ず投票してくれると思った。
-    もし高橋派が投票しないとしたら、 ..
-    1. 初期値の変更 (sum)
-    2. ソート順位の変更
-*/
+#define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 
 int main()
 {
     int N;
 
     std::cin >> N;
-    std::vector<int> A(N);
-    std::vector<int> B(N);
-    std::vector<int> E(N);
-    std::vector<int> IDX(N);
+    std::vector<int> A(N + 1);
+    std::vector<int> B(N + 1);
+    std::vector<int> IDX(N + 1);
+    std::vector<int> piece(N + 1, 0); // ポイントを溜めていく。
+    std::vector<std::vector<int>> childs_of_V(N + 1, std::vector<int>());
+    std::vector<int> parent(N + 1);
     iota(ALL(IDX), 0); // 0スタートのiota
 
-    REP(i, N - 1)
+    REP(_i, N - 1)
     {
+        int i = _i + 1;
         std::cin >> A[i] >> B[i];
+        // 接続性追加
+        // 子供の追加
+
+        int minV = A[i] < B[i] ? A[i] : B[i];
+        int largerV = A[i] > B[i] ? A[i] : B[i];
+
+        childs_of_V[minV].push_back(largerV);
+
+        // B[i] にとっての親は？
+        parent[largerV] = A[minV];
+
+        /*
+            この条件だと、A[i] B[i] が親、子と言い切れない可能性が出てくる？
+              0
+              1
+            2  3 
+            だとして、
+            2 1 (2->1)
+            0 1 (0->1) だと、矛盾する。
+            本来の連結性としては 0 を root にすればよいはずだった。
+
+            対策:
+            小さい数を常に親とすればよい。
+        */
+        /*
+                1
+                ^
+                |
+                3
+                ^
+                |
+                2
+                みたいになっている場合は、どうするの？親にはなれないけど...
+       */
     }
+
+    // 数が小さい方が親なので、不要。
+    // // 1を頂点にして、エッジを繋ぎなおしたい ( type で親に行くか/子に行くか の判定のため )
+    // REP(_i, N)
+    // {
+    //     int i = _i + 1;
+    // }
+
     int Q;
     cin >> Q;
     REP(i, Q)
     {
         int t, e, x;
-        cin >> t >> e >> x;
+        cin >> t >> e >> x; // Ai が親、 Bi が
+
         // t = 1 のとき、
         // 頂点aeiから辺をたどって頂点beiを通らずに到達できるような全ての頂点vに対して、cvをcv+xiに書き換える。
+        if (t == 1)
+        {
+            int a, b;
+            a = A[e];
+            b = B[e]; // B を通らない。 B は親か？
+            if (a < b)
+            {
+                // a が親のとき、 b を通らずに到達できるのは
+                // a の一番のroot まで戻り、足し算をして、
+                // b 以下に対しては、マイナスする。
+                // int now_e = a;
+                // while (parent[now_e] != 0)
+                // {
+                //     now_e = parent[now_e];
+                // }
+                // この時点で、now_e にはrootが入っている。 (1のことでは？)
+                // 1なので計算は不要
+                piece[1] += x;
+                piece[b] -= x;
+            }
+            else
+            {
+                // b が親のとき、 a を通らずに到達できるのは
+                // b の子供だけ
+                piece[b] += x;
+            }
+        }
+        else
+        {
+            // t=2のとき
+            // // 頂点beiから辺をたどって頂点aeiを通らずに到達できるような全ての頂点vに対して、cvをcv+xiに書き換える。
+            int a, b;
+            a = A[e];
+            b = B[e]; // B を通らない。 B は親か？
+            if (a < b)
+            {
+                piece[b] += x;
+            }
+            else
+            {
+                piece[b] -= x;
+                piece[1] += x;
+            }
+        }
+    }
+
+    REP(_i, N)
+    {
+        int i = _i + 1;
+        int score = 0;
+        int now_e = i;
+        while (parent[now_e] != 0)
+        {
+            score += piece[now_e];
+        }
+        score += piece[now_e];
     }
 }
