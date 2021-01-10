@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <queue>
+#include <set>
 using namespace std;
 #define ALL(x) x.begin(), x.end()
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
@@ -14,25 +16,31 @@ int main()
     std::vector<int> A(N + 1);
     std::vector<int> B(N + 1);
     std::vector<int> IDX(N + 1);
+    iota(ALL(IDX), 0);                // 0スタートのiota
     std::vector<int> piece(N + 1, 0); // ポイントを溜めていく。
     std::vector<std::vector<int>> childs_of_V(N + 1, std::vector<int>());
+    std::vector<std::vector<int>> connectivity(N + 1, std::vector<int>());
     std::vector<int> parent(N + 1);
-    iota(ALL(IDX), 0); // 0スタートのiota
 
     REP(_i, N - 1)
     {
         int i = _i + 1;
         std::cin >> A[i] >> B[i];
         // 接続性追加
-        // 子供の追加
 
         int minV = A[i] < B[i] ? A[i] : B[i];
         int largerV = A[i] > B[i] ? A[i] : B[i];
 
-        childs_of_V[minV].push_back(largerV);
+        // 相互に接続
+        connectivity[minV].push_back(largerV);
+        connectivity[largerV].push_back(minV);
 
+        // 下のパートに書く
+        // 子供の追加
         // B[i] にとっての親は？
-        parent[largerV] = A[minV];
+        // これ意味ないのでは？
+        // childs_of_V[minV].push_back(largerV);
+        // parent[largerV] = A[minV];
 
         /*
             この条件だと、A[i] B[i] が親、子と言い切れない可能性が出てくる？
@@ -60,11 +68,33 @@ int main()
     }
 
     // 数が小さい方が親なので、不要。
-    // // 1を頂点にして、エッジを繋ぎなおしたい ( type で親に行くか/子に行くか の判定のため )
-    // REP(_i, N)
-    // {
-    //     int i = _i + 1;
-    // }
+    // 1を頂点にして、エッジを繋ぎなおしたい ( type で親に行くか/子に行くか の判定のため )
+    {
+        std::queue<int> mQ;
+        std::set<int> done_v;
+        mQ.push(1); // 1からスタート
+        while (!mQ.empty())
+        {
+            int _e = mQ.front();
+            // _e に対して、その子供を全部見る。
+            mQ.pop();
+            for (auto v : connectivity[_e])
+            {
+                if (done_v.find(v) != done_v.end())
+                {
+                    // もし見つけた場合 | すでにつなぎなおしをやった。
+                    continue;
+                }
+                else
+                {
+                    mQ.push(v);
+                    childs_of_V[_e].push_back(v);
+                    parent[v] = _e;
+                }
+            }
+            done_v.insert(_e);
+        }
+    }
 
     int Q;
     cin >> Q;
@@ -80,6 +110,7 @@ int main()
             int a, b;
             a = A[e];
             b = B[e]; // B を通らない。 B は親か？
+            // 問題: どっちが親かすぐ判定できないと、困る
             if (a < b)
             {
                 // a が親のとき、 b を通らずに到達できるのは
