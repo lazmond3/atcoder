@@ -6,7 +6,7 @@
 using namespace std;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
-const bool debug = false;
+const bool debug = true;
 int pow(int a, int p)
 {
     if (p == 0)
@@ -190,7 +190,10 @@ void assert_10_M(int N, int M, const vector<int> &answer)
 
         という形式になる。
         N = 16 未満 
-        or N = 16 + (16*n) + <アマリ> というパターンマッチを使う
+        or N = 16 ( = shou.size() ) + (16*n) + <アマリ> というパターンマッチを使う
+    */
+    /*
+        STEP2 として、リピート部分のあまりの変化を再度行う必要がある。
     */
     calc_vec(M,
              /*ref out*/ what_is_shou_for_amari,
@@ -201,6 +204,183 @@ void assert_10_M(int N, int M, const vector<int> &answer)
     cout << "------------------" << endl;
 }
 
+// これ calc と何が違うの
+void long_div_me(/*ref in*/ const vector<int> &warareru,
+                 /*in*/ int b,
+                 /*ref out*/ vector<int> &shou,
+                 /*ref out*/ int &amari)
+{
+    shou.resize(0);
+    // amari.resize(0);
+
+    int i = 0;
+    int target = warareru[i++];
+    while (i < warareru.size())
+    {
+        target = target * 10 + warareru[i++];
+        if (target >= b)
+        {
+            int shou_one = target / b;
+            int amari_one = target % b;
+            target = amari_one;
+            shou.push_back(shou_one);
+        }
+        else
+        {
+            shou.push_back(0);
+            // これ毎回間違える--!!
+            // target = target * 10 + warareru[i++];
+            continue;
+        }
+    }
+    if (target >= b)
+    {
+        int shou_one = target / b;
+        int amari_one = target % b;
+        target = amari_one;
+        shou.push_back(shou_one);
+    }
+
+    amari = target; // これって b 未満だよね？
+    assert(target < b);
+}
+
+// ✅ checked.
+void test_long_div_me()
+{
+    // 0588235294117647 0588235294117647 0588235294117647 を 17 で割ったあまりは？
+    // まず、 shou を割ったあまりは何か
+    const vector<int> warareru{5, 8, 8, 2, 3, 5, 2, 9, 4, 1, 1, 7, 6, 4, 7};
+    vector<int> shou;
+    int amari; //  (answer)
+    int b = 17;
+    long_div_me(/*ref const in*/ warareru,
+                /*int b*/ b,
+                /*ref out*/ shou,
+                /*ref out*/ amari);
+    const vector<int> answer{3, 4, 6, 0, 2, 0, 7, 6, 1, 2, 4, 5, 6, 7};
+
+    if (debug)
+    {
+        cout << "shuo: " << endl;
+        for (auto s : shou)
+        {
+            cout << s << ",";
+        }
+        cout << endl;
+
+        cout << "answer:" << endl;
+        for (auto a : answer)
+        {
+            cout << a << ",";
+        }
+        cout << "endl";
+        cout << flush;
+    }
+
+    assert(answer.size() == shou.size());
+    for (int i = 0;
+         i < shou.size(); ++i)
+    {
+        assert(shou[i] == answer[i]);
+    }
+    assert(amari == 8);
+}
+
+void set_vec_from_num(const int num, /*out*/ vector<int> &out)
+{
+    out.resize(0);
+    int now = num;
+
+    while (now != 0)
+    {
+        int amari = now % 10;
+        out.push_back(amari);
+        now = now / 10;
+    }
+    reverse(ALL(out));
+}
+
+/*
+    欲しいあまりの出し方としては、
+    0588235294117647 0588235294117647 0588235294117647 
+    と 1回、 2回 .. やっていくなかで、
+*/
+int step2(/*ref in*/ const vector<int> &repeated,
+          /*ref out*/ vector<int> &amari_vector_answer,
+          /*in*/ const int M)
+{
+    amari_vector_answer.resize(0);
+    int times = 1;
+    int amari = 0;
+    vector<int> shou;
+    long_div_me(
+        /*const ref: warareru*/
+        repeated,
+        /*const: b*/ M,
+        /*out ref */ shou,
+        /*out ref*/ amari);
+
+    amari_vector_answer.push_back(amari);
+    while (amari != 0)
+    {
+        vector<int> new_vec;
+        set_vec_from_num(/*const int*/ amari, /*ref out*/ new_vec);
+        for (auto r : repeated)
+        {
+            new_vec.push_back(r);
+        }
+
+        times += 1;
+        long_div_me(
+            /*const ref: warareru*/
+            /*ref intput*/ new_vec,
+            /*b*/ M,
+            /*out ref*/ shou,
+            /*out ref*/ amari);
+        amari_vector_answer.push_back(amari);
+    }
+    assert(amari_vector_answer.size() == times);
+    return times;
+}
+
+void test_step2()
+{
+    int M = 17;
+    vector<int> amari_vector_answer;
+    vector<int> repeated{0, 5, 8, 8, 2, 3, 5, 2, 9, 4, 1, 1, 7, 6, 4, 7};
+    int times = step2(
+        /*const ref input*/ repeated,
+        /*ref out*/ amari_vector_answer,
+        /*const int*/ M);
+    vector<int> answer{8, 16, 7, 15, 6, 14, 5, 13, 4, 12, 3, 11, 2, 10, 1, 9, 0};
+    if (debug)
+    {
+
+        cout << "times: " << times << endl;
+        cout << "answer size: " << answer.size() << endl;
+        cout << "amari:" << endl;
+        for (auto am : amari_vector_answer)
+        {
+            cout << am << ",";
+        }
+        cout << endl
+             << flush;
+    }
+    assert(times == answer.size());
+    assert(amari_vector_answer.size() == answer.size());
+
+    for (int i = 0;
+         i < answer.size();
+         ++i)
+    {
+        assert(amari_vector_answer[i] == answer[i]);
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    test_step2();
+
+    // test_long_div_me();
 }
