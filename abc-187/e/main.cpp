@@ -131,5 +131,6 @@ int main()
             score += piece[now_e];
         }
         score += piece[now_e];
+        cout << score << endl;
     }
 }
