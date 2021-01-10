@@ -33,18 +33,29 @@ int get_min_10n(int target)
 /*
     1.666 だから、 どこから始まるか, をメモする必要がある。
 */
-
-void calc_vec(int M)
+/*
+    実装できた。あとは引数に結果を渡す。
+*/
+// repeated_string は商 の羅列なので、対応するamari がほしい
+void calc_vec(int M,
+              /*out*/ vector<int> &what_is_shou_for_amari,
+              /*out*/ vector<int> &shou,
+              /*out*/ vector<int> &amari_vector,
+              /*out*/ vector<int> &repeated)
 {
     set<int> already_amari;
     int now_num = M;
     int amari_now = 1;
-    vector<int> what_is_shou_for_amari(M + 1);
     int last_amari = -1;
 
+    what_is_shou_for_amari.resize(M + 1);
+    shou.resize(0);
+    amari_vector.resize(0);
+    repeated.resize(0);
+
     // ループする 商 を見つける
-    vector<int> shou;         // 割り算の商
-    vector<int> amari_vector; // 割り算のあまりの配列
+    ; // 割り算の商
+    ; // 割り算のあまりの配列
 
     while (true)
     {
@@ -77,7 +88,7 @@ void calc_vec(int M)
 
         if (debug)
         {
-            cout << "amari_now: " << amari_now << endl;
+            // cout << "amari_now: " << amari_now << endl;
         }
     }
 
@@ -116,9 +127,10 @@ void calc_vec(int M)
     auto p = std::find(ALL(amari_vector), last_amari);
     if (amari_vector.end() != p)
     {
-        for (auto v = p; v < amari_vector.end(); v++)
+        for (auto v = p /* mid point*/; v < amari_vector.end(); v++)
         {
             int sho_repeated_i = what_is_shou_for_amari[*v];
+            repeated.push_back(sho_repeated_i);
             cout << sho_repeated_i;
         }
         cout << endl;
@@ -153,36 +165,44 @@ void calc_vec(int M)
     }
 }
 
-void assert_10_M(int M)
+void assert_10_M(int M, const vector<int> &answer)
 {
-    calc_vec(M);
+    vector<int> what_is_shou_for_amari;
+    vector<int> shou;
+    vector<int> amari_vector;
+    vector<int> repeated;
+
+    calc_vec(M,
+             /*ref out*/ what_is_shou_for_amari,
+             /*ref out*/ shou,
+             /*ref out*/ amari_vector,
+             /*ref out*/ repeated);
+
+    if (debug)
+    {
+        cout << "repeated: vec" << endl;
+        for (auto v : repeated)
+        {
+            cout << v << ",";
+        }
+        cout << endl;
+    }
+    assert(repeated.size() == answer.size());
+    REP(i, repeated.size())
+    {
+        assert(repeated[i] == answer[i]);
+    }
+    cout << "------------------" << endl;
 }
 
 int main(int argc, char *argv[])
 {
-    // assert_10_6();
-    // cout << 13 << endl;
-    // assert_10_M(13);
-    // cout << endl;
+    vector<int> vec13{0, 7, 6, 9, 2, 3};
+    assert_10_M(13, /*ref*/ vec13);
 
-    // cout << 21 << endl;
-    // assert_10_M(21);
-    // cout << endl;
+    vector<int> vec19{0, 5, 2, 6, 3, 1, 5, 7, 8, 9, 4, 7, 3, 6, 8, 4, 2, 1};
+    assert_10_M(19, /*ref*/ vec19);
 
-    cout << "last out";
-    vector<int> h(9999);
-    h.push_back(1);
-    cout << h[10000];
-
-    // セグフォするんだけど、どうすればすぐにわかる？
-    cout << 9997 << endl;
-    assert_10_M(9997);
-    cout << endl;
-
-    REP(i, 100)
-    {
-        cout << "now loop i: " << i + 1 << endl;
-        assert_10_M(i + 1);
-        cout << "------------" << endl;
-    }
+    vector<int> vec23{0, 4, 3, 4, 7, 8, 2, 6, 0, 8, 6, 9, 5, 6, 5, 2, 1, 7, 3, 9, 1, 3};
+    assert_10_M(23, /*ref*/ vec23);
 }
