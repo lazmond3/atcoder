@@ -5,6 +5,7 @@
 #include <cassert>
 using namespace std;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
+#define ALL(x) x.begin(), x.end()
 const bool debug = false;
 int pow(int a, int p)
 {
@@ -43,7 +44,7 @@ void calc_vec(int M)
 
     // ループする 商 を見つける
     vector<int> shou;         // 割り算の商
-    vector<int> amari_vector; // 割り算の商
+    vector<int> amari_vector; // 割り算のあまりの配列
 
     while (true)
     {
@@ -82,10 +83,18 @@ void calc_vec(int M)
 
     cout << "result string for 1 / " << M << " = ";
     int first_num = shou[0] / 10;
+    float first_num_float = (float)shou[0] / 10;
     if (first_num == 0)
     {
         // cout << "0.";
-        cout << ((float)shou[0] / 10);
+        if (first_num_float < 0.1)
+        {
+            cout << "0.";
+        }
+        else
+        {
+            cout << ((float)shou[0] / 10);
+        }
 
         // cout << first_num;
     }
@@ -103,6 +112,21 @@ void calc_vec(int M)
     }
     cout << endl;
     cout << "repeat_string : ";
+    // auto p = .find(last_amari);
+    auto p = std::find(ALL(amari_vector), last_amari);
+    if (amari_vector.end() != p)
+    {
+        for (auto v = p; v < amari_vector.end(); v++)
+        {
+            int sho_repeated_i = what_is_shou_for_amari[*v];
+            cout << sho_repeated_i;
+        }
+        cout << endl;
+    }
+    else
+    {
+        cout << "cannot find..";
+    }
 
     if (debug)
     {
