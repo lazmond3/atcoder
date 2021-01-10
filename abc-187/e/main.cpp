@@ -4,18 +4,74 @@
 #include <numeric>
 #include <queue>
 #include <set>
+#include <cassert>
 using namespace std;
 #define ALL(x) x.begin(), x.end()
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define int long long
 
 const bool debug = false;
+
+vector<long long> cache;
+int calc_piece_point(int v_number,
+                     vector<int> &parent,
+                     vector<int> &piece);
+int test_calc_cache()
+{
+    int N = 7;
+    cache.resize(N + 1);
+    REP(i, N + 1)
+    {
+        cache[i] = -1;
+    }
+    vector<int> parent = {0, 0, 1, 2, 2, 4, 1, 3};
+    // 2, 7 に +1 ずつ。
+    vector<int> piece = {0, 0, 1, 0, 0, 0, 0, 1};
+    assert(calc_piece_point(
+               2, parent, piece) == 1);
+    assert(cache[2] == 1);
+    assert(calc_piece_point(
+               3, parent, piece) == 1);
+    assert(cache[3] == 1);
+}
+
+int calc_piece_point(int v_number,
+                     vector<int> &parent,
+                     vector<int> &piece)
+{
+    if (cache[v_number] != -1)
+        return cache[v_number];
+
+    int sum = piece[v_number];
+    if (parent[v_number] != 0)
+    {
+        sum += calc_piece_point(
+            parent[v_number],
+            parent,
+            piece);
+    }
+
+    cache[v_number] = sum;
+    return sum;
+}
+
 signed main()
 {
+    if (debug)
+    {
+        test_calc_cache();
+        return 0;
+    }
     int N;
 
     std::cin >> N;
-    std::vector<int> A(N + 1);
+    cache.resize(N + 1);
+    REP(i, N + 1)
+    {
+        cache[i] = -1;
+    }
+    std::vector<int>
+        A(N + 1);
     std::vector<int> B(N + 1);
     std::vector<int> which_is_older_index(N + 1);
     iota(ALL(which_is_older_index), 0); // 0スタートのiota
@@ -179,12 +235,14 @@ signed main()
         int i = _i + 1;
         int score = 0;
         int now_e = i;
-        while (parent[now_e] != 0)
-        {
-            score += piece[now_e];
-            now_e = parent[now_e];
-        }
-        score += piece[now_e];
+        // この部分をメモ化再帰するといいのでは？
+        // while (parent[now_e] != 0)
+        // {
+        //     score += piece[now_e];
+        //     now_e = parent[now_e];
+        // }
+        // score += piece[now_e];
+        score = calc_piece_point(now_e, parent, piece);
         cout << score << endl;
     }
 }
