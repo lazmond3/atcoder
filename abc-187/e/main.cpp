@@ -28,14 +28,14 @@ signed main()
     {
         int i = _i + 1;
         std::cin >> A[i] >> B[i];
+        int a, b;
+
+        a = A[i];
+        b = B[i];
+
         // 接続性追加
-
-        int minV = A[i] < B[i] ? A[i] : B[i];
-        int largerV = A[i] > B[i] ? A[i] : B[i];
-
-        // 相互に接続
-        connectivity[minV].push_back(largerV);
-        connectivity[largerV].push_back(minV);
+        connectivity[a].push_back(b);
+        connectivity[b].push_back(a);
 
         // 下のパートに書く
         // 子供の追加
