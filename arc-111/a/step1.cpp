@@ -2,6 +2,7 @@
 #include <vector>
 #include <set>
 #include <cstdlib>
+#include <cassert>
 using namespace std;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 
@@ -28,20 +29,95 @@ int get_min_10n(int target)
         例: 10 /  6 =   1.66666666 の  1 はループしない。
         -> 10^N を割るときには
 */
-void assert_10_6()
+/*
+    1.666 だから、 どこから始まるか, をメモする必要がある。
+*/
+
+void calc_vec(int M)
 {
-    int M = 6;
     set<int> already_amari;
     int now_num = M;
+    int amari_now = 1;
+    vector<int> what_is_shou_for_amari(M + 1);
+
+    // ループする 商 を見つける
+    vector<int> shou;         // 割り算の商
+    vector<int> amari_vector; // 割り算の商
 
     while (true)
     {
+        if (already_amari.find(amari_now) != already_amari.end())
+        {
+            cout << "again amari is : " << amari_now << ", and 商 is " << what_is_shou_for_amari[amari_now] << endl;
+            break;
+        }
+
+        already_amari.insert(amari_now);
+        amari_vector.push_back(amari_now);
+
+        amari_now *= 10;
+
         // このループ 1回 で 10 を 1回 かける
-        int ten = get_min_10n(now_num);
-        int amari = ten % M;
+        if (amari_now < now_num)
+        {
+            what_is_shou_for_amari[amari_now] = 0;
+            amari_now *= 10;
+            shou.push_back(0);
+            continue;
+        }
+
+        shou.push_back(amari_now / M);
+        what_is_shou_for_amari[amari_now / 10] = amari_now / M;
+        amari_now = amari_now % M;
+
+        cout << "amari_now: " << amari_now << endl;
     }
+
+    cout << "amari for what is shou for .." << endl;
+    for (auto w : what_is_shou_for_amari)
+    {
+        cout << w << ",";
+    }
+    cout << endl;
+
+    cout << "shou: " << endl;
+    for (auto s : shou)
+    {
+        cout << s << ",";
+    }
+    cout << endl;
+
+    cout << "amari:" << endl;
+    for (auto a : amari_vector)
+    {
+        cout << a << ",";
+    }
+    cout << endl;
+}
+
+void assert_10_M(int M)
+{
+    calc_vec(M);
 }
 
 int main(int argc, char *argv[])
 {
+    // assert_10_6();
+    cout << 13 << endl;
+    assert_10_M(13);
+    cout << endl;
+
+    cout << 21 << endl;
+    assert_10_M(21);
+    cout << endl;
+
+    cout << "last out";
+    vector<int> h(9999);
+    h.push_back(1);
+    cout << h[10000];
+
+    // セグフォするんだけど、どうすればすぐにわかる？
+    cout << 9997 << endl;
+    assert_10_M(9997);
+    cout << endl;
 }
