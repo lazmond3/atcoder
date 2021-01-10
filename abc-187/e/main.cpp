@@ -7,9 +7,10 @@
 using namespace std;
 #define ALL(x) x.begin(), x.end()
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
+#define int long long
 
 const bool debug = false;
-int main()
+signed main()
 {
     int N;
 
@@ -69,7 +70,7 @@ int main()
     }
     // cout << "---- after edge reading" << endl;
 
-    // 数が小さい方が親なので、不要。
+    // 数が小さい方が親なので、不要。 <- 必要だった。
     // 1を頂点にして、エッジを繋ぎなおしたい ( type で親に行くか/子に行くか の判定のため )
     {
         std::queue<int> mQ;
@@ -103,14 +104,12 @@ int main()
         }
     }
 
-    // cout << "after つなぎなおし" << endl;
-
     int Q;
     cin >> Q;
     REP(i, Q)
     {
         int t, e, x;
-        cin >> t >> e >> x; // Ai が親、 Bi が
+        cin >> t >> e >> x;
 
         int a, b;
         a = A[e];
