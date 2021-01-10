@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-const bool debug = false;
+const bool debug = true;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
@@ -24,6 +24,13 @@ void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
 // for test
 void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ const vector<int> &answer)
 {
+    cout << "target size: " << target.size() << ", answer size: " << answer.size() << endl
+         << flush;
+    if (debug)
+    {
+        show_vector(target, "target: ");
+        show_vector(answer, "answer: ");
+    }
     assert(target.size() == answer.size());
     for (int i = 0;
          i < target.size();
@@ -33,6 +40,8 @@ void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ con
     }
 }
 // ----------
+
+// STEP 1: ✅
 void shou_and_repeated(const int M,
                        /*ref out*/ vector<int> &shou,
                        /*ref out*/ vector<int> &amari_vector,
@@ -95,6 +104,7 @@ void shou_and_repeated(const int M,
     }
 }
 
+// ✅ checked
 void test_shou_and_repeated()
 {
     // 88
@@ -187,15 +197,15 @@ void test_shou_and_repeated()
                             });
 }
 
-// repeated を割ったループ
+// repeated を割るだけ。
 // return amari
+// ✅
 int repeated_and_amari_cycle(const int M,
-                             /*ref out*/ vector<int> &amari_vector,
                              /*const ref in*/ const vector<int> &repeated_with_amari) // repeated とは限られず、先頭にあまりが付加した形になる。
 {
     int i = 0;
     int target = repeated_with_amari[i++];
-    int amari = 0;
+
     while (i < repeated_with_amari.size())
     {
         target = target * 10 + repeated_with_amari[i++];
@@ -224,46 +234,98 @@ int repeated_and_amari_cycle(const int M,
 
     // amari = target; // これって b 未満だよね？
     assert(target < M);
-    return amari;
+    return target;
 }
 
+vector<int> num_to_vector(int n)
+{
+    vector<int> answer;
+    while (n != 0)
+    {
+        answer.push_back(n % 10);
+        n = n / 10;
+    }
+    reverse(ALL(answer));
+    return answer;
+}
+// ✅
+void test_repeated_and_amari_cycle()
+{
+    // 88
+    assert(repeated_and_amari_cycle(88, vector<int>{3, 6}) == 36);
+    assert(repeated_and_amari_cycle(88, vector<int>{3, 6, 3, 6}) == 28);
+    assert(repeated_and_amari_cycle(88, vector<int>{2, 8, 3, 6}) == 20);
+    assert(repeated_and_amari_cycle(88, vector<int>{2, 0, 3, 6}) == 12);
+    assert(repeated_and_amari_cycle(88, vector<int>{4, 3, 6}) == 84);
+    assert(repeated_and_amari_cycle(88, num_to_vector(8436)) == 76);
+    assert(repeated_and_amari_cycle(88, num_to_vector(7636)) == 68);
+    assert(repeated_and_amari_cycle(88, num_to_vector(6836)) == 60);
+}
 // repeated を何回連結させるとあまりがゼロになるか。
-int repeated_mod_times(const int M,
-                       /*ref out*/ vector<int> &amari_vector,
-                       /*const ref in*/ const vector<int> &repeated)
+// return times
+// あまりがゼロにならないこともあるのか！！
+// (M=88に対して、 repeated={3,6} だと、同じ(偶数条件) をループしてしまい、ゼロにはならない。)
+/*
+    amari:  4, times: 741889
+    amari: 84, times: 741890
+    amari: 76, times: 741891
+    amari: 68, times: 741892
+    amari: 60, times: 741893
+    amari: 52, times: 741894
+    amari: 44, times: 741895
+    amari: 36, times: 741896
+    amari: 28, times: 741897
+    amari: 20, times: 741898
+    amari: 12, times: 741899
+    amari:  4, times: 741900
+    amari: 84, times: 741901
+*/
+//
+void repeated_mod_times(const int M,
+                        /*ref out*/ vector<int> &amari_vector,
+                        /*const ref in*/ const vector<int> &repeated)
 {
     int times = 1;
     int amari = 0;
+    set<int> seen_amari;
 
     amari = repeated_and_amari_cycle(/*const int*/ M,
-                                     /*ref out*/ amari_vector,
                                      /*const ref in*/ repeated);
 
     vector<int> not_used_amari_vector;
-    amari_vector.push_back(amari);
+    // これを削除した。
+    // amari_vector.push_back(amari);
+
     while (amari != 0)
     {
-        vector<int> next_repeated;
-        int _amari = amari;
-
-        while (_amari != 0)
+        if (seen_amari.find(amari) != seen_amari.end())
         {
-            next_repeated.push_back(_amari % 10);
-            _amari = _amari / 10;
+            break;
         }
+        seen_amari.insert(amari);
+        amari_vector.push_back(amari);
+
+        vector<int> next_repeated = num_to_vector(amari);
 
         for (auto r : repeated)
             next_repeated.push_back(r);
 
         amari = repeated_and_amari_cycle(
             /*const int*/ M,
-            /*ref out*/ not_used_amari_vector,
             /*const ref in*/ next_repeated);
-        amari_vector.push_back(amari);
-        times += 1;
     }
-    return times;
 }
+
+void test_repeated_mod_times()
+{
+    // 88
+    vector<int> amari_vector_88;
+    repeated_mod_times(88, /*ref out*/ amari_vector_88, num_to_vector(36));
+    assert_vec(
+        amari_vector_88,
+        vector<int>{36, 28, 20, 12, 4, 84, 76, 68, 60, 52, 44});
+}
+
 int service(const int N, const int M)
 {
     vector<int> shou, repeated, what_is_shou_for_amari;
@@ -277,7 +339,6 @@ int service(const int N, const int M)
     vector<int> amari_vector_repeated;
     int times = repeated_and_amari_cycle(
         /*const int*/ M,
-        /*ref out*/ amari_vector_repeated,
         /*const ref in*/ repeated);
 
     // shou を M で割ったあまりはいくつになる？
@@ -297,7 +358,9 @@ int service(const int N, const int M)
 
 signed main(signed argc, char *argv[])
 {
-    test_shou_and_repeated();
+    // test_shou_and_repeated();
+    test_repeated_and_amari_cycle();
+    test_repeated_mod_times();
 
     // long long N;
     // int M;
