@@ -281,6 +281,7 @@ void test_repeated_and_amari_cycle()
     amari: 84, times: 741901
 */
 //
+// テスト ✅
 void repeated_mod_times(const int M,
                         /*ref out*/ vector<int> &amari_vector,
                         /*const ref in*/ const vector<int> &repeated)
@@ -296,7 +297,7 @@ void repeated_mod_times(const int M,
     // これを削除した。
     // amari_vector.push_back(amari);
 
-    while (amari != 0)
+    while (true)
     {
         if (seen_amari.find(amari) != seen_amari.end())
         {
@@ -316,6 +317,7 @@ void repeated_mod_times(const int M,
     }
 }
 
+// テスト ✅
 void test_repeated_mod_times()
 {
     // 88
@@ -324,6 +326,18 @@ void test_repeated_mod_times()
     assert_vec(
         amari_vector_88,
         vector<int>{36, 28, 20, 12, 4, 84, 76, 68, 60, 52, 44});
+    // 23
+    vector<int> amari_vector_23;
+    repeated_mod_times(23, /*ref out*/ amari_vector_23, num_to_vector(36));
+    assert_vec(
+        amari_vector_23,
+        vector<int>{13, 2, 6, 15, 18, 19, 4, 22, 5, 7, 0});
+    // 17
+    vector<int> amari_vector_17;
+    repeated_mod_times(17, /*ref out*/ amari_vector_17, num_to_vector(36));
+    assert_vec(
+        amari_vector_17,
+        vector<int>{2, 15, 6, 7, 5, 9, 1, 0});
 }
 
 int service(const int N, const int M)
@@ -337,9 +351,29 @@ int service(const int N, const int M)
                       /*ref out*/ repeated);
 
     vector<int> amari_vector_repeated;
-    int times = repeated_and_amari_cycle(
+    repeated_and_amari_cycle(
         /*const int*/ M,
         /*const ref in*/ repeated);
+
+    // repeated　をわるあまりの巡回
+    vector<int> repeated_amari_loop;
+
+    repeated_mod_times(/*const int*/ M,
+                       /*out*/ repeated_amari_loop,
+                       /*const ref in*/ repeated);
+
+    // N は桁数を意味する。
+
+    // 1. shou 桁数よりも多いか？ -> 引き算しよう。
+
+    // 2. repeated 桁数 よりも多いか？ -> 何個入っているか計算しよう。
+
+    // 3. repeated 桁数 が 何個か入っているか？
+
+    // - 例: 88
+    // 1. shou =
+
+    // -------- 以前の考察
 
     // shou を M で割ったあまりはいくつになる？
     // 結局何桁ある？
@@ -354,11 +388,12 @@ int service(const int N, const int M)
         => あまり 80 
         (消費するNは 5)
     */
+    return 1;
 }
 
 signed main(signed argc, char *argv[])
 {
-    // test_shou_and_repeated();
+    test_shou_and_repeated();
     test_repeated_and_amari_cycle();
     test_repeated_mod_times();
 
