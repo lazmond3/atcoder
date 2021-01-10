@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <numeric>
 using namespace std;
-/*
+/*  
 問題文 N 頂点 N − 1 辺から成る木があり、 (木は全てそう)
 頂点には 1 , 2 , … , N の番号が、辺には 1 , 2 , … , N − 1 の番号がついています。
 辺 i は頂点 a i と頂点 b i を結びます。 この木の各頂点には 1 つの整数が書かれています。
@@ -27,6 +27,11 @@ t i = 2 のとき : 頂点 b e i から辺をたどって頂点 a e i を通ら�
 事前にいける場所のリストを作成しておく。 
 */
 
+/*
+ 木のグラフ
+ http://www.isc.meiji.ac.jp/~mizutani/python/image/tree.png 
+*/
+
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 /*
@@ -42,64 +47,28 @@ t i = 2 のとき : 頂点 b e i から辺をたどって頂点 a e i を通ら�
     2. ソート順位の変更
 */
 
-int abs(int a)
-{
-    if (a > 0)
-        return a;
-    else
-        return -a;
-}
-
 int main()
 {
-    long long N;
+    int N;
 
     std::cin >> N;
-    std::vector<long long> AOKI(N);
-    std::vector<long long> TAKAHASHI(N);
+    std::vector<int> A(N);
+    std::vector<int> B(N);
+    std::vector<int> E(N);
     std::vector<int> IDX(N);
-    iota(ALL(IDX), 0);
-    long long aoki_sum = 0;
-    long long takahashi_sum = 0;
+    iota(ALL(IDX), 0); // 0スタートのiota
 
-    REP(i, N)
+    REP(i, N - 1)
     {
-        std::cin >> AOKI[i] >> TAKAHASHI[i];
-        aoki_sum += AOKI[i];
-        // takahashi_sum += TAKAHASHI[i];
+        std::cin >> A[i] >> B[i];
     }
-    // 降順にソート
-    // 単純にトータルでいいか
-    sort(ALL(IDX), [&](auto i, auto j) {
-        return (AOKI[i] * 2 + TAKAHASHI[i]) > (AOKI[j] * 2 + TAKAHASHI[j]);
-    });
-
-    // debug
-    // REP(i, N)
-    // {
-    //     cout << "IDX[" << i << "] : " << IDX[i] << endl;
-    // }
-    if (aoki_sum < takahashi_sum)
+    int Q;
+    cin >> Q;
+    REP(i, Q)
     {
-        cout << 0 << endl;
-        return 0;
+        int t, e, x;
+        cin >> t >> e >> x;
+        // t = 1 のとき、
+        // 頂点aeiから辺をたどって頂点beiを通らずに到達できるような全ての頂点vに対して、cvをcv+xiに書き換える。
     }
-
-    REP(i, N)
-    {
-        aoki_sum -= AOKI[IDX[i]];
-        takahashi_sum += TAKAHASHI[IDX[i]] + AOKI[IDX[i]];
-        if (aoki_sum < takahashi_sum)
-        {
-            cout << i + 1 << endl;
-            return 0;
-        }
-    }
-
-    // -> 高橋派が多ければ そこをとる必要はない。
-    // 鷹八: T, 鈴木: W
-    // a[i] - b[i] という基準でソートしたい。
-    // b[i] - a[i] として、これが多いところから取っていきたい。
-    // i を選択すると、
-    // T + (b[i]), W - b[i] という遷移が起こる。
 }
