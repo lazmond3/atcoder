@@ -89,7 +89,7 @@ void calc_vec(int M)
         // cout << "0.";
         if (first_num_float < 0.1)
         {
-            cout << "0.";
+            cout << "0.0";
         }
         else
         {
@@ -175,9 +175,9 @@ int main(int argc, char *argv[])
     cout << h[10000];
 
     // セグフォするんだけど、どうすればすぐにわかる？
-    // cout << 9997 << endl;
-    // assert_10_M(9997);
-    // cout << endl;
+    cout << 9997 << endl;
+    assert_10_M(9997);
+    cout << endl;
 
     REP(i, 100)
     {
