@@ -14,7 +14,7 @@ def lst_division_for_calc_amari(f, lst, m):
     amari = lst[i]
     i += 1
 
-    if (len(lst) < 10, )
+    # if (len(lst) < 10, )
 
     seen_amari = set()
     # out
