@@ -22,6 +22,8 @@ const bool detail_debug = false;
     環境変数でデバッグON OFF したい。
     複数の値の返却のほうが楽じゃない？structとか。
     vector の vector とか。
+
+    python のテスト機能とか。
 */
 /* ---------------------------------------------------------------------------------- */
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
@@ -231,10 +233,10 @@ vector<int> num_to_vector(int n)
 
 // times の代わりに、repeated set に対するあまりの循環を計算する関数
 // これ結構大変じゃない？
-void repeated_mod_times(const int M,
-                        const int start_amari,
-                        /*ref out*/ vector<int> &amari_vector, // 名前が悪い気がする。 repeated_amari_repeated とか
-                        /*const ref in*/ const vector<int> &repeated)
+void generate_amari_series_for_repeated_set(const int M,
+                                            const int start_amari,
+                                            /*ref out*/ vector<int> &amari_vector, // 名前が悪い気がする。 repeated_amari_repeated とか
+                                            /*const ref in*/ const vector<int> &repeated)
 {
     int times = 1;
     int amari = 0;
@@ -306,10 +308,10 @@ int service(const int N, const int M)
                                                   shou);
 
     // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
-    repeated_mod_times(/*const int*/ M,
-                       /*const int*/ initial_amari,
-                       /*out*/ repeated_amari_loop,
-                       /*const ref in*/ repeated);
+    generate_amari_series_for_repeated_set(/*const int*/ M,
+                                           /*const int*/ initial_amari,
+                                           /*out*/ repeated_amari_loop,
+                                           /*const ref in*/ repeated);
 
     if (N > shou.size())
     {
