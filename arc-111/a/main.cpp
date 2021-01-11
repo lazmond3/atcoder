@@ -237,7 +237,7 @@ vector<int> num_to_vector(int n)
 // これ結構大変じゃない？
 void generate_amari_series_for_repeated_set(const int M,
                                             const int initial_amari_for_shou,
-                                            /*ref out*/ vector<int> &amari_vector, // 名前が悪い気がする。 repeated_amari_repeated とか
+                                            /*ref out*/ vector<int> &amari_series_for_repeated_set, // 名前が悪い気がする。 repeated_amari_repeated とか
                                             /*const ref in*/ const vector<int> &repeated)
 {
     int times = 1;
@@ -260,7 +260,7 @@ void generate_amari_series_for_repeated_set(const int M,
             break;
         }
         seen_amari.insert(amari);
-        amari_vector.push_back(amari);
+        amari_series_for_repeated_set.push_back(amari);
 
         vector<int> next_repeated = num_to_vector(amari);
 
@@ -286,7 +286,7 @@ int service(const int N, const int M)
                     /*ref out*/ shou,
                     /*ref out*/ repeated);
 
-    vector<int> repeated_amari_loop;
+    vector<int> amari_series_for_repeated_set;
 
     // shou に対する イニシャルあまり問題
     if (debug)
@@ -306,7 +306,7 @@ int service(const int N, const int M)
     // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
     generate_amari_series_for_repeated_set(/*const int*/ M,
                                            /*const int*/ initial_amari_for_shou,
-                                           /*out*/ repeated_amari_loop,
+                                           /*out*/ amari_series_for_repeated_set,
                                            /*const ref in*/ repeated);
 
     if (N > shou.size())
@@ -314,7 +314,7 @@ int service(const int N, const int M)
         _N -= shou.size();
 
         // cout << "here off idx amari suze" << endl;
-        int repeated_circular_size = repeated_amari_loop.size();
+        int repeated_circular_size = amari_series_for_repeated_set.size();
 
         // cout << "here off idx amari" << endl;
         // ここの部分が間違っていた。
@@ -329,7 +329,7 @@ int service(const int N, const int M)
         if (last_repeated_set_idx == 0 && last_repeated_set_offset != 0)
         {
 
-            last_repeated_set_amari = repeated_amari_loop[repeated_amari_loop.size() - 1];
+            last_repeated_set_amari = amari_series_for_repeated_set[amari_series_for_repeated_set.size() - 1];
         }
         else if (last_repeated_set_idx == 0)
         {
@@ -337,7 +337,7 @@ int service(const int N, const int M)
         }
         else
         {
-            last_repeated_set_amari = repeated_amari_loop[last_repeated_set_idx - 1];
+            last_repeated_set_amari = amari_series_for_repeated_set[last_repeated_set_idx - 1];
         }
 
         // concat が必要
