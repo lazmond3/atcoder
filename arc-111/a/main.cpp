@@ -88,6 +88,8 @@ void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ con
 
 // 普通の循環少数の生成列を作成する。
 // 疑問: 0.250 のようなケースに対しては、どうする？
+// 1 / 3 = 0.3333 というケースでは、 shou = 3,  repeated  = [3] を作成。
+// 1 / 4 = 0.250  というケースでは、 shou = 025 repeated  = [0] を作成する。
 void shou_and_repeated(const int M,
                        /*ref out*/ vector<int> &shou,
                        /*ref out*/ vector<int> &amari_vector,
