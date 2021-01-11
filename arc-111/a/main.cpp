@@ -283,6 +283,7 @@ void test_repeated_and_amari_cycle()
 //
 // テスト ✅
 void repeated_mod_times(const int M,
+                        const int start_amari,
                         /*ref out*/ vector<int> &amari_vector,
                         /*const ref in*/ const vector<int> &repeated)
 {
@@ -290,9 +291,20 @@ void repeated_mod_times(const int M,
     int amari = 0;
     set<int> seen_amari;
 
-    amari = repeated_and_amari_cycle(/*const int*/ M,
-                                     /*const ref in*/ repeated);
+    vector<int> start_vec = num_to_vector(start_amari);
+    for (auto r : repeated)
+    {
+        start_vec.push_back(r);
+    }
 
+    amari = repeated_and_amari_cycle(/*const int*/ M,
+                                     /*const ref in*/ start_vec);
+
+    if (debug)
+    {
+        show_vector(start_vec, "[repeated mod times] start_vec:");
+        cout << "amari: " << amari << endl;
+    }
     vector<int> not_used_amari_vector;
     // これを削除した。
     // amari_vector.push_back(amari);
@@ -318,23 +330,24 @@ void repeated_mod_times(const int M,
 }
 
 // テスト ✅
+// セグフォする。
 void test_repeated_mod_times()
 {
     // 88
     vector<int> amari_vector_88;
-    repeated_mod_times(88, /*ref out*/ amari_vector_88, num_to_vector(36));
+    repeated_mod_times(88, /*start_amari*/ 0, /*ref out*/ amari_vector_88, num_to_vector(36));
     assert_vec(
         amari_vector_88,
         vector<int>{36, 28, 20, 12, 4, 84, 76, 68, 60, 52, 44});
     // 23
     vector<int> amari_vector_23;
-    repeated_mod_times(23, /*ref out*/ amari_vector_23, num_to_vector(36));
+    repeated_mod_times(23, /*start_amari*/ 0, /*ref out*/ amari_vector_23, num_to_vector(36));
     assert_vec(
         amari_vector_23,
         vector<int>{13, 2, 6, 15, 18, 19, 4, 22, 5, 7, 0});
     // 17
     vector<int> amari_vector_17;
-    repeated_mod_times(17, /*ref out*/ amari_vector_17, num_to_vector(36));
+    repeated_mod_times(17, /*start_amari*/ 0, /*ref out*/ amari_vector_17, num_to_vector(36));
     assert_vec(
         amari_vector_17,
         vector<int>{2, 15, 6, 7, 5, 9, 1, 0});
@@ -342,6 +355,7 @@ void test_repeated_mod_times()
 
 int service(const int N, const int M)
 {
+    int _N = N;
     vector<int> shou, repeated, what_is_shou_for_amari;
     vector<int> amari_vector;
     shou_and_repeated(/*const int*/ M,
@@ -358,20 +372,109 @@ int service(const int N, const int M)
     // repeated　をわるあまりの巡回
     vector<int> repeated_amari_loop;
 
+    // shou に対する イニシャルあまり問題
+    if (debug)
+    {
+        show_vector(shou, "service shou show: ");
+        /*
+            [service shou show: ]: 
+            0,1,1,3,6,
+        */
+    }
+
+    int initial_amari = repeated_and_amari_cycle(M,
+                                                 shou);
     repeated_mod_times(/*const int*/ M,
+                       /*const int*/ initial_amari,
                        /*out*/ repeated_amari_loop,
                        /*const ref in*/ repeated);
 
     // N は桁数を意味する。
+    if (debug)
+    {
+        show_vector(repeated_amari_loop, "[service] repeated amari loop");
+        /*
+            28,20,12,4,84,76,68,60,52,44,36,
+        */
+    }
+
+    /*
+        理想ケース
+        1 / 88 = 0.01136 .. 363636363
+        0.01136 の部分で、あまりは 80.
+        80 スタートの あまりの一覧を知りたい。
+        8036 % 88 = 28 となる。
+        あまり循環は 28,20,12,4,84,76,68,60,52,44,36, となる。
+
+                      80  28 20 12  4 84 76 68 60 52 44 36   28 20 12  4 84 76 68 60 52 44 36   28 20 12  4
+        1 / 88 = 0.01136  36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 3 
+                      88
+            _____________________________________________________________________
+                      80  36
+                          88
+            _____________________________________________________________________
+                          28                         44 36
+                                                        88
+            _____________________________________________________________________
+                                                        36  36
+                                                            88
+            _____________________________________________________________________
+                                                            28 (loop detected!)
+
+        
+                      80  28 20 12  4 84 76 68 60 52 44 36   28 20 12  4 84 76 68 60 52 44 36   28 20 12  4
+        1 / 88 = 0.01136  36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 3 
+        // こういう感じに、 N = 5 + 11*2*2 + 2*4 + 1 = 58 の場合, M で割ったあまりは
+                 0.01136  36 36 36 36 3 
+                                   88
+            _____________________________________________________________________
+                                    4 3
+                                    8 8
+            _____________________________________________________________________
+                                    4 3 
+                                
+            となり、 あまりは 43 となる。
+
+        // 計算過程
+        N = 58 のとき、 N > shou.size() のため、
+        N - shou.size()(=5) = 53 となる。
+        53 / 11 = 44 + 9 / 11 = 4 ... 9 となる。
+        9 / 2 = 4 .. 1 となる。 => 4番目のあまりは、 amari[4-1] = 4 となるので、 4 これに、repeated[0] == 3 を
+
+
+        >>> "".join(a.strip().split(" "))
+        '113636363636363636363636363636363636363636363636363636363'
+        >>> b ="".join(a.strip().split(" "))
+        >>> int(b)
+        113636363636363636363636363636363636363636363636363636363
+        >>> int(b) % 88
+        43
+
+    */
 
     // 1. shou 桁数よりも多いか？ -> 引き算しよう。
+
+    if (N > shou.size())
+    {
+    }
 
     // 2. repeated 桁数 よりも多いか？ -> 何個入っているか計算しよう。
 
     // 3. repeated 桁数 が 何個か入っているか？
 
     // - 例: 88
-    // 1. shou =
+    // 1. shou = 01136 (>>> 1 / 88 = 0.011363636363636364) である。
+    //    N =  5 で shou 桁数。
+    // 2. repeated 桁数は 36 で 2ケタ
+    // 3. N = 100 とすると、 N - 5 = 95, 95 / 2 = 47 あまり 1となる。
+    //    このとき、
+    // repeated_amari_loop = {36, 28, 20, 12, 4, 84, 76, 68, 60, 52, 44}
+    // となる ( 回数 = 11 で1周する。 )
+    // 47 / 11 = 4 あまり 3なので、 repeated 周回分のあまりは20,
+    // repeated 自体があまり 1 なので、あまり3.
+    /*
+        
+    */
 
     // -------- 以前の考察
 
@@ -393,9 +496,11 @@ int service(const int N, const int M)
 
 signed main(signed argc, char *argv[])
 {
-    test_shou_and_repeated();
-    test_repeated_and_amari_cycle();
-    test_repeated_mod_times();
+    // test_shou_and_repeated();
+    // test_repeated_and_amari_cycle();
+    // test_repeated_mod_times();
+
+    service(10, 88);
 
     // long long N;
     // int M;
