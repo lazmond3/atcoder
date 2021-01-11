@@ -818,9 +818,10 @@ void test_service4()
 }
 void test_service5()
 {
-    eq_assert(service(3, 4), 2, "service(3, 4)"); // 250 %4 = 2
-    eq_assert(service(2, 4), 1, "service(3, 4)"); // 250 %4 = 2
-    eq_assert(service(1, 4), 2, "service(1, 4)"); // 0.2 => 2 % 4
+    eq_assert(service(3, 4), 2, "service(3, 4)");     // 250 %4 = 2
+    eq_assert(service(2, 4), 1, "service(3, 4)");     // 250 %4 = 2
+    eq_assert(service(1, 4), 2, "service(1, 4)");     // 0.2 => 2 % 4
+    eq_assert(service(73, 13), 0, "service(73, 13)"); // 0.2 => 2 % 4
     /*  
         多分 n が小さい領域で失敗していて、
         shou の計算とかをすべきではない。
@@ -846,8 +847,8 @@ signed main(signed argc, char *argv[])
 
     // test_repeated_mod_times();
 
-    // test_service5();
-    // return 0;
+    test_service5();
+    return 0;
 
     long long N;
     int M;
