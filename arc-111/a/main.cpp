@@ -25,6 +25,8 @@ const bool detail_debug = false;
     保存したら make が走るようにしたい。
     myassert で赤文字で出したりしたい。
     環境変数でデバッグON OFF したい。
+    複数の値の返却のほうが楽じゃない？structとか。
+    vector の vector とか。
 */
 /* ---------------------------------------------------------------------------------- */
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
@@ -153,7 +155,26 @@ void test_shou_and_repeated()
     vector<int> amari_vector_4;
     vector<int> repeated_4;
     shou_and_repeated(4, shou_4, amari_vector_4, repeated_4);
-    assert_vec(shou_4, vector<int>{0, 2, 5});
+    // assert_vec(shou_4, vector<int>{0, 2, 5});
+    show_vector(shou_4, "shou_4");                 // 2 5 0
+    show_vector(amari_vector_4, "amari_vector_4"); // 1 2 0
+    show_vector(repeated_4, "repeated_4");
+
+    vector<int> shou_13;
+    vector<int> amari_vector_13;
+    vector<int> repeated_13;
+    shou_and_repeated(13, shou_13, amari_vector_13, repeated_13);
+    show_vector(shou_13, "shou_13");
+    show_vector(amari_vector_13, "amari_vector_13");
+    show_vector(repeated_13, "repeated_13");
+
+    vector<int> shou_2;
+    vector<int> amari_vector_2;
+    vector<int> repeated_2;
+    shou_and_repeated(2, shou_2, amari_vector_2, repeated_2);
+    show_vector(shou_2, "shou_2");
+    show_vector(amari_vector_2, "amari_vector_2");
+    show_vector(repeated_2, "repeated_2");
 }
 
 // repeated repeated_with_amari を M で割ったあまりを計算する。
@@ -377,8 +398,8 @@ int service(const int N, const int M)
 
 signed main(signed argc, char *argv[])
 {
-    // test_service7();
-    // return 0;
+    test_shou_and_repeated();
+    return 0;
 
     long long N;
     int M;
