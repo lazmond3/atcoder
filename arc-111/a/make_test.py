@@ -88,14 +88,19 @@ def main():
     for i in range(int(sys.argv[3]), int(sys.argv[4])):
         if debug:
             print( "=== i : ", i, " ====== ")
-        if not os.path.exists(f"test-{sys.argv[2]}-{m}"):
+        if not debug and not os.path.exists(f"test-{sys.argv[2]}-{m}"):
             os.mkdir(f"test-{sys.argv[2]}-{m}")
 
-        with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.in", "w") as fin:
-            fin.write(f"{i} {m}\n")
+        if not debug:
+            with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.in", "w") as fin:
+                fin.write(f"{i} {m}\n")
         str_lst = make_str_lst(m , i)
-        with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.out", "w") as fout:            
-            lst_division_for_calc_amari(fout, str_lst, m)
+        if not debug:
+            with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.out", "w") as fout:            
+                lst_division_for_calc_amari(fout, str_lst, m)
+        else:
+            with open("/dev/null" , "w") as fout2:
+                lst_division_for_calc_amari(fout2, str_lst, m)
 
 
     # target_str = str(1/m)[2:][:n]
