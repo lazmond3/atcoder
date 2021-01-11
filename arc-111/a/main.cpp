@@ -25,6 +25,12 @@ const bool detail_debug = false;
     myassert で赤文字で出したりしたい。
 */
 // for debug
+/*
+    ❌ 引っかかっているところ
+    1 / 4 などの、循環小数にならずに終わってしまう場合。
+
+    73, 13 などの、最後が
+*/
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
 {
     cout << "[" << label << "]: " << endl;
@@ -615,6 +621,23 @@ int service(const int N, const int M)
 
     /*
         理想ケース
+                        2      4
+        1 / 13 = 0.076923 076923 076923
+                    13
+            ____________________________
+                    119
+                     13
+            ____________________________
+                      22
+                      13
+            ____________________________
+                       93
+                       13
+            ____________________________
+                        2 
+
+
+
         1 / 88 = 0.01136 .. 363636363
         0.01136 の部分で、あまりは 80.
         80 スタートの あまりの一覧を知りたい。
@@ -821,7 +844,7 @@ void test_service5()
     eq_assert(service(3, 4), 2, "service(3, 4)");     // 250 %4 = 2
     eq_assert(service(2, 4), 1, "service(3, 4)");     // 250 %4 = 2
     eq_assert(service(1, 4), 2, "service(1, 4)");     // 0.2 => 2 % 4
-    eq_assert(service(73, 13), 0, "service(73, 13)"); // 0.2 => 2 % 4
+    eq_assert(service(78, 13), 0, "service(78, 13)"); // 0.2 => 2 % 4
     /*  
         多分 n が小さい領域で失敗していて、
         shou の計算とかをすべきではない。
