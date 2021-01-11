@@ -6,8 +6,8 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-// const bool debug = false;
-const bool debug = true;
+const bool debug = false;
+// const bool debug = true;
 const bool seg_debug = false;
 // const bool debug = false;
 const bool detail_debug = false;
@@ -277,14 +277,14 @@ int repeated_and_amari_cycle(const int M,
     }
 
     // 提出のときにREした原因 例: eq_assert(service(78, 13), 0, "service(78, 13)");
-    // 0 とは限らないので WA.
+    // 0 とは限らない?WA.
     if (repeated_with_amari.size() == 0)
     {
         // return
-        // return 0;
+        return 0;
         //
-        cout << "cannot be 0 in repeaed" << endl;
-        assert(false);
+        // cout << "cannot be 0 in repeaed" << endl;
+        // assert(false);
     }
 
     int target = repeated_with_amari[i++];
@@ -506,7 +506,7 @@ int service(const int N, const int M)
         cout << "   -- after call mod times --- " << endl;
         cout << "[service] repeated amari loop: size: " << repeated_amari_loop.size() << endl;
 
-        // show_vector(repeated_amari_loop, );
+        show_vector(repeated_amari_loop, "repeated amari loop2");
     }
 
     // N は桁数を意味する。
@@ -856,6 +856,22 @@ void test_service5()
            6 
     */
 }
+void test_service6()
+{
+    eq_assert(service(1, 4), 2, "service(1, 4)");   // 0.2 => 2 % 4
+    eq_assert(service(2, 4), 1, "service(3, 4)");   // 25 % 4 = 1
+    eq_assert(service(3, 4), 2, "service(3, 4)");   // 250 % 4 = 2
+    eq_assert(service(4, 4), 0, "service(78, 13)"); // 2500 % 4 ==  => 2 % 4
+    eq_assert(service(5, 4), 0, "service(78, 13)"); // 25000 % 4 ==  => 2 % 4
+}
+void test_service7()
+{
+    eq_assert(service(1, 2), 1, "service(1, 4)"); // 5%2  == 1 => 2 % 4
+    eq_assert(service(2, 2), 0, "service(3, 4)"); // 50%2 == 0
+    eq_assert(service(3, 2), 0, "service(3, 4)");
+    eq_assert(service(4, 2), 0, "service(78, 13)");
+    eq_assert(service(5, 2), 0, "service(78, 13)");
+}
 signed main(signed argc, char *argv[])
 {
     // test_shou_and_repeated();
@@ -870,8 +886,10 @@ signed main(signed argc, char *argv[])
 
     // test_repeated_mod_times();
 
-    test_service5();
-    return 0;
+    // test_service5();
+    // test_service6();
+    // test_service7();
+    // return 0;
 
     long long N;
     int M;
