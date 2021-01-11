@@ -433,7 +433,7 @@ int service(const int N, const int M)
             _____________________________________________________________________
                                     4 3 
                                 
-            となり、 あまりは 43 となる。
+            となり、   あまりは 43 となる。
 
         // 計算過程
         N = 58 のとき、 N > shou.size() のため、
@@ -454,7 +454,8 @@ int service(const int N, const int M)
 
         int last_repeated_set_amari = repeated_amari[last_repeated_set_idx-1];
         if (last_repeated_set_idx == 0) {
-            36 のところで終わっているとき は、最後のあまりを36にしないといけなさそう。
+            // 36 のところで終わっているとき は、最後のあまりを36にしないといけなさそう。
+            last_repeated_set_amari = 36;            
         }
 
         // これって本当に1charコピーできるのかな
@@ -466,8 +467,6 @@ int service(const int N, const int M)
 
         こういう感じで計算ができるはず。
         
-
-
         
         // もし、 repeated で割り切れたとすると、一番最後の36になる？   => ✅ OK
                       80  28 20 12  4 84 76 68 60 52 44 36
