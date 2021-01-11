@@ -147,30 +147,39 @@ void shou_and_repeated(const int M,
     }
 }
 
+void test_shou_and_repeated()
+{
+    vector<int> shou_4;
+    vector<int> amari_vector_4;
+    vector<int> repeated_4;
+    shou_and_repeated(4, shou_4, amari_vector_4, repeated_4);
+    assert_vec(shou_4, vector<int>{0, 2, 5});
+}
+
 // repeated repeated_with_amari を M で割ったあまりを計算する。
 int repeated_and_amari_cycle(const int M,
-                             /*const ref in*/ const vector<int> &repeated_with_amari) // repeated とは限られず、先頭にあまりが付加した形になる。
+                             /*const ref in*/ const vector<int> &target_vec) // repeated とは限られず、先頭にあまりが付加した形になる。
 {
     int i = 0;
 
     if (seg_debug)
     {
         cout << "in repeated amari cycle";
-        show_vector(repeated_with_amari, "repeated with amari"); // 割り切れた時？
+        show_vector(target_vec, "repeated with amari"); // 割り切れた時？
     }
 
     // 提出のときにREした原因 例: eq_assert(service(78, 13), 0, "service(78, 13)");
     // 0 とは限らない?
-    if (repeated_with_amari.size() == 0)
+    if (target_vec.size() == 0)
     {
         return 0;
     }
 
-    int target = repeated_with_amari[i++];
+    int target = target_vec[i++];
 
-    while (i < repeated_with_amari.size())
+    while (i < target_vec.size())
     {
-        target = target * 10 + repeated_with_amari[i++];
+        target = target * 10 + target_vec[i++];
         if (target >= M)
         {
             int shou_one = target / M;
