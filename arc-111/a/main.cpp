@@ -455,15 +455,12 @@ int service(const int N, const int M)
     }
     else
     {
-        cout << "NOT IMPLEMENTED" << endl;
-        assert(false);
-        exit(1);
-        if (N == shou.size())
-        {
-        }
-        else
-        {
-        }
+        // cout << "NOT IMPLEMENTED" << endl;
+        // assert(false);
+        // exit(1);
+        vector<int> subshou(shou.begin(), shou.begin() + N);
+        int ans = repeated_and_amari_cycle(M, subshou);
+        return ans;
     }
 
     /*
@@ -594,11 +591,25 @@ int service(const int N, const int M)
     return 1;
 }
 
+// ✅
 void test_service()
 {
     assert(service(58, 88) == 43);
     assert(service(57, 88) == 4);
     assert(service(5, 88) == 80);
+    assert(service(6, 88) == 11);
+}
+
+void test_service2()
+{
+    assert(service(1, 2) == 1);
+    assert(service(2, 7) == 0);
+    // cout << "1000000000000000000" << endl;
+    // int a = 1000000000000000000; // long はちゃんとこの量を取れている。
+    // cout << a << endl;
+    // cout << service(1000000000000000000, 9997) << endl;
+    // 9629 が出てしまった。
+    assert(service(1000000000000000000, 9997) == 9015);
 }
 signed main(signed argc, char *argv[])
 {
@@ -607,7 +618,8 @@ signed main(signed argc, char *argv[])
     // test_repeated_mod_times();
 
     // service(10, 88);
-    test_service();
+    // test_service();
+    test_service2();
 
     // long long N;
     // int M;
