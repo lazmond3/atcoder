@@ -692,6 +692,8 @@ void test_service2()
     eq_assert(service(10002, 9997), 6991, "service(10002, 9997)");
     eq_assert(service(10102, 9997), 56, "service(10102, 9997)");
     eq_assert(service(10152, 9997), 8928, "service(10152, 9997)");
+    eq_assert(service(10172, 9997), 8028, "service(10172, 9997)");
+    eq_assert(service(10200, 9997), 5663, "service(10200, 9997)");
     eq_assert(service(10202, 9997), 6475, "service(10202, 9997)");
     eq_assert(service(10502, 9997), 6176, "service(10502, 9997)");
 
