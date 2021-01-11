@@ -378,11 +378,14 @@ int service(const int N, const int M)
         return ans;
     }
 
-    // ここに来ることはない。
-    return 1;
+    assert("ここに来ることはない" && false);
 }
 
+#ifndef TEST
 signed main(signed argc, char *argv[])
+#else
+signed main2(signed argc, char *argv[])
+#endif
 {
     test_shou_and_repeated();
     return 0;
