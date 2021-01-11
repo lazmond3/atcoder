@@ -87,9 +87,9 @@ void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ con
 // 疑問: 0.250 のようなケースに対しては、どうする？
 // 1 / 3 = 0.3333 というケースでは、 shou = 3,  repeated  = [3] を作成。
 // 1 / 4 = 0.250  というケースでは、 shou = 025 repeated  = [0] を作成する。
-void shou_and_repeated(const int M,
-                       /*ref out*/ vector<int> &shou,
-                       /*ref out*/ vector<int> &repeated)
+void generate_series(const int M,
+                     /*ref out*/ vector<int> &shou,
+                     /*ref out*/ vector<int> &repeated)
 {
     set<int> already_seen_amari;
     int now_num = M;
@@ -147,19 +147,19 @@ void test_shou_and_repeated()
 {
     vector<int> shou_4;
     vector<int> repeated_4;
-    shou_and_repeated(4, shou_4, repeated_4);
+    generate_series(4, shou_4, repeated_4);
     show_vector(shou_4, "shou_4");         // 2 5 0
     show_vector(repeated_4, "repeated_4"); // 0
 
     vector<int> shou_13;
     vector<int> repeated_13;
-    shou_and_repeated(13, shou_13, repeated_13);
+    generate_series(13, shou_13, repeated_13);
     show_vector(shou_13, "shou_13");         // 0,7,6,9,2,3,
     show_vector(repeated_13, "repeated_13"); // 0,7,6,9,2,3,
 
     vector<int> shou_2;
     vector<int> repeated_2;
-    shou_and_repeated(2, shou_2, repeated_2);
+    generate_series(2, shou_2, repeated_2);
     show_vector(shou_2, "shou_2");         // 5 0
     show_vector(repeated_2, "repeated_2"); // 0
 }
@@ -280,9 +280,9 @@ int service(const int N, const int M)
     int _N = N;
     vector<int> shou, repeated;
     vector<int> amari_vector;
-    shou_and_repeated(/*const int*/ M,
-                      /*ref out*/ shou,
-                      /*ref out*/ repeated);
+    generate_series(/*const int*/ M,
+                    /*ref out*/ shou,
+                    /*ref out*/ repeated);
 
     // repeated　をわるあまりの巡回
     // repeated amari loop == 0 というのは、なぜ？
