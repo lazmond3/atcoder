@@ -5,8 +5,10 @@
 #include <set>
 #include <algorithm>
 #include <cassert>
+#include <cstring>
 using namespace std;
-const bool debug = false;
+bool debug = false;
+
 // const bool debug = true;
 const bool seg_debug = false;
 // const bool debug = false;
@@ -26,6 +28,8 @@ const bool detail_debug = false;
     python のテスト機能を活用したい。
 
     oj でやる。oj でやるとき、どういう流れでやるか考えておきたい。
+
+    環境変数でテストかどうか決める.
 */
 /* ---------------------------------------------------------------------------------- */
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
@@ -383,8 +387,14 @@ signed main(signed argc, char *argv[])
 signed main2(signed argc, char *argv[])
 #endif
 {
-    test_shou_and_repeated();
-    return 0;
+    const char *DEBUG_p = std::getenv("DEBUG");
+    debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) != 0;
+
+    if (debug)
+    {
+        test_shou_and_repeated();
+        return 0;
+    }
 
     long long N;
     int M;
