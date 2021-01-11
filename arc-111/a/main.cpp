@@ -94,7 +94,6 @@ void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ con
 // 1 / 4 = 0.250  というケースでは、 shou = 025 repeated  = [0] を作成する。
 void shou_and_repeated(const int M,
                        /*ref out*/ vector<int> &shou,
-                       /*ref out*/ vector<int> &amari_vector,
                        /*ref out*/ vector<int> &repeated)
 {
     set<int> already_seen_amari;
@@ -106,7 +105,7 @@ void shou_and_repeated(const int M,
     vector<int> what_is_shou_for_amari(M + 1);
 
     shou.resize(0);
-    amari_vector.resize(0);
+    vector<int> amari_vector;
     repeated.resize(0);
 
     while (true)
@@ -152,28 +151,22 @@ void shou_and_repeated(const int M,
 void test_shou_and_repeated()
 {
     vector<int> shou_4;
-    vector<int> amari_vector_4;
     vector<int> repeated_4;
-    shou_and_repeated(4, shou_4, amari_vector_4, repeated_4);
-    show_vector(shou_4, "shou_4");                 // 2 5 0
-    show_vector(amari_vector_4, "amari_vector_4"); // 1 2 0
-    show_vector(repeated_4, "repeated_4");         // 0
+    shou_and_repeated(4, shou_4, repeated_4);
+    show_vector(shou_4, "shou_4");         // 2 5 0
+    show_vector(repeated_4, "repeated_4"); // 0
 
     vector<int> shou_13;
-    vector<int> amari_vector_13;
     vector<int> repeated_13;
-    shou_and_repeated(13, shou_13, amari_vector_13, repeated_13);
-    show_vector(shou_13, "shou_13");                 // 0,7,6,9,2,3,
-    show_vector(amari_vector_13, "amari_vector_13"); // 1,10,9,12,3,4,
-    show_vector(repeated_13, "repeated_13");         // 0,7,6,9,2,3,
+    shou_and_repeated(13, shou_13, repeated_13);
+    show_vector(shou_13, "shou_13");         // 0,7,6,9,2,3,
+    show_vector(repeated_13, "repeated_13"); // 0,7,6,9,2,3,
 
     vector<int> shou_2;
-    vector<int> amari_vector_2;
     vector<int> repeated_2;
-    shou_and_repeated(2, shou_2, amari_vector_2, repeated_2);
-    show_vector(shou_2, "shou_2");                 // 5 0
-    show_vector(amari_vector_2, "amari_vector_2"); // 1 0
-    show_vector(repeated_2, "repeated_2");         // 0
+    shou_and_repeated(2, shou_2, repeated_2);
+    show_vector(shou_2, "shou_2");         // 5 0
+    show_vector(repeated_2, "repeated_2"); // 0
 }
 
 // repeated repeated_with_amari を M で割ったあまりを計算する。
@@ -294,7 +287,6 @@ int service(const int N, const int M)
     vector<int> amari_vector;
     shou_and_repeated(/*const int*/ M,
                       /*ref out*/ shou,
-                      /*ref out*/ amari_vector,
                       /*ref out*/ repeated);
 
     // repeated　をわるあまりの巡回
