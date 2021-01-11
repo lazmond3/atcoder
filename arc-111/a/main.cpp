@@ -157,8 +157,8 @@ void test_shou_and_repeated()
 }
 
 // repeated repeated_with_amari を M で割ったあまりを計算する。
-int repeated_and_amari_cycle(const int M,
-                             /*const ref in*/ const vector<int> &target_vec) // repeated とは限られず、先頭にあまりが付加した形になる。
+int calc_amari_for_target_vec(const int M,
+                              /*const ref in*/ const vector<int> &target_vec) // repeated とは限られず、先頭にあまりが付加した形になる。
 {
     int i = 0;
 
@@ -238,8 +238,8 @@ void repeated_mod_times(const int M,
         start_vec.push_back(r);
     }
 
-    amari = repeated_and_amari_cycle(/*const int*/ M,
-                                     /*const ref in*/ start_vec);
+    amari = calc_amari_for_target_vec(/*const int*/ M,
+                                      /*const ref in*/ start_vec);
 
     vector<int> not_used_amari_vector;
 
@@ -257,7 +257,7 @@ void repeated_mod_times(const int M,
         for (auto r : repeated)
             next_repeated.push_back(r);
 
-        amari = repeated_and_amari_cycle(
+        amari = calc_amari_for_target_vec(
             /*const int*/ M,
             /*const ref in*/ next_repeated);
     }
@@ -295,8 +295,8 @@ int service(const int N, const int M)
         */
     }
 
-    int initial_amari = repeated_and_amari_cycle(M,
-                                                 shou);
+    int initial_amari = calc_amari_for_target_vec(M,
+                                                  shou);
 
     // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
     repeated_mod_times(/*const int*/ M,
@@ -359,7 +359,7 @@ int service(const int N, const int M)
             show_vector(concated_vec_for_last_amari, "concated vec for last amari");
         }
 
-        int ans = repeated_and_amari_cycle(M, concated_vec_for_last_amari);
+        int ans = calc_amari_for_target_vec(M, concated_vec_for_last_amari);
 
         return ans;
     }
@@ -367,7 +367,7 @@ int service(const int N, const int M)
     {
         // shou の一部分を取得する。 ( N文字のみ )
         vector<int> subshou(shou.begin(), shou.begin() + N); // 0.25 , N == 1 だと、 2 になる。
-        int ans = repeated_and_amari_cycle(M, subshou);
+        int ans = calc_amari_for_target_vec(M, subshou);
         return ans;
     }
 
