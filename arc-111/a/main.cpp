@@ -340,6 +340,8 @@ int service(const int N, const int M)
             last_repeated_set_amari = amari_series_for_repeated_set[last_repeated_set_idx - 1];
         }
 
+        // ざっくりこの辺を修正すればいい気がする。
+
         // concat が必要
         auto concated_vec_for_last_amari = num_to_vector(last_repeated_set_amari);
 
