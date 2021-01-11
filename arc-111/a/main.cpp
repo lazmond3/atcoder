@@ -6,11 +6,14 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-const bool debug = true;
+const bool debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
 
+/*
+    myassert で赤文字で出したりしたい。
+*/
 // for debug
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
 {
@@ -364,13 +367,13 @@ int service(const int N, const int M)
                       /*ref out*/ what_is_shou_for_amari,
                       /*ref out*/ repeated);
 
-    vector<int> amari_vector_repeated;
     repeated_and_amari_cycle(
         /*const int*/ M,
         /*const ref in*/ repeated);
 
     // repeated　をわるあまりの巡回
     vector<int> repeated_amari_loop;
+    vector<int> &amari_vector_repeated = repeated_amari_loop;
 
     // shou に対する イニシャルあまり問題
     if (debug)
@@ -384,6 +387,7 @@ int service(const int N, const int M)
 
     int initial_amari = repeated_and_amari_cycle(M,
                                                  shou);
+
     repeated_mod_times(/*const int*/ M,
                        /*const int*/ initial_amari,
                        /*out*/ repeated_amari_loop,
@@ -396,6 +400,70 @@ int service(const int N, const int M)
         /*
             28,20,12,4,84,76,68,60,52,44,36,
         */
+    }
+
+    if (N > shou.size())
+    {
+        _N -= shou.size();
+
+        // cout << "here off idx amari suze" << endl;
+        int repeated_circular_size = repeated_amari_loop.size();
+        // cout << "here off idx amari" << endl;
+        int _repeated_circular_amari = _N % repeated_circular_size;
+        // cout << "here off idx" << endl;
+        int last_repeated_set_idx = _repeated_circular_amari / repeated.size();
+        // cout << "here off: _repeated_circular_amari: " << _repeated_circular_amari << endl;
+        int last_repeated_set_offset = _repeated_circular_amari % repeated.size();
+        // cout << "here" << endl;
+
+        if (debug)
+        {
+            show_vector(amari_vector_repeated, "amari vector repeated [before segfo]");
+            cout << flush;
+        }
+
+        int last_repeated_set_amari = 0;
+        if (last_repeated_set_idx == 0)
+        {
+            // cout << "before: here: last_repeated_set_amari" << endl
+            //      << flush;
+            if (debug)
+            {
+                show_vector(amari_vector_repeated, "amari vector repeated [before segfo]");
+                cout << flush;
+            }
+            last_repeated_set_amari = amari_vector_repeated[amari_vector_repeated.size() - 1];
+            // cout << "here: last_repeated_set_amari" << endl;
+        }
+        else
+        {
+            // cout << "before here: last_repeated_set_amari" << endl;
+            last_repeated_set_amari = amari_vector_repeated[last_repeated_set_idx - 1];
+            // cout << "here: last_repeated_set_amari" << endl;
+        }
+        // concat が必要
+        auto concated_vec_for_last_amari = num_to_vector(last_repeated_set_amari);
+
+        // このoffset ってなんだっけ
+        vector<int> repeated_last_used(repeated.begin(), repeated.begin() + last_repeated_set_offset);
+        for (auto rlu : repeated_last_used)
+        {
+            concated_vec_for_last_amari.push_back(rlu);
+        }
+        int ans = repeated_and_amari_cycle(M, concated_vec_for_last_amari);
+        return ans;
+    }
+    else
+    {
+        cout << "NOT IMPLEMENTED" << endl;
+        assert(false);
+        exit(1);
+        if (N == shou.size())
+        {
+        }
+        else
+        {
+        }
     }
 
     /*
@@ -526,13 +594,20 @@ int service(const int N, const int M)
     return 1;
 }
 
+void test_service()
+{
+    assert(service(58, 88) == 43);
+    assert(service(57, 88) == 4);
+    assert(service(5, 88) == 80);
+}
 signed main(signed argc, char *argv[])
 {
     // test_shou_and_repeated();
     // test_repeated_and_amari_cycle();
     // test_repeated_mod_times();
 
-    service(10, 88);
+    // service(10, 88);
+    test_service();
 
     // long long N;
     // int M;
