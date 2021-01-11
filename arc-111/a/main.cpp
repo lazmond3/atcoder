@@ -234,7 +234,7 @@ vector<int> num_to_vector(int n)
 // times の代わりに、repeated set に対するあまりの循環を計算する関数
 // これ結構大変じゃない？
 void generate_amari_series_for_repeated_set(const int M,
-                                            const int start_amari,
+                                            const int initial_amari_for_shou,
                                             /*ref out*/ vector<int> &amari_vector, // 名前が悪い気がする。 repeated_amari_repeated とか
                                             /*const ref in*/ const vector<int> &repeated)
 {
@@ -242,16 +242,14 @@ void generate_amari_series_for_repeated_set(const int M,
     int amari = 0;
     set<int> seen_amari;
 
-    vector<int> start_vec = num_to_vector(start_amari);
+    vector<int> initial_amari_for_shou_vec = num_to_vector(initial_amari_for_shou);
     for (auto r : repeated)
     {
-        start_vec.push_back(r);
+        initial_amari_for_shou_vec.push_back(r);
     }
 
     amari = calc_amari_for_target_vec(/*const int*/ M,
-                                      /*const ref in*/ start_vec);
-
-    vector<int> not_used_amari_vector;
+                                      /*const ref in*/ initial_amari_for_shou_vec);
 
     while (true)
     {
@@ -286,11 +284,7 @@ int service(const int N, const int M)
                     /*ref out*/ shou,
                     /*ref out*/ repeated);
 
-    // repeated　をわるあまりの巡回
-    // repeated amari loop == 0 というのは、なぜ？
-    //   ->
     vector<int> repeated_amari_loop;
-    vector<int> &amari_vector_repeated = repeated_amari_loop;
 
     // shou に対する イニシャルあまり問題
     if (debug)
@@ -304,12 +298,12 @@ int service(const int N, const int M)
         */
     }
 
-    int initial_amari = calc_amari_for_target_vec(M,
-                                                  shou);
+    int initial_amari_for_shou = calc_amari_for_target_vec(M,
+                                                           shou);
 
     // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
     generate_amari_series_for_repeated_set(/*const int*/ M,
-                                           /*const int*/ initial_amari,
+                                           /*const int*/ initial_amari_for_shou,
                                            /*out*/ repeated_amari_loop,
                                            /*const ref in*/ repeated);
 
@@ -342,11 +336,11 @@ int service(const int N, const int M)
         int last_repeated_set_amari = 0;
         if (last_repeated_set_idx == 0)
         {
-            last_repeated_set_amari = amari_vector_repeated[amari_vector_repeated.size() - 1];
+            last_repeated_set_amari = repeated_amari_loop[repeated_amari_loop.size() - 1];
         }
         else
         {
-            last_repeated_set_amari = amari_vector_repeated[last_repeated_set_idx - 1];
+            last_repeated_set_amari = repeated_amari_loop[last_repeated_set_idx - 1];
         }
         // concat が必要
         auto concated_vec_for_last_amari = num_to_vector(last_repeated_set_amari);
