@@ -20,7 +20,9 @@ const bool detail_debug = false;
 //         eq_show(e, a);                                                                               \
 //         (__builtin_expect(!(e == a), 0) ? __assert_rtn(__func__, __FILE__, __LINE__, #e) : (void)0); \
 //     } while (0)
-
+/*
+    保存したら make が走るようにしたい。
+*/
 /*
     myassert で赤文字で出したりしたい。
 */
