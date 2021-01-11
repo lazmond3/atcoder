@@ -423,36 +423,6 @@ void repeated_mod_times(const int M,
     }
 }
 
-// テスト ✅
-// セグフォする。　=>  ✅
-void test_repeated_mod_times()
-{
-    // 4
-    vector<int> amari_vector_4;
-    repeated_mod_times(4, /*start_amari*/ 1, /*ref out*/ amari_vector_4, num_to_vector(0));
-    assert_vec(
-        amari_vector_4,
-        vector<int>{1});
-    // 88
-    vector<int> amari_vector_88;
-    repeated_mod_times(88, /*start_amari*/ 0, /*ref out*/ amari_vector_88, num_to_vector(36));
-    assert_vec(
-        amari_vector_88,
-        vector<int>{36, 28, 20, 12, 4, 84, 76, 68, 60, 52, 44});
-    // 23
-    vector<int> amari_vector_23;
-    repeated_mod_times(23, /*start_amari*/ 0, /*ref out*/ amari_vector_23, num_to_vector(36));
-    assert_vec(
-        amari_vector_23,
-        vector<int>{13, 2, 6, 15, 18, 19, 4, 22, 5, 7, 0});
-    // 17
-    vector<int> amari_vector_17;
-    repeated_mod_times(17, /*start_amari*/ 0, /*ref out*/ amari_vector_17, num_to_vector(36));
-    assert_vec(
-        amari_vector_17,
-        vector<int>{2, 15, 6, 7, 5, 9, 1, 0});
-}
-
 int service(const int N, const int M)
 {
     if (debug)
@@ -489,44 +459,14 @@ int service(const int N, const int M)
     int initial_amari = repeated_and_amari_cycle(M,
                                                  shou);
 
-    if (debug)
-    {
-        cout << "   -- before call mod times -- " << endl;
-        cout << "[service] initial amari: " << initial_amari << endl;
-        show_vector(repeated_amari_loop, "repeated_amari_loop"); // 4 のときなど、これが .size() == 0 になる。
-        show_vector(repeated, "repeated");
-    }
-
-    // shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき?
+    // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
     repeated_mod_times(/*const int*/ M,
                        /*const int*/ initial_amari,
                        /*out*/ repeated_amari_loop,
                        /*const ref in*/ repeated);
 
-    if (debug)
-    {
-        cout << "   -- after call mod times --- " << endl;
-        cout << "[service] repeated amari loop: size: " << repeated_amari_loop.size() << endl;
-
-        show_vector(repeated_amari_loop, "repeated amari loop2");
-    }
-
-    // N は桁数を意味する。
-    if (detail_debug)
-    {
-        show_vector(repeated_amari_loop, "[service] repeated amari loop");
-        /*
-            28,20,12,4,84,76,68,60,52,44,36,
-        */
-    }
-
-    if (N > shou.size() && repeated.size() == 1 && repeated[0] == 0)
-    {
-    }
-
     if (N > shou.size())
     {
-
         _N -= shou.size();
 
         // cout << "here off idx amari suze" << endl;
@@ -554,31 +494,16 @@ int service(const int N, const int M)
         int last_repeated_set_amari = 0;
         if (last_repeated_set_idx == 0)
         {
-            if (seg_debug)
-            {
-                cout << "before: here: last_repeated_set_amari" << endl
-                     << flush;
-            }
-
-            // if (debug)
-            // {
-            //     show_vector(amari_vector_repeated, "amari vector is zero [before segfo]");
-            //     cout << flush;
-            // }
             last_repeated_set_amari = amari_vector_repeated[amari_vector_repeated.size() - 1];
-            if (seg_debug)
-
-                cout << "here: last_repeated_set_amari" << endl;
         }
         else
         {
-            // cout << "before here: last_repeated_set_amari" << endl;
             last_repeated_set_amari = amari_vector_repeated[last_repeated_set_idx - 1];
-            // cout << "here: last_repeated_set_amari" << endl;
         }
         // concat が必要
         auto concated_vec_for_last_amari = num_to_vector(last_repeated_set_amari);
-        // このoffset ってなんだっけ
+
+        // ❌ この部分が複雑
         vector<int> repeated_last_used(repeated.begin(), repeated.begin() + last_repeated_set_offset);
         for (auto rlu : repeated_last_used)
         {
@@ -594,15 +519,9 @@ int service(const int N, const int M)
             show_variable(last_repeated_set_amari, "last_repeated_set_amari");
             show_vector(concated_vec_for_last_amari, "concated vec for last amari");
         }
-        if (seg_debug)
-        {
-            cout << "before ans " << endl;
-        }
+
         int ans = repeated_and_amari_cycle(M, concated_vec_for_last_amari);
-        if (seg_debug)
-        {
-            cout << "after  ans " << endl;
-        }
+
         return ans;
     }
     else // Nが小さい場合:  N <= shou.size()
