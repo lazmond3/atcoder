@@ -7,10 +7,16 @@
 #include <cassert>
 using namespace std;
 const bool debug = true;
-const bool detail_debug = true;
+const bool detail_debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
+// #define massert(e, a)                                                                                \
+//     do                                                                                               \
+//     {                                                                                                \
+//         eq_show(e, a);                                                                               \
+//         (__builtin_expect(!(e == a), 0) ? __assert_rtn(__func__, __FILE__, __LINE__, #e) : (void)0); \
+//     } while (0)
 
 /*
     myassert で赤文字で出したりしたい。
@@ -30,6 +36,30 @@ void show_variable(const int val, const string &label)
 {
     cout << "[" << label << "]: " << endl;
     cout << val << endl;
+}
+
+void eq_assert(const int val, const int answer, const string &label)
+{
+    if (val != answer)
+    {
+
+        cout << "Assertion failed: "
+             << "(val = " << val << ", label = " << label << ", "
+             << ", answer = " << answer << ") " << endl
+             << flush;
+
+        exit(1);
+    }
+}
+void eq_show(const int val, const int answer)
+{
+    if (val != answer)
+    {
+
+        cout << "Assertion failed: "
+             << "(val = " << val << ", answer = " << answer << ") " << endl
+             << flush;
+    }
 }
 // for test
 void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ const vector<int> &answer)
@@ -443,11 +473,11 @@ int service(const int N, const int M)
         {
             // cout << "before: here: last_repeated_set_amari" << endl
             //      << flush;
-            if (debug)
-            {
-                show_vector(amari_vector_repeated, "amari vector is zero [before segfo]");
-                cout << flush;
-            }
+            // if (debug)
+            // {
+            //     show_vector(amari_vector_repeated, "amari vector is zero [before segfo]");
+            //     cout << flush;
+            // }
             last_repeated_set_amari = amari_vector_repeated[amari_vector_repeated.size() - 1];
             // cout << "here: last_repeated_set_amari" << endl;
         }
@@ -650,10 +680,24 @@ void test_service2()
     // cout << a << endl;
     // cout << service(1000000000000000000, 9997) << endl;
     // 9629 が出てしまった。..
-    assert(service(10000, 9997) == 9767);
-    assert(service(100000, 9997) == 3428);
-    assert(service(1000000, 9997) == 1644);
-    assert(service(10000000, 9997) == 4580);
+    // eq_assert(service(10000, 9997), 9767);
+    // eq_assert(service(10001, 9997), 7697);
+    // eq_assert(service(10002, 9997), 6991);
+    // eq_assert(service(10102, 9997), 56);
+    // eq_assert(service(10152, 9997), 8928);
+    // eq_assert(service(10202, 9997), 6475);
+    // eq_assert(service(10502, 9997), 6176);
+    eq_assert(service(10001, 9997), 7697, "service(10001, 9997)");
+    eq_assert(service(10000, 9997), 9767, "service(10000, 9997)");
+    eq_assert(service(10002, 9997), 6991, "service(10002, 9997)");
+    eq_assert(service(10102, 9997), 56, "service(10102, 9997)");
+    eq_assert(service(10152, 9997), 8928, "service(10152, 9997)");
+    eq_assert(service(10202, 9997), 6475, "service(10202, 9997)");
+    eq_assert(service(10502, 9997), 6176, "service(10502, 9997)");
+
+    // eq_assert(service(100000, 9997), 3428); //
+    // eq_assert(service(1000000, 9997), 1644);
+    // eq_assert(service(10000000, 9997), 4580);
     // assert(service(1000000000000000000, 9997) == 9015);
 }
 signed main(signed argc, char *argv[])
