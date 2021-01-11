@@ -47,7 +47,8 @@ def lst_division_for_calc_amari(f, lst, m):
         print(f"shou: {shou}, amarilst: {result_amari_lst} amari: {amari}")
         print(f"amari: {amari}")
     f.write(str(amari) + "\n")
-        
+
+# この関数は、 10**N / M をした結果の整数列を生成する。
 def make_str_lst(m, count):
     str_lst = []
     amari = 1
@@ -73,17 +74,8 @@ def make_str_lst(m, count):
 
 def main():
     m = int(sys.argv[1])
-    # count = int(sys.argv[2])+1
-
-    
     # 直接確認するので遅いが、確実な関数を作る。
-
     # 割り算の確認
-    # count = 1000
-
-
-    # if debug:
-    #     print(f"str lst: {str_lst}")
     
     for i in range(int(sys.argv[3]), int(sys.argv[4])):
         if debug:
@@ -95,19 +87,15 @@ def main():
             with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.in", "w") as fin:
                 fin.write(f"{i} {m}\n")
         str_lst = make_str_lst(m , i)
+        if debug:
+            print(f"str lst is ... {str_lst}")
+
         if not debug:
             with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.out", "w") as fout:            
                 lst_division_for_calc_amari(fout, str_lst, m)
         else:
             with open("/dev/null" , "w") as fout2:
                 lst_division_for_calc_amari(fout2, str_lst, m)
-
-
-    # target_str = str(1/m)[2:][:n]
-    # target = int(target_str)
-
-    # print(target)
-    # print("answer: " , target % m)
 
 if __name__ == "__main__":
     main()
