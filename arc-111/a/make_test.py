@@ -1,6 +1,10 @@
 import sys,os
-debug = False
+debug = True
 
+# ❌ 4 でわるときの答えが間違えている
+# 例: 3 4 => int(10**3 / 4) % 4 正解は250 % 4 == 2　だけど 1 と出てしまう
+# 例: 1 4 でも、 0.2 => 2 / 4 == 0 だから、 0を4で割ったあまりは0になるはずだが、いまは2が出てしまっている。
+# n が小さい領域で失敗している気がする。
 if len(sys.argv) < 5:
     print("python3 make_test.py <m> directory_name, from, to")
     exit(0)
@@ -9,6 +13,8 @@ def lst_division_for_calc_amari(f, lst, m):
     i = 0
     amari = lst[i]
     i += 1
+
+    if (len(lst) < 10, )
 
     seen_amari = set()
     # out
@@ -39,7 +45,7 @@ def lst_division_for_calc_amari(f, lst, m):
     amari = amari % m
     if debug:
         print(f"shou: {shou}, amarilst: {result_amari_lst} amari: {amari}")
-    print(f"amari: {amari}")
+        print(f"amari: {amari}")
     f.write(str(amari) + "\n")
         
 def make_str_lst(m, count):
@@ -80,6 +86,8 @@ def main():
     #     print(f"str lst: {str_lst}")
     
     for i in range(int(sys.argv[3]), int(sys.argv[4])):
+        if debug:
+            print( "=== i : ", i, " ====== ")
         if not os.path.exists(f"test-{sys.argv[2]}-{m}"):
             os.mkdir(f"test-{sys.argv[2]}-{m}")
 
