@@ -461,8 +461,11 @@ int service(const int N, const int M)
 
         // cout << "here off idx amari suze" << endl;
         int repeated_circular_size = repeated_amari_loop.size();
+
         // cout << "here off idx amari" << endl;
-        int _repeated_circular_amari = _N % repeated_circular_size;
+        // ここの部分が間違っていた。
+        int _repeated_circular_amari = _N % (repeated_circular_size * repeated.size());
+
         // cout << "here off idx" << endl;
         int last_repeated_set_idx = _repeated_circular_amari / repeated.size();
         // cout << "here off: _repeated_circular_amari: " << _repeated_circular_amari << endl;
@@ -703,6 +706,15 @@ void test_service2()
     // eq_assert(service(10000000, 9997), 4580);
     // assert(service(1000000000000000000, 9997) == 9015);
 }
+void test_service3()
+{
+    eq_assert(service(224, 88), 3, "service(224, 88)");
+    /*
+        224 ケタなのだが、
+        224 - 5 = 219
+        219 % (2 * 11) = 21
+    */
+}
 signed main(signed argc, char *argv[])
 {
     // test_shou_and_repeated();
@@ -712,6 +724,8 @@ signed main(signed argc, char *argv[])
     // service(10, 88);
     // test_service();
     // test_service2();
+    // test_service3();
+    // return 0;
 
     long long N;
     int M;
