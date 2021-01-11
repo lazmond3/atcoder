@@ -83,10 +83,10 @@ def main():
         if not os.path.exists(f"test-{sys.argv[2]}-{m}"):
             os.mkdir(f"test-{sys.argv[2]}-{m}")
 
-        with open(f"test-{sys.argv[2]}-{m}/sample-{i}.in", "w") as fin:
+        with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.in", "w") as fin:
             fin.write(f"{i} {m}\n")
         str_lst = make_str_lst(m , i)
-        with open(f"test-{sys.argv[2]}-{m}/sample-{i}.out", "w") as fout:            
+        with open(f"test-{sys.argv[2]}-{m}/sample-{i:04}.out", "w") as fout:            
             lst_division_for_calc_amari(fout, str_lst, m)
 
 
