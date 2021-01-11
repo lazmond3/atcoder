@@ -54,7 +54,8 @@ def make_str_lst(m, count):
     amari = 1
     count += 1
 
-    while amari != 0 and count != 0:
+    # while amari != 0 and count != 0:
+    while count != 0:
         if amari >= m:
             div =amari //m
             if debug:
