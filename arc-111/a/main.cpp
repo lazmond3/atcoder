@@ -6,7 +6,8 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-const bool debug = false;
+const bool debug = true;
+const bool detail_debug = true;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
@@ -23,6 +24,12 @@ void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
         cout << v << ",";
     }
     cout << endl;
+}
+
+void show_variable(const int val, const string &label)
+{
+    cout << "[" << label << "]: " << endl;
+    cout << val << endl;
 }
 // for test
 void assert_vec(/*const ref in*/ const vector<int> &target, /*const ref in*/ const vector<int> &answer)
@@ -285,6 +292,7 @@ void test_repeated_and_amari_cycle()
 */
 //
 // テスト ✅
+// times の代わりに、repeated set に対するあまりの循環を計算する関数
 void repeated_mod_times(const int M,
                         const int start_amari,
                         /*ref out*/ vector<int> &amari_vector,
@@ -303,11 +311,11 @@ void repeated_mod_times(const int M,
     amari = repeated_and_amari_cycle(/*const int*/ M,
                                      /*const ref in*/ start_vec);
 
-    if (debug)
-    {
-        show_vector(start_vec, "[repeated mod times] start_vec:");
-        cout << "amari: " << amari << endl;
-    }
+    // if (debug)
+    // {
+    //     show_vector(start_vec, "[repeated mod times] start_vec:");
+    //     cout << "amari: " << amari << endl;
+    // }
     vector<int> not_used_amari_vector;
     // これを削除した。
     // amari_vector.push_back(amari);
@@ -333,7 +341,7 @@ void repeated_mod_times(const int M,
 }
 
 // テスト ✅
-// セグフォする。
+// セグフォする。　=>  ✅
 void test_repeated_mod_times()
 {
     // 88
@@ -358,6 +366,10 @@ void test_repeated_mod_times()
 
 int service(const int N, const int M)
 {
+    if (debug)
+    {
+        cout << "--------- N: " << N << "------ M: " << M << "---------" << endl;
+    }
     int _N = N;
     vector<int> shou, repeated, what_is_shou_for_amari;
     vector<int> amari_vector;
@@ -367,10 +379,6 @@ int service(const int N, const int M)
                       /*ref out*/ what_is_shou_for_amari,
                       /*ref out*/ repeated);
 
-    repeated_and_amari_cycle(
-        /*const int*/ M,
-        /*const ref in*/ repeated);
-
     // repeated　をわるあまりの巡回
     vector<int> repeated_amari_loop;
     vector<int> &amari_vector_repeated = repeated_amari_loop;
@@ -378,7 +386,9 @@ int service(const int N, const int M)
     // shou に対する イニシャルあまり問題
     if (debug)
     {
-        show_vector(shou, "service shou show: ");
+        show_vector(repeated, "[service] repeated: ");
+        show_vector(shou, "[service] shou: ");
+        show_variable(shou.size(), "[service] shou size: ");
         /*
             [service shou show: ]: 
             0,1,1,3,6,
@@ -388,13 +398,25 @@ int service(const int N, const int M)
     int initial_amari = repeated_and_amari_cycle(M,
                                                  shou);
 
+    if (debug)
+    {
+        cout << "[service] initial amari: " << initial_amari << endl;
+    }
+
     repeated_mod_times(/*const int*/ M,
                        /*const int*/ initial_amari,
                        /*out*/ repeated_amari_loop,
                        /*const ref in*/ repeated);
 
-    // N は桁数を意味する。
     if (debug)
+    {
+        cout << "[service] repeated amari loop: size: " << repeated_amari_loop.size() << endl;
+
+        // show_vector(repeated_amari_loop, );
+    }
+
+    // N は桁数を意味する。
+    if (detail_debug)
     {
         show_vector(repeated_amari_loop, "[service] repeated amari loop");
         /*
@@ -416,12 +438,6 @@ int service(const int N, const int M)
         int last_repeated_set_offset = _repeated_circular_amari % repeated.size();
         // cout << "here" << endl;
 
-        if (debug)
-        {
-            show_vector(amari_vector_repeated, "amari vector repeated [before segfo]");
-            cout << flush;
-        }
-
         int last_repeated_set_amari = 0;
         if (last_repeated_set_idx == 0)
         {
@@ -429,7 +445,7 @@ int service(const int N, const int M)
             //      << flush;
             if (debug)
             {
-                show_vector(amari_vector_repeated, "amari vector repeated [before segfo]");
+                show_vector(amari_vector_repeated, "amari vector is zero [before segfo]");
                 cout << flush;
             }
             last_repeated_set_amari = amari_vector_repeated[amari_vector_repeated.size() - 1];
@@ -443,12 +459,21 @@ int service(const int N, const int M)
         }
         // concat が必要
         auto concated_vec_for_last_amari = num_to_vector(last_repeated_set_amari);
-
         // このoffset ってなんだっけ
         vector<int> repeated_last_used(repeated.begin(), repeated.begin() + last_repeated_set_offset);
         for (auto rlu : repeated_last_used)
         {
             concated_vec_for_last_amari.push_back(rlu);
+        }
+        if (debug)
+        {
+            cout << "-----------------" << endl;
+            show_variable(repeated_circular_size, "repeated_circular_size");
+            show_variable(_repeated_circular_amari, "_repeated_circular_amari");
+            show_variable(last_repeated_set_idx, "last_repeated_set_idx");
+            show_variable(last_repeated_set_offset, "last_repeated_set_offset");
+            show_variable(last_repeated_set_amari, "last_repeated_set_amari");
+            show_vector(concated_vec_for_last_amari, "concated vec for last amari");
         }
         int ans = repeated_and_amari_cycle(M, concated_vec_for_last_amari);
         return ans;
@@ -596,20 +621,40 @@ void test_service()
 {
     assert(service(58, 88) == 43);
     assert(service(57, 88) == 4);
+    assert(service(1, 2) == 1);
+    assert(service(2, 7) == 0);
     assert(service(5, 88) == 80);
     assert(service(6, 88) == 11);
+    assert(service(10, 88) == 27);
+    assert(service(30, 88) == 19);
+    assert(service(31, 88) == 20);
+    assert(service(32, 88) == 27);
+    assert(service(33, 88) == 12);
+    assert(service(34, 88) == 35);
+    assert(service(35, 88) == 4);
 }
 
 void test_service2()
 {
-    assert(service(1, 2) == 1);
-    assert(service(2, 7) == 0);
+    assert(service(5, 13) == 9);
+    assert(service(6, 13) == 2);
+    assert(service(7, 13) == 7);
+    assert(service(8, 13) == 12);
+    assert(service(9, 13) == 9);
+    assert(service(10, 13) == 8);
+    /*[[service] repeated: ]: 
+        0,7,6,9,2,3,
+    s*/
     // cout << "1000000000000000000" << endl;
     // int a = 1000000000000000000; // long はちゃんとこの量を取れている。
     // cout << a << endl;
     // cout << service(1000000000000000000, 9997) << endl;
-    // 9629 が出てしまった。
-    assert(service(1000000000000000000, 9997) == 9015);
+    // 9629 が出てしまった。..
+    assert(service(10000, 9997) == 9767);
+    assert(service(100000, 9997) == 3428);
+    assert(service(1000000, 9997) == 1644);
+    assert(service(10000000, 9997) == 4580);
+    // assert(service(1000000000000000000, 9997) == 9015);
 }
 signed main(signed argc, char *argv[])
 {
