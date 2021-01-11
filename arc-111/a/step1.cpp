@@ -124,7 +124,7 @@ void calc_vec(int M,
     cout << endl;
     cout << "repeat_string : ";
     // auto p = .find(last_amari);
-    auto p = std::find(ALL(amari_vector), last_amari);
+    auto p = tあstsdﾆ8::find(ALL(amari_vector), last_amari);
     if (amari_vector.end() != p)
     {
         for (auto v = p /* mid point*/; v < amari_vector.end(); v++)
