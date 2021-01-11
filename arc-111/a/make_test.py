@@ -1,5 +1,5 @@
 import sys,os
-debug = True
+debug = False
 
 # ❌ 4 でわるときの答えが間違えている
 # 例: 3 4 => int(10**3 / 4) % 4 正解は250 % 4 == 2　だけど 1 と出てしまう
