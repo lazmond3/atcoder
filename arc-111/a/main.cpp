@@ -6,8 +6,9 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-// const bool debug = true;
 const bool debug = false;
+const bool seg_debug = false;
+// const bool debug = false;
 const bool detail_debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
@@ -245,6 +246,18 @@ int repeated_and_amari_cycle(const int M,
                              /*const ref in*/ const vector<int> &repeated_with_amari) // repeated とは限られず、先頭にあまりが付加した形になる。
 {
     int i = 0;
+
+    if (seg_debug)
+    {
+        cout << "in repeated amari cycle";
+        show_vector(repeated_with_amari, "repeated with amari"); // 割り切れた時？
+    }
+
+    // 提出のときにREした原因 例: eq_assert(service(78, 13), 0, "service(78, 13)");
+    if (repeated_with_amari.size() == 0)
+    {
+        return 0;
+    }
     int target = repeated_with_amari[i++];
 
     while (i < repeated_with_amari.size())
@@ -466,24 +479,39 @@ int service(const int N, const int M)
         // ここの部分が間違っていた。
         int _repeated_circular_amari = _N % (repeated_circular_size * repeated.size());
 
-        // cout << "here off idx" << endl;
+        if (seg_debug)
+            cout << "here off idx" << endl;
         int last_repeated_set_idx = _repeated_circular_amari / repeated.size();
-        // cout << "here off: _repeated_circular_amari: " << _repeated_circular_amari << endl;
+        if (seg_debug)
+
+            cout << "here off: _repeated_circular_amari: " << _repeated_circular_amari << endl;
         int last_repeated_set_offset = _repeated_circular_amari % repeated.size();
-        // cout << "here" << endl;
+        if (seg_debug)
+        {
+
+            cout << "here" << endl;
+
+            cout << "here: last_repeated_set_idx: " << last_repeated_set_idx << endl;
+        }
 
         int last_repeated_set_amari = 0;
         if (last_repeated_set_idx == 0)
         {
-            // cout << "before: here: last_repeated_set_amari" << endl
-            //      << flush;
+            if (seg_debug)
+            {
+                cout << "before: here: last_repeated_set_amari" << endl
+                     << flush;
+            }
+
             // if (debug)
             // {
             //     show_vector(amari_vector_repeated, "amari vector is zero [before segfo]");
             //     cout << flush;
             // }
             last_repeated_set_amari = amari_vector_repeated[amari_vector_repeated.size() - 1];
-            // cout << "here: last_repeated_set_amari" << endl;
+            if (seg_debug)
+
+                cout << "here: last_repeated_set_amari" << endl;
         }
         else
         {
@@ -509,7 +537,15 @@ int service(const int N, const int M)
             show_variable(last_repeated_set_amari, "last_repeated_set_amari");
             show_vector(concated_vec_for_last_amari, "concated vec for last amari");
         }
+        if (seg_debug)
+        {
+            cout << "before ans " << endl;
+        }
         int ans = repeated_and_amari_cycle(M, concated_vec_for_last_amari);
+        if (seg_debug)
+        {
+            cout << "after  ans " << endl;
+        }
         return ans;
     }
     else
@@ -715,6 +751,16 @@ void test_service3()
         219 % (2 * 11) = 21
     */
 }
+void test_service4()
+{
+    // expected 0 が落ちてしまう。
+    eq_assert(service(78, 13), 0, "service(78, 13)");
+    /*
+        224 ケタなのだが、
+        224 - 5 = 219
+        219 % (2 * 11) = 21
+    */
+}
 signed main(signed argc, char *argv[])
 {
     // test_shou_and_repeated();
@@ -725,6 +771,7 @@ signed main(signed argc, char *argv[])
     // test_service();
     // test_service2();
     // test_service3();
+    // test_service4();
     // return 0;
 
     long long N;
