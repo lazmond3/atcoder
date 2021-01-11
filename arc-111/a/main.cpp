@@ -23,7 +23,9 @@ const bool detail_debug = false;
     複数の値の返却のほうが楽じゃない？structとか。
     vector の vector とか。
 
-    python のテスト機能とか。
+    python のテスト機能を活用したい。
+
+    oj でやる。oj でやるとき、どういう流れでやるか考えておきたい。
 */
 /* ---------------------------------------------------------------------------------- */
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
@@ -318,22 +320,11 @@ int service(const int N, const int M)
         // ここの部分が間違っていた。
         int _repeated_circular_amari = _N % (repeated_circular_size * repeated.size());
 
-        if (seg_debug)
-            cout << "here off idx" << endl;
         int last_repeated_set_idx = _repeated_circular_amari / repeated.size();
-        if (seg_debug)
-
-            cout << "here off: _repeated_circular_amari: " << _repeated_circular_amari << endl;
         int last_repeated_set_offset = _repeated_circular_amari % repeated.size();
-        if (seg_debug)
-        {
-
-            cout << "here" << endl;
-
-            cout << "here: last_repeated_set_idx: " << last_repeated_set_idx << endl;
-        }
 
         int last_repeated_set_amari = 0;
+        // ⚡️ ここの処理が怪しい
         if (last_repeated_set_idx == 0)
         {
             last_repeated_set_amari = repeated_amari_loop[repeated_amari_loop.size() - 1];
@@ -342,6 +333,7 @@ int service(const int N, const int M)
         {
             last_repeated_set_amari = repeated_amari_loop[last_repeated_set_idx - 1];
         }
+
         // concat が必要
         auto concated_vec_for_last_amari = num_to_vector(last_repeated_set_amari);
 
