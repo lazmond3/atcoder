@@ -146,20 +146,21 @@ void shou_and_repeated(const int M,
         }
     }
 
-    if (debug)
-    {
-        show_vector(shou, "shou reset したい");
-        show_vector(repeated, "repeated amari");
-    }
-    if (shou[shou.size() - 1] == 0 && repeated.size() == 1 and repeated[0] == 0)
-    {
+    // こんなことをする必要はないのでは
+    // if (debug)
+    // {
+    //     show_vector(shou, "shou reset したい");
+    //     show_vector(repeated, "repeated amari");
+    // }
+    // if (shou[shou.size() - 1] == 0 && repeated.size() == 1 and repeated[0] == 0)
+    // {
 
-        shou.pop_back();
-        if (debug)
-        {
-            show_vector(shou, "shou reset した");
-        }
-    }
+    //     shou.pop_back();
+    //     if (debug)
+    //     {
+    //         show_vector(shou, "shou reset した");
+    //     }
+    // }
 }
 
 // ✅ checked
@@ -275,7 +276,11 @@ int repeated_and_amari_cycle(const int M,
     {
         // return
         // return 0;
+        //
+        cout << "cannot be 0 in repeaed" << endl;
+        assert(false);
     }
+
     int target = repeated_with_amari[i++];
 
     while (i < repeated_with_amari.size())
@@ -296,6 +301,7 @@ int repeated_and_amari_cycle(const int M,
             continue;
         }
     }
+
     if (target >= M)
     {
         int shou_one = target / M;
@@ -374,16 +380,17 @@ void repeated_mod_times(const int M,
     {
         cout << "[mod] repated mod: "
              << "start amari: " << start_amari << endl;
-        show_vector(start_vec, "start vec");
+        show_vector(start_vec, "start vec"); // 4 の場合、これが1,0 になる。そのため、最初のamari =
     }
     amari = repeated_and_amari_cycle(/*const int*/ M,
                                      /*const ref in*/ start_vec);
 
-    // if (debug)
-    // {
-    //     show_vector(start_vec, "[repeated mod times] start_vec:");
-    //     cout << "amari: " << amari << endl;
-    // }
+    if (debug)
+    {
+        // show_vector(start_vec, "[repeated mod times] start_vec:");
+        // cout << "amari: " << amari << endl;
+        show_variable(amari, "[repeated mod times] amari");
+    }
     vector<int> not_used_amari_vector;
     // これを削除した。
     // amari_vector.push_back(amari);
@@ -590,13 +597,19 @@ int service(const int N, const int M)
         }
         return ans;
     }
-    else
+    else // Nが小さい場合:  N <= shou.size()
     {
         // cout << "NOT IMPLEMENTED" << endl;
         // assert(false);
         // exit(1);
-        vector<int> subshou(shou.begin(), shou.begin() + N);
+        vector<int> subshou(shou.begin(), shou.begin() + N); // 0.25 , N == 1 だと、 2 になる。
         int ans = repeated_and_amari_cycle(M, subshou);
+        if (debug)
+        {
+            show_vector(shou, "shou in N <= shou.size()");
+            show_vector(subshou, "subshou in N <= shou.size()");
+            show_variable(ans, "answer in N <= shou.size()");
+        }
         return ans;
     }
 
@@ -805,7 +818,14 @@ void test_service4()
 }
 void test_service5()
 {
-    eq_assert(service(3, 4), 1, "service(3, 4)"); // but get 2
+    eq_assert(service(3, 4), 2, "service(3, 4)"); // 250 %4 = 2
+    eq_assert(service(2, 4), 1, "service(3, 4)"); // 250 %4 = 2
+    eq_assert(service(1, 4), 2, "service(1, 4)"); // 0.2 => 2 % 4
+    /*  
+        多分 n が小さい領域で失敗していて、
+        shou の計算とかをすべきではない。
+        0.2
+    */
     /*
         0.25
           250
@@ -826,8 +846,8 @@ signed main(signed argc, char *argv[])
 
     // test_repeated_mod_times();
 
-    test_service5();
-    return 0;
+    // test_service5();
+    // return 0;
 
     long long N;
     int M;
