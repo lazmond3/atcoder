@@ -6,7 +6,8 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-const bool debug = true;
+// const bool debug = true;
+const bool debug = false;
 const bool detail_debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
@@ -710,11 +711,11 @@ signed main(signed argc, char *argv[])
 
     // service(10, 88);
     // test_service();
-    test_service2();
+    // test_service2();
 
-    // long long N;
-    // int M;
-    // cin >> N >> M;
+    long long N;
+    int M;
+    cin >> N >> M;
 
-    // service(N, M);
+    cout << service(N, M) << endl;
 }
