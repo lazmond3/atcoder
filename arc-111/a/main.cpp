@@ -6,7 +6,8 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-const bool debug = false;
+// const bool debug = false;
+const bool debug = true;
 const bool seg_debug = false;
 // const bool debug = false;
 const bool detail_debug = false;
@@ -144,6 +145,21 @@ void shou_and_repeated(const int M,
             repeated.push_back(what_is_shou_for_amari[*v]);
         }
     }
+
+    if (debug)
+    {
+        show_vector(shou, "shou reset したい");
+        show_vector(repeated, "repeated amari");
+    }
+    if (shou[shou.size() - 1] == 0 && repeated.size() == 1 and repeated[0] == 0)
+    {
+
+        shou.pop_back();
+        if (debug)
+        {
+            show_vector(shou, "shou reset した");
+        }
+    }
 }
 
 // ✅ checked
@@ -254,9 +270,11 @@ int repeated_and_amari_cycle(const int M,
     }
 
     // 提出のときにREした原因 例: eq_assert(service(78, 13), 0, "service(78, 13)");
+    // 0 とは限らないので WA.
     if (repeated_with_amari.size() == 0)
     {
-        return 0;
+        // return
+        // return 0;
     }
     int target = repeated_with_amari[i++];
 
@@ -352,6 +370,12 @@ void repeated_mod_times(const int M,
         start_vec.push_back(r);
     }
 
+    if (debug)
+    {
+        cout << "[mod] repated mod: "
+             << "start amari: " << start_amari << endl;
+        show_vector(start_vec, "start vec");
+    }
     amari = repeated_and_amari_cycle(/*const int*/ M,
                                      /*const ref in*/ start_vec);
 
@@ -388,6 +412,12 @@ void repeated_mod_times(const int M,
 // セグフォする。　=>  ✅
 void test_repeated_mod_times()
 {
+    // 4
+    vector<int> amari_vector_4;
+    repeated_mod_times(4, /*start_amari*/ 1, /*ref out*/ amari_vector_4, num_to_vector(0));
+    assert_vec(
+        amari_vector_4,
+        vector<int>{1});
     // 88
     vector<int> amari_vector_88;
     repeated_mod_times(88, /*start_amari*/ 0, /*ref out*/ amari_vector_88, num_to_vector(36));
@@ -424,6 +454,8 @@ int service(const int N, const int M)
                       /*ref out*/ repeated);
 
     // repeated　をわるあまりの巡回
+    // repeated amari loop == 0 というのは、なぜ？
+    //   ->
     vector<int> repeated_amari_loop;
     vector<int> &amari_vector_repeated = repeated_amari_loop;
 
@@ -444,9 +476,13 @@ int service(const int N, const int M)
 
     if (debug)
     {
+        cout << "   -- before call mod times -- " << endl;
         cout << "[service] initial amari: " << initial_amari << endl;
+        show_vector(repeated_amari_loop, "repeated_amari_loop"); // 4 のときなど、これが .size() == 0 になる。
+        show_vector(repeated, "repeated");
     }
 
+    // shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき?
     repeated_mod_times(/*const int*/ M,
                        /*const int*/ initial_amari,
                        /*out*/ repeated_amari_loop,
@@ -454,6 +490,7 @@ int service(const int N, const int M)
 
     if (debug)
     {
+        cout << "   -- after call mod times --- " << endl;
         cout << "[service] repeated amari loop: size: " << repeated_amari_loop.size() << endl;
 
         // show_vector(repeated_amari_loop, );
@@ -468,8 +505,13 @@ int service(const int N, const int M)
         */
     }
 
+    if (N > shou.size() && repeated.size() == 1 && repeated[0] == 0)
+    {
+    }
+
     if (N > shou.size())
     {
+
         _N -= shou.size();
 
         // cout << "here off idx amari suze" << endl;
@@ -761,6 +803,15 @@ void test_service4()
         219 % (2 * 11) = 21
     */
 }
+void test_service5()
+{
+    eq_assert(service(3, 4), 1, "service(3, 4)"); // but get 2
+    /*
+        0.25
+          250
+           6 
+    */
+}
 signed main(signed argc, char *argv[])
 {
     // test_shou_and_repeated();
@@ -772,7 +823,11 @@ signed main(signed argc, char *argv[])
     // test_service2();
     // test_service3();
     // test_service4();
-    // return 0;
+
+    // test_repeated_mod_times();
+
+    test_service5();
+    return 0;
 
     long long N;
     int M;
