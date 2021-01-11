@@ -14,12 +14,7 @@ const bool detail_debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
-// #define massert(e, a)                                                                                \
-//     do                                                                                               \
-//     {                                                                                                \
-//         eq_show(e, a);                                                                               \
-//         (__builtin_expect(!(e == a), 0) ? __assert_rtn(__func__, __FILE__, __LINE__, #e) : (void)0); \
-//     } while (0)
+
 /*
     # やりたいこと
     保存したら make が走るようにしたい。
