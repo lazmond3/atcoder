@@ -325,9 +325,15 @@ int service(const int N, const int M)
 
         int last_repeated_set_amari = 0;
         // ⚡️ ここの処理が怪しい
-        if (last_repeated_set_idx == 0)
+
+        if (last_repeated_set_idx == 0 && last_repeated_set_offset != 0)
         {
+
             last_repeated_set_amari = repeated_amari_loop[repeated_amari_loop.size() - 1];
+        }
+        else if (last_repeated_set_idx == 0)
+        {
+            assert("こんなことありえない？" && false);
         }
         else
         {
