@@ -1,12 +1,13 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <set>
 #include <string>
 #include <vector>
 using namespace std;
-const bool debug = false;
+bool debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
@@ -31,6 +32,10 @@ class Solution {
         // 最初は このループに入れる。
         // ループ内部では、 i, j の増加がありうる。
         while (true) {
+            if (debug) {
+                cout << "now : i : " << i << ", j : " << j << endl;
+                cout << "\t score: " << now_score << endl;
+            }
             // もし、 j が進めるなら進む。
             // j が s.size() を越してしまった場合は、 ...
             // s[j] が含まれてしまった場合は、 ...
@@ -50,7 +55,7 @@ class Solution {
                 // 上記 の条件がなくなるまで、i を進めてみる。
                 // ⚡️: i を進めていい条件は j より小さいこと
                 // | 逆に、どういう時に j を越してしまう？
-                while (i < s.size() &&
+                while (i < s.size() && i < j &&
                        used_char.find(s[j]) == used_char.end()) {
                     now_score -= 1;
 
@@ -66,6 +71,7 @@ class Solution {
                 if (used_char.find(s[j]) != used_char.end()) {
                     // もし、 j が入らなくなったら、次へ進んでもよい。
                     // continue したい。
+                    continue;
                 }
             }
         }
@@ -86,6 +92,8 @@ void eq_assert(const int val, const int answer, const string &label) {
 }
 
 signed main() {
+    const char *DEBUG_p = std::getenv("DEBUG");
+    debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
     Solution a = Solution();
     eq_assert(a.lengthOfLongestSubstring("abcabcbb"), 3, "abcabcbb");
     eq_assert(a.lengthOfLongestSubstring("bbbbb"), 1, "bbbbb");
