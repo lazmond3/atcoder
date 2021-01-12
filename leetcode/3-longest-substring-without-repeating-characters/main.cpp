@@ -21,8 +21,8 @@ class Solution {
     /* i文字目 -> j文字目 (j文字目は含まない？) で進めたとき、
        この区間の set について 文字を入れたり出したりしながら、
        最良の答えを記憶する。 */
-    int answer = 1;
-    int best_answer = answer;
+    int now_score = 1;
+    int best_answer = now_score;
     int i = 0;
     int j = 1;  // なので、 j は s.size() まで可能。
     set<char> used_char;
@@ -33,34 +33,36 @@ class Solution {
     // s[j] が含まれてしまった場合は、 ...
     while (j <= s.size() && used_char.find(s[j]) == used_char.end()) {
       used_char.insert(s[j]);
-      answer += 1;
-      chmax(answer, best_answer);
+      now_score += 1;
+      chmax(now_score, best_answer);
       j += 1;
     }
 
     if (j == s.size()) {
-      return answer;
+      return now_score;
     }
-    if () }
-};
-/* 連続している部分を探す必要がある。 */
-/* 尺取でいけないか？ */
+    if (used_char.find(s[j]) == used_char.end()) {
+      // 上記 の条件がなくなるまで、
+    }
+  };
+  /* 連続している部分を探す必要がある。 */
+  /* 尺取でいけないか？ */
 
-void eq_assert(const int val, const int answer, const string &label) {
-  if (val != answer) {
-    cout << "Assertion failed: "
-         << "(val = " << val << ", label = " << label << ", "
-         << ", answer = " << answer << ") " << endl
-         << flush;
+  void eq_assert(const int val, const int answer, const string &label) {
+    if (val != answer) {
+      cout << "Assertion failed: "
+           << "(val = " << val << ", label = " << label << ", "
+           << ", answer = " << answer << ") " << endl
+           << flush;
 
-    exit(1);
+      exit(1);
+    }
   }
-}
 
-signed main() {
-  Solution a = Solution();
-  eq_assert(a.lengthOfLongestSubstring("abcabcbb"), 3, "abcabcbb");
-  eq_assert(a.lengthOfLongestSubstring("bbbbb"), 1, "bbbbb");
-  eq_assert(a.lengthOfLongestSubstring("pwwkew"), 3, "pwwkew");
-  eq_assert(a.lengthOfLongestSubstring(""), 0, "<empty>");
-}
+  signed main() {
+    Solution a = Solution();
+    eq_assert(a.lengthOfLongestSubstring("abcabcbb"), 3, "abcabcbb");
+    eq_assert(a.lengthOfLongestSubstring("bbbbb"), 1, "bbbbb");
+    eq_assert(a.lengthOfLongestSubstring("pwwkew"), 3, "pwwkew");
+    eq_assert(a.lengthOfLongestSubstring(""), 0, "<empty>");
+  }
