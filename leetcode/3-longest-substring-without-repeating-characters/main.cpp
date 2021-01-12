@@ -18,6 +18,18 @@ template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } retu
 // https://leetcode.com/problems/longest-substring-without-repeating-characters/
 class Solution {
    public:
+    /*
+     ❌ 反省点
+     - find() != end() を間違えた。　これ間違えやすすぎる。
+
+     課題としては、最初 j が j.size() まで可能と思っていたが、
+     j.size()
+              j
+     abcdefgh .
+     こうなった時点で終了する番兵的な存在にすべきだった。
+     while (j < s.size())
+
+    */
     int lengthOfLongestSubstring(string s) {
         /* i文字目 -> j文字目 (j文字目は含まない？) で進めたとき、
            この区間の set について 文字を入れたり出したりしながら、
