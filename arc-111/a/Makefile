@@ -1,11 +1,5 @@
 .PHONY: clean ojtest
 
-clean:
-	if [ -e test-out ]; then rm test-out; fi
-	if [ -e a.out ]; then rm a.out; fi
-	if [ -e main ]; then rm main; fi
-	if [ -e debug ]; then rm debug; fi
-
 main: main2.cpp
 	g++ -std=c++17 main2.cpp -o main
 debug: main2.cpp
@@ -15,5 +9,11 @@ test: main2.cpp main2_test.cpp main2.hpp
 	./test-out
 
 oj:
+	if [ ! -e main ]; then make main; fi
+	oj test -c ./main
 
-	oj test
+clean:
+	if [ -e test-out ]; then rm test-out; fi
+	if [ -e a.out ]; then rm a.out; fi
+	if [ -e main ]; then rm main; fi
+	if [ -e debug ]; then rm debug; fi
