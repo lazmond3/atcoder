@@ -30,8 +30,21 @@ class Solution {
             i                        j <- またここから始まる
             aaaabbbbccc .. cccbbbbaaaa ccccdddaaaa
 
+            尺取はできない。なぜなら i を動かしてはいけないかもしれないから。
+
+        */
+        /*
             // atcoder の本で見たのは、なんの文字を追加すればpalindrome
-           になるか、だった
+           になるか、だった。最小文字数の追加。
+
+            だとすると、
+            i         j
+            aaabbbccc D .........
+            という感じで、もし違うなら、
+
+            こういう抜きパターンもある？
+            ......... bbbccce D ....... cccbbbaaa
+            // でもこれが最小文字とは限らない。 e を追加すればいいわけだし。
          */
         return "";
     }
