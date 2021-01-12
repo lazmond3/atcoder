@@ -21,7 +21,6 @@ const bool detail_debug = false;
     # やりたいこと
     保存したら make が走るようにしたい。
     myassert で赤文字で出したりしたい。
-    環境変数でデバッグON OFF したい。
     複数の値の返却のほうが楽じゃない？structとか。
     vector の vector とか。
 
@@ -30,6 +29,7 @@ const bool detail_debug = false;
     oj でやる。oj でやるとき、どういう流れでやるか考えておきたい。
 
     環境変数でテストかどうか決める.
+    ✅環境変数でデバッグON OFF したい。
 */
 /* ---------------------------------------------------------------------------------- */
 void show_vector(/*const ref in*/ const vector<int> &vec, const string &label)
@@ -239,10 +239,10 @@ vector<int> num_to_vector(int n)
 
 // times の代わりに、repeated set に対するあまりの循環を計算する関数
 // これ結構大変じゃない？
-void generate_amari_series_for_repeated_set(const int M,
-                                            const int initial_amari_for_shou,
-                                            /*ref out*/ vector<int> &amari_series_for_repeated_set, // 名前が悪い気がする。 repeated_amari_repeated とか
-                                            /*const ref in*/ const vector<int> &repeated)
+int generate_amari_series_for_repeated_set(const int M,
+                                           const int initial_amari_for_shou,
+                                           /*ref out*/ vector<int> &amari_series_for_repeated_set, // 名前が悪い気がする。 repeated_amari_repeated とか
+                                           /*const ref in*/ const vector<int> &repeated)
 {
     int times = 1;
     int amari = 0;
@@ -275,6 +275,14 @@ void generate_amari_series_for_repeated_set(const int M,
             /*const int*/ M,
             /*const ref in*/ next_repeated);
     }
+    /*
+        最後のあまりが 0 のときは これはもうリピートしないんだけど、そのフラグを返したほうがよさそう。
+    */
+    if (debug)
+    {
+        show_variable(amari, "generation of series: last amari: ");
+    }
+    return amari;
 }
 
 int service(const int N, const int M)
@@ -308,10 +316,10 @@ int service(const int N, const int M)
                                                            shou);
 
     // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
-    generate_amari_series_for_repeated_set(/*const int*/ M,
-                                           /*const int*/ initial_amari_for_shou,
-                                           /*out*/ amari_series_for_repeated_set,
-                                           /*const ref in*/ repeated);
+    int last_generation_amari = generate_amari_series_for_repeated_set(/*const int*/ M,
+                                                                       /*const int*/ initial_amari_for_shou,
+                                                                       /*out*/ amari_series_for_repeated_set,
+                                                                       /*const ref in*/ repeated);
 
     if (N > shou.size())
     {
@@ -320,15 +328,28 @@ int service(const int N, const int M)
         int repeated_circular_size = amari_series_for_repeated_set.size();
         int _repeated_circular_amari = _N % (repeated_circular_size * repeated.size());
 
+        if (_N >= repeated_circular_size && last_generation_amari == 0)
+        {
+            if (debug)
+            {
+                cout << "------- ここで、last amari == 0 のパターンなので、あまり == 0 となる。" << endl;
+            }
+            return 0;
+        }
+
         // int last_repeated_set_amari = 0;
         // ⚡️ ここの処理が怪しい
         // 前面書き換え
         // ❌ for 割り切れたとき(4とか, 2になってしまう)
         // repeated == 0 のケース
+
+        // これって
         if (debug)
         {
             show_variable(_repeated_circular_amari, "_repeated_circular_amari");
             show_variable(shou.size(), "shou size");
+            show_variable(repeated_circular_size, "repeated_circular_size");
+            show_vector(amari_series_for_repeated_set, "amari_series_for_repeated_set");
         }
         vector<int> target(_repeated_circular_amari + shou.size());
         int repeated_count = _repeated_circular_amari / repeated.size();
