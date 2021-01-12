@@ -22,8 +22,16 @@ class Solution {
         // 1000 文字までなので、全探索O(N^3) でもいけそう。
         // i , j のすべての組みに対して、 palindrome チェック
         /*
-                i                   j  => この時点でマチガイ
-            aaaabbbbccc ....  ccccdddaaaa
+                i                            j  => この時点でマチガイ
+            aaaabbbbccc ....           ccccdddaaaa
+            // i を固定しておく。
+            // s[i] == s[j] になったら、両方の添字を進ませる？
+
+            i                        j <- またここから始まる
+            aaaabbbbccc .. cccbbbbaaaa ccccdddaaaa
+
+            // atcoder の本で見たのは、なんの文字を追加すればpalindrome
+           になるか、だった
          */
         return "";
     }
