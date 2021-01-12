@@ -18,7 +18,15 @@ template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } retu
 // https://leetcode.com/problems/longest-palindromic-substring/
 class Solution {
    public:
-    string longestPalindrome(string s) { return ""; }
+    string longestPalindrome(string s) {
+        // 1000 文字までなので、全探索O(N^3) でもいけそう。
+        // i , j のすべての組みに対して、 palindrome チェック
+        /*
+                i                   j  => この時点でマチガイ
+            aaaabbbbccc ....  ccccdddaaaa
+         */
+        return "";
+    }
 };
 
 template <class T>
