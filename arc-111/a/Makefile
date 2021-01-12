@@ -12,6 +12,10 @@ oj:
 	if [ ! -e main ]; then make main; fi
 	oj test -c ./main
 
+
+testpy:
+	python3 test.py
+
 clean:
 	if [ -e test-out ]; then rm test-out; fi
 	if [ -e a.out ]; then rm a.out; fi
