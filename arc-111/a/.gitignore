@@ -4,3 +4,4 @@ test-out
 test-*
 debug
 test*
+!test.py

@@ -5,9 +5,7 @@ debug = False
 # 例: 3 4 => int(10**3 / 4) % 4 正解は250 % 4 == 2　だけど 1 と出てしまう
 # 例: 1 4 でも、 0.2 => 2 / 4 == 0 だから、 0を4で割ったあまりは0になるはずだが、いまは2が出てしまっている。
 # n が小さい領域で失敗している気がする。
-if len(sys.argv) < 5:
-    print("python3 make_test.py <m> directory_name, from, to")
-    exit(0)
+
 # リスト用の計算があったら便利なのかも、と思ったら、これだ。
 def lst_division_for_calc_amari(f, lst, m):
     i = 0
@@ -99,4 +97,8 @@ def main():
                 lst_division_for_calc_amari(fout2, str_lst, m)
 
 if __name__ == "__main__":
+    if len(sys.argv) < 5:
+        print("python3 make_test.py <m> directory_name, from, to")
+        exit(0)
+
     main()
