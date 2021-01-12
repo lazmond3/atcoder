@@ -239,10 +239,10 @@ vector<int> num_to_vector(int n)
 
 // times の代わりに、repeated set に対するあまりの循環を計算する関数
 // これ結構大変じゃない？
-void generate_amari_series_for_repeated_set(const int M,
-                                            const int initial_amari_for_shou,
-                                            /*ref out*/ vector<int> &amari_series_for_repeated_set, // 名前が悪い気がする。 repeated_amari_repeated とか
-                                            /*const ref in*/ const vector<int> &repeated)
+int generate_amari_series_for_repeated_set(const int M,
+                                           const int initial_amari_for_shou,
+                                           /*ref out*/ vector<int> &amari_series_for_repeated_set, // 名前が悪い気がする。 repeated_amari_repeated とか
+                                           /*const ref in*/ const vector<int> &repeated)
 {
     int times = 1;
     int amari = 0;
@@ -275,6 +275,7 @@ void generate_amari_series_for_repeated_set(const int M,
             /*const int*/ M,
             /*const ref in*/ next_repeated);
     }
+    return amari;
 }
 
 int service(const int N, const int M)
@@ -308,15 +309,18 @@ int service(const int N, const int M)
                                                            shou);
 
     // ❌ ~~ shou の末尾が 0 で repeated_amari_loop == 0 のケースは、 shou の末尾の0 を削除すべき? ~~ <- そんなことない。
-    generate_amari_series_for_repeated_set(/*const int*/ M,
-                                           /*const int*/ initial_amari_for_shou,
-                                           /*out*/ amari_series_for_repeated_set,
-                                           /*const ref in*/ repeated);
+    int last_set_amari = generate_amari_series_for_repeated_set(/*const int*/ M,
+                                                                /*const int*/ initial_amari_for_shou,
+                                                                /*out*/ amari_series_for_repeated_set,
+                                                                /*const ref in*/ repeated);
 
     if (N > shou.size())
     {
         _N -= shou.size();
-
+        if (_N >= amari_series_for_repeated_set.size() && last_set_amari == 0)
+        {
+            return 0;
+        }
         // cout << "here off idx amari suze" << endl;
         int repeated_circular_size = amari_series_for_repeated_set.size();
 
@@ -337,7 +341,8 @@ int service(const int N, const int M)
         }
         else if (last_repeated_set_idx == 0)
         {
-            assert("こんなことありえない？" && false);
+            last_repeated_set_amari = amari_series_for_repeated_set[amari_series_for_repeated_set.size() - 1];
+            // assert("こんなことありえない？" && false);
         }
         else
         {
