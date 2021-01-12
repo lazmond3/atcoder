@@ -38,11 +38,18 @@ class Solution {
       j += 1;
     }
 
-    if (j == s.size()) {
-      return now_score;
+    // j がすぎてしまった場合, もうやる必要はない
+    // (i を動かさなくてもよかったため。)
+    if (j > s.size()) {
+      return best_answer;
     }
     if (used_char.find(s[j]) == used_char.end()) {
-      // 上記 の条件がなくなるまで、
+      // 上記 の条件がなくなるまで、i を進めてみる。
+      while (i < s.size() && used_char.find(s[j]) == used_char.end()) {
+      }
+      if (i == s.size()) {
+        return best_answer;
+      }
     }
   };
   /* 連続している部分を探す必要がある。 */
