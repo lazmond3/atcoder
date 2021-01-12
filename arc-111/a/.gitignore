@@ -1,1 +1,6 @@
 a.out.dSYM
+main
+test-out
+test-*
+debug
+test*
