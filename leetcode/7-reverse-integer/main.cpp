@@ -6,10 +6,8 @@
 #include <algorithm>
 #include <cassert>
 using namespace std;
-// const bool debug = false;
 const bool debug = true;
 const bool seg_debug = false;
-// const bool debug = false;
 const bool detail_debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
