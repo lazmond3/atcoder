@@ -463,12 +463,6 @@ signed main2(signed argc, char *argv[])
     const char *DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
 
-    // if (debug)
-    // {
-    //     test_shou_and_repeated();
-    //     return 0;
-    // }
-
     long long N;
     int M;
     cin >> N >> M;
