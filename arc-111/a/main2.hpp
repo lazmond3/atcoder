@@ -33,4 +33,5 @@ int generate_amari_series_for_repeated_set(const int M,
                                            /*ref out*/ vector<int> &amari_series_for_repeated_set, // 名前が悪い気がする。 repeated_amari_repeated とか
                                            /*const ref in*/ const vector<int> &repeated);
 int service(const int N, const int M);
+vector<int> num_to_vector(int n);
 #endif
