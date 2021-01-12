@@ -29,34 +29,42 @@ class Solution {
         set<char> used_char;
         used_char.insert(s[i]);
 
+        if (s.length() == 0) return 0;
         // 最初は このループに入れる。
         // ループ内部では、 i, j の増加がありうる。
         while (true) {
             if (debug) {
                 cout << "now : i : " << i << ", j : " << j << endl;
+                cout << "\t -- " << s << endl;
                 cout << "\t score: " << now_score << endl;
+                cout << "\t maxscore: " << best_answer << endl;
             }
             // もし、 j が進めるなら進む。
             // j が s.size() を越してしまった場合は、 ...
             // s[j] が含まれてしまった場合は、 ...
-            while (j <= s.size() && used_char.find(s[j]) == used_char.end()) {
+            while (j < s.size() && used_char.find(s[j]) == used_char.end()) {
+                // ❌ この時の j は size と同じ可能性がある。
                 used_char.insert(s[j]);
-                now_score += 1;
-                chmax(now_score, best_answer);
+                now_score += 1;  // jを増加させても条件を満たしているので、
+                                 // スコアを増加できる。
+                chmax(best_answer, now_score);
                 j += 1;
             }
 
             // j がすぎてしまった場合, もうやる必要はない
             // (i を動かさなくてもよかったため。)
-            if (j > s.size()) {
+            if (j == s.size()) {
                 return best_answer;
             }
-            if (used_char.find(s[j]) == used_char.end()) {
+
+            // もし、 s[j] がすでに使うところに含まれてしまっているならば...
+            if (used_char.find(s[j]) != used_char.end()) {
                 // 上記 の条件がなくなるまで、i を進めてみる。
                 // ⚡️: i を進めていい条件は j より小さいこと
                 // | 逆に、どういう時に j を越してしまう？
                 while (i < s.size() && i < j &&
-                       used_char.find(s[j]) == used_char.end()) {
+                       // 見つかる範囲内で
+                       used_char.find(s[j]) != used_char.end()) {
                     now_score -= 1;
 
                     // s[i] を 使った set から削除する。
