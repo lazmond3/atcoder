@@ -287,6 +287,96 @@ int generate_amari_series_for_repeated_set(const int M,
 
 int service(const int N, const int M)
 {
+
+    /*
+        理想ケース
+
+        1 / 88 = 0.01136 .. 363636363
+        0.01136 の部分で、あまりは 80.
+        80 スタートの あまりの一覧を知りたい。
+        8036 % 88 = 28 となる。
+        あまり循環は 28,20,12,4,84,76,68,60,52,44,36, となる。
+
+        生成された循環小数に対する あまりの循環列
+                      80  28 20 12  4 84 76 68 60 52 44 36   28 20 12  4 84 76 68 60 52 44 36   28 20 12  4
+        1 / 88 = 0.01136  36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 3 
+                      88
+            _____________________________________________________________________
+                      80  36
+                          88
+            _____________________________________________________________________
+                          28                         44 36
+                                                        88
+            _____________________________________________________________________
+                                                        36  36
+                                                            88
+            _____________________________________________________________________
+                                                            28 (loop detected!)
+
+        
+                      80  28 20 12  4 84 76 68 60 52 44 36   28 20 12  4 84 76 68 60 52 44 36   28 20 12  4
+        1 / 88 = 0.01136  36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 36 36 36 36 36 36 36   36 36 36 36 3 
+        // こういう感じに、 N = 5 + 11*2*2 + 2*4 + 1 = 58 の場合, M で割ったあまりは
+                 0.01136  36 36 36 36 3 
+                                   88
+            _____________________________________________________________________
+                                    4 3
+                                    8 8
+            _____________________________________________________________________
+                                    4 3 
+                                
+            となり、   あまりは 43 となる。
+
+        // プログラムに落とす時の 計算過程
+        N = 58 のとき、 N > shou.size() のため、
+        N - shou.size()(=5) = 53 となる。
+        53 / 11 = 44 + 9 / 11 = 4 ... 9 となる。
+        9 / 2 = 4 .. 1 となる。 => 4番目のあまりは、 amari[4-1] = 4 となるので、 4 これに、repeated[0] == 3 を
+        // このあまりの足し算の部分は、 repeated.begin(), repeated.begin() + amari_for_each_repeated(=1) ということになる。
+        // この部分のrepeated を最後に継ぎ足す。
+        
+        if ( N > shou.size() ) {
+            N -= shou.size();
+        }
+        int repeated_circular_size = 11; // 計算して求める。
+        int _not_used_repeated_set_商 = N / repeated_circular_size; // => 4 // これは使わない
+        int _repeated_set_count_amari = N % repeated_circular_size; // => 9
+        int last_repeated_set_idx   = _repeated_set_count_amari / repeated.size(); // 9 / 2 == 4
+        int afte_repeated_set_ofset = _repeated_set_count_amari % repeated.size(); // 9 % 2 == 1
+
+        // ❌ この方針で O(1) で考えようと思ったが、結局 最後の部分は全部使うベクターで、
+        // O(M(repeated_size) * M(repeated_set のあまり循環の長さ)) でいけそうだったので、そちらで AC した。
+        // どちらにせよ、結局割り切れた場合分けの周りで間違えていそうだった。
+        int last_repeated_set_amari = repeated_amari[last_repeated_set_idx-1];
+        if (last_repeated_set_idx == 0) {
+            // 36 のところで終わっているとき は、最後のあまりを36にしないといけなさそう。
+            last_repeated_set_amari = 36;            
+        }
+
+        // これって本当に1charコピーできるのかな
+        vector<int> repeated_used ( repeated.begin(), repeated.begin() + afte_repeated_set_ofset);
+
+        // まだ作ってない関数
+        vector<int> concated_vec_for_amari = concat(last_repeated_set_amari, repeated_used);
+        int answer = amarikeisan(M, concated_vec_for_amari);
+
+        こういう感じで計算ができるはず。
+        
+        // もし、 repeated で割り切れたとすると、一番最後の36になる？   => ✅ OK
+                      80  28 20 12  4 84 76 68 60 52 44 36
+        1 / 88 = 0.01136  36 36 36 36 36 36 36 36 36 36 36
+
+
+        >>> "".join(a.strip().split(" "))
+        '113636363636363636363636363636363636363636363636363636363'
+        >>> b ="".join(a.strip().split(" "))
+        >>> int(b)
+        113636363636363636363636363636363636363636363636363636363
+        >>> int(b) % 88
+        43
+
+    */
+
     if (debug)
     {
         cout << "--------- N: " << N << "------ M: " << M << "---------" << endl;
@@ -343,7 +433,6 @@ int service(const int N, const int M)
         // ❌ for 割り切れたとき(4とか, 2になってしまう)
         // repeated == 0 のケース
 
-        // これって
         if (debug)
         {
             show_variable(_repeated_circular_amari, "_repeated_circular_amari");
