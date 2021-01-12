@@ -34,10 +34,53 @@ void test_repeated_and_amari_cycle()
     assert(calc_amari_for_target_vec(88, num_to_vector(6836)) == 60);
 }
 
+void test_generate_series()
+{
+    // 88
+    vector<int> amari_vector_88;
+    vector<int> shou_88;
+    generate_series(88, /*ref out*/ shou_88, /*ref out*/ amari_vector_88);
+    show_vector(shou_88, "shou_88");
+    show_vector(amari_vector_88, "amari_vector_88");
+    assert_vec(
+        shou_88,
+        {0, 1, 1, 3, 6});
+    assert_vec(
+        amari_vector_88,
+        {3, 6});
+
+    // 23
+    vector<int> amari_vector_23;
+    vector<int> shou_23;
+    generate_series(23, /*ref out*/ shou_23, /*ref out*/ amari_vector_23);
+    show_vector(shou_23, "shou_23");
+    show_vector(amari_vector_23, "amari_vector_23");
+    assert_vec(
+        shou_23,
+        {0, 4, 3, 4, 7, 8, 2, 6, 0, 8, 6, 9, 5, 6, 5, 2, 1, 7, 3, 9, 1, 3});
+    assert_vec(
+        amari_vector_23,
+        {0, 4, 3, 4, 7, 8, 2, 6, 0, 8, 6, 9, 5, 6, 5, 2, 1, 7, 3, 9, 1, 3});
+
+    // // 17
+    vector<int> amari_vector_17;
+    vector<int> shou_17;
+    generate_series(17, /*ref out*/ shou_17, /*ref out*/ amari_vector_17);
+    show_vector(shou_17, "shou_17");
+    show_vector(amari_vector_17, "amari_vector_17");
+    assert_vec(
+        shou_17,
+        {0, 5, 8, 8, 2, 3, 5, 2, 9, 4, 1, 1, 7, 6, 4, 7});
+    assert_vec(
+        amari_vector_17,
+        {0, 5, 8, 8, 2, 3, 5, 2, 9, 4, 1, 1, 7, 6, 4, 7});
+}
+
 signed main()
 {
     const char *DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
     test_shou_and_repeated();
     test_repeated_and_amari_cycle();
+    test_generate_series();
 }
