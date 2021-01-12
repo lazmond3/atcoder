@@ -482,7 +482,7 @@ signed main2(signed argc, char *argv[])
 #endif
 {
     const char *DEBUG_p = std::getenv("DEBUG");
-    debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) != 0;
+    debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
 
     // if (debug)
     // {
