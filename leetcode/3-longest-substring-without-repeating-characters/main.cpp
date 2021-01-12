@@ -22,6 +22,7 @@ class Solution {
        この区間の set について 文字を入れたり出したりしながら、
        最良の答えを記憶する。 */
     int answer = 1;
+    int best_answer = answer;
     int i = 0;
     int j = 1;  // なので、 j は s.size() まで可能。
     set<char> used_char;
@@ -30,15 +31,17 @@ class Solution {
     // もし、 j が進めるなら進む。
     // j が s.size() を越してしまった場合は、 ...
     // s[j] が含まれてしまった場合は、 ...
-    while (j <= s.size() && used_char.find(s[j]) != used_char.end()) {
+    while (j <= s.size() && used_char.find(s[j]) == used_char.end()) {
       used_char.insert(s[j]);
       answer += 1;
+      chmax(answer, best_answer);
       j += 1;
     }
 
     if (j == s.size()) {
+      return answer;
     }
-  }
+    if () }
 };
 /* 連続している部分を探す必要がある。 */
 /* 尺取でいけないか？ */
