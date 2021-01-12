@@ -9,12 +9,11 @@
 #include <cassert>
 #include <cstring>
 using namespace std;
-bool debug = false;
+extern bool debug;
 
 // const bool debug = true;
-const bool seg_debug = false;
-// const bool debug = false;
-const bool detail_debug = false;
+// const bool seg_debug = false;
+// const bool detail_debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long

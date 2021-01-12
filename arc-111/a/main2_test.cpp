@@ -21,7 +21,7 @@ void test_shou_and_repeated()
     show_vector(repeated_2, "repeated_2"); // 0
 }
 
-int main()
+signed main()
 {
     const char *DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
