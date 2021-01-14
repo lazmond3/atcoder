@@ -132,6 +132,9 @@ class Solution {
 
 template <class T>
 void test_eq_assert(const T val, const T answer, const string& label) {
+    if (debug && val == answer) {
+        cout << "--------- [[ " << label << "]] ---------" << endl;
+    }
     if (val != answer) {
         cout << RED;
         cout << "--------- [[ " << label << "]] ---------" << endl;
