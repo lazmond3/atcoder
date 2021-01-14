@@ -81,6 +81,10 @@ class Solution {
             n + m == 偶数のとき、中央値はdouble
             奇数のとき、中央値はちょうど定まる。
         */
+
+        /*
+
+        */
         return 0.0;
     }
 };
@@ -88,8 +92,9 @@ class Solution {
 template <class T>
 void test_eq_assert(const T val, const T answer, const string& label) {
     if (debug && val == answer) {
-        cout << GRE << "--------- [[ " << label << "]] ---------" << CLR
-             << endl;
+        cout << GRE;
+        cout << "--------- [[ " << label << "]] ---------" << endl;
+        cout << CLR;
     }
     if (val != answer) {
         cout << RED;
