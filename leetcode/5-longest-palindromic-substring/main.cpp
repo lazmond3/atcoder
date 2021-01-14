@@ -31,88 +31,81 @@ cyan         36         46
 white        37         47
 */
 
+void check_even(const string& s, int& max_score, int& max_i, int& max_j) {
+    // 01234....789
+    //  left_i は 0 から 8まで動ける
+    // right_j は 1 から 9まで動ける
+    for (int i = 0; i < (s.size() - 1); ++i) {
+        if (debug) {
+            cout << "[check_even] i : " << i << ", max_score = " << max_score
+                 << endl;
+        }
+        int now_score = 2;
+        int left_i = i;
+        int right = i + 1;
+        while (0 <= left_i && right < s.size() && s[left_i] == s[right]) {
+            if (now_score > max_score) {
+                if (debug) {
+                    cout << "[check_even] left: " << left_i
+                         << ", right: " << right << ", score up!" << endl;
+                }
+                max_i = left_i;
+                max_j = right;
+                max_score = now_score;
+            }
+            left_i -= 1;
+            right += 1;
+            now_score += 2;
+        }
+    }
+}
+void check_odd(const string& s, int& max_score, int& max_i, int& max_j) {
+    for (int i = 1; i < (s.size() - 1); ++i) {
+        if (debug) {
+            cout << "[check_odd] i : " << i << ", max_score = " << max_score
+                 << endl;
+        }
+        // リセットされた。これから始まる
+        int now_score = 3;  // 最初のこれが通ればスコアは 3　になる。
+        int left = i - 1;
+        int right = i + 1;
+        while (0 <= left && right < s.size() && s[left] == s[right]) {
+            // 達成したらスコアをあげる。
+            if (now_score > max_score) {
+                if (debug) {
+                    cout << "[check_odd] left: " << left << ", right: " << right
+                         << ", score up!" << endl;
+                }
+                max_i = left;
+                max_j = right;
+                max_score = now_score;
+            }
+            // 次の left, right を作る
+            left -= 1;
+            right += 1;
+            now_score += 2;
+        }
+    }
+}
+
 // https://leetcode.com/problems/longest-palindromic-substring/
 class Solution {
-   private:
-    int max_i = 0;
-    int max_j = 0;  // jも含めることにしよう。
-    int max_score = 1;
-    string this_string;
-
-    void check_odd() {
-        for (int i = 1; i < (this_string.size() - 1); ++i) {
-            if (debug) {
-                cout << "[check_odd] i : " << i << ", max_score = " << max_score
-                     << endl;
-            }
-            // リセットされた。これから始まる
-            int now_score = 3;  // 最初のこれが通ればスコアは 3　になる。
-            int left = i - 1;
-            int right = i + 1;
-            while (0 <= left && right < this_string.size() &&
-                   this_string[left] == this_string[right]) {
-                // 達成したらスコアをあげる。
-                if (now_score > max_score) {
-                    if (debug) {
-                        cout << "[check_odd] left: " << left
-                             << ", right: " << right << ", score up!" << endl;
-                    }
-                    max_i = left;
-                    max_j = right;
-                    max_score = now_score;
-                }
-                // 次の left, right を作る
-                left -= 1;
-                right += 1;
-                now_score += 2;
-            }
-        }
-    }
-    void check_even() {
-        // 01234....789
-        //  left_i は 0 から 8まで動ける
-        // right_j は 1 から 9まで動ける
-        for (int i = 0; i < (this_string.size() - 1); ++i) {
-            if (debug) {
-                cout << "[check_even] i : " << i
-                     << ", max_score = " << max_score << endl;
-            }
-            int now_score = 2;
-            int left_i = i;
-            int right = i + 1;
-            while (0 <= left_i && right < this_string.size() &&
-                   this_string[left_i] == this_string[right]) {
-                if (now_score > max_score) {
-                    if (debug) {
-                        cout << "[check_even] left: " << left_i
-                             << ", right: " << right << ", score up!" << endl;
-                    }
-                    max_i = left_i;
-                    max_j = right;
-                    max_score = now_score;
-                }
-                left_i -= 1;
-                right += 1;
-                now_score += 2;
-            }
-        }
-    }
-
    public:
     string longestPalindrome(string s) {
         if (s.size() == 0) return "";
         if (s.size() == 1) return s;
-
-        this_string = s;
+        int max_i = 0;
+        int max_j = 0;  // jも含めることにしよう。
+        int max_score = 1;
 
         if (debug) cout << "this_string: " << s << endl;
-        check_odd();
+        check_odd(s, max_score, max_i, max_j);
         if (debug) {
             cout << "----- check odd -------" << endl;
             cout << "max_i: " << max_i << endl;
             cout << "max_j: " << max_j << ", max score: " << max_score << endl;
         }
-        check_even();
+        check_even(s, max_score, max_i, max_j);
         if (debug) {
             cout << "----- check even -------" << endl;
             cout << "max_i: " << max_i << endl;
@@ -132,7 +125,7 @@ class Solution {
 };
 
 template <class T>
-void eq_assert(const T val, const T answer, const string &label) {
+void eq_assert(const T val, const T answer, const string& label) {
     if (val != answer) {
         cout << "Assertion failed: "
              << "(val = " << val << ", label = " << label << ", "
@@ -143,7 +136,7 @@ void eq_assert(const T val, const T answer, const string &label) {
     }
 }
 template <class T>
-void test_eq_assert(const T val, const T answer, const string &label) {
+void test_eq_assert(const T val, const T answer, const string& label) {
     if (val != answer) {
         cout << RED;
         cout << "--------- [[ " << label << "]] ---------" << endl;
@@ -159,7 +152,7 @@ void test_eq_assert(const T val, const T answer, const string &label) {
 }
 
 signed main() {
-    const char *DEBUG_p = std::getenv("DEBUG");
+    const char* DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
     Solution a = Solution();
     // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
