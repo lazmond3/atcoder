@@ -149,9 +149,8 @@ void test_eq_assert(const T val, const T answer, const string &label) {
         cout << "--------- [[ " << label << "]] ---------" << endl;
         cout << CLR;
         cout << "Assertion failed: "
-             << "(" << RED << "val = " << val << CLR << ", label = " << label
-             << ", "
-             << "answer = " << answer << ") " << endl
+             << "(val = " << RED << val << CLR << ", label = " << label << ", "
+             << "answer = " << BLU << answer << CLR << ") " << endl
              << flush;
         cout << CLR;
 
@@ -166,10 +165,11 @@ signed main() {
     // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
     test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
                            "abcd substr 1,3");
-    test_eq_assert<string>(string("abcd").substr(0, 0), "", "abcd substr 1,3");
+    test_eq_assert<string>(string("abcd").substr(0, 0), "__",
+                           "abcd substr 1,3");
     test_eq_assert<string>(string("0123456789").substr(3, 5), "456",
                            "0-9 の substr 3-5");
-    test_eq_assert<string>(string("babad").substr(0, 2 + 1), "bab",
+    test_eq_assert<string>(string("babad").substr(0, 2), "bab",
                            "これおちる？bab");  // x から p 文字
 
     test_eq_assert<string>(Solution().longestPalindrome("babad"), "bab",
