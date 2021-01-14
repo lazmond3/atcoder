@@ -54,7 +54,7 @@ string check_even(const string& s) {
                 if (debug) {
                     printf(
                         "%s score up! i = %d, left: %d, right: %d, "
-                        "max_score(%d) to now_score(%d) substr: %s\n",
+                        "max_score(%d) -> now_score(%d) substr: %s\n",
                         "[check_even]", i, left, right, max_score, now_score,
                         s.substr(left, right - left + 1).c_str());
                 }
@@ -88,7 +88,7 @@ string check_odd(const string& s) {
                 if (debug) {
                     printf(
                         "%s score up! i = %d, left: %d, right: %d, "
-                        "max_score(%d) to now_score(%d) substr: %s\n",
+                        "max_score(%d) -> now_score(%d) substr: %s\n",
                         "[check_odd]", i, left, right, max_score, now_score,
                         s.substr(left, right - left + 1).c_str());
                 }
