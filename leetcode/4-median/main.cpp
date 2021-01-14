@@ -37,6 +37,24 @@ cyan         36         46
 white        37         47
 */
 
+struct left_right {
+    int left;
+    int right;
+
+    left_right(int l, int r) : left(l), right(r) {}
+};
+/*
+    判定関数
+*/
+struct left_right count_left_right_item_number(const vector<int>& vec,
+                                               int target_number) {
+    // FIXME
+    return left_right(0, 100);
+}
+
+// 二分探索用判定関数
+bool is_good(const vector<int>& vec, int target_number) { return false; }
+
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 class Solution {
    public:
