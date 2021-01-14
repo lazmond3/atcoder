@@ -66,7 +66,7 @@ bool is_good(const vector<int>& nums1, const vector<int>& nums2,
     問題の要求精度は -106 <= nums1[i], nums2[i] <= 106 であり、
     double の精度は 15ケタある。
 */
-double binary_search_median(const vector<int>& vec, double target_number) {
+double binary_search_median(const vector<int>& vec, double start, double end) {
     // FIXME
     return 0.0;
 }
@@ -176,7 +176,7 @@ class Solution {
             nums1[nums1.size() / 2]);  // FIXME nums1 の 中央値
         double end = static_cast<double>(
             nums1[nums1.size() / 2]);  // FIXME nums2 の 中央値
-        // swap start。
+
         if (start > end) {
             swap(start, end);
         }
