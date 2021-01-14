@@ -172,9 +172,14 @@ class Solution {
                    o          x
              OOOOOOIIIIIIIIIIIIIIIIOOOOIIIII
         */
-        const double nums1 = 0.0;  // FIXME nums1 の 中央値
-        const double nums2 = 0.0;  // FIXME nums2 の 中央値
-        // swap してもいい。
+        double start = static_cast<double>(
+            nums1[nums1.size() / 2]);  // FIXME nums1 の 中央値
+        double end = static_cast<double>(
+            nums1[nums1.size() / 2]);  // FIXME nums2 の 中央値
+        // swap start。
+        if (start > end) {
+            swap(start, end);
+        }
 
         // binary_search_median()
         return 0.0;
@@ -205,7 +210,16 @@ void test_eq_assert(const T val, const T answer, const string& label) {
 signed main() {
     const char* DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
-    Solution a = Solution();
+
+    // STL swap のテスト　
+    {
+        int a = 10;
+        int b = 100;
+        swap<int>(a, b);
+        test_eq_assert<int>(a, 100, "swapテスト1 a == 100");
+        test_eq_assert<int>(b, 10, "swapテスト2 b == 10");
+    }
+
     // // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
     // test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
     //                        "abcd substr 1,3");
