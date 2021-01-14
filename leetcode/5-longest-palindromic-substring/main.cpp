@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -17,6 +18,10 @@ template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } retu
 #define BLU "\033[34m"
 #define CLR "\033[0m"
 // clang-format on
+
+// 🎄⭐️🎅 欲しいもの
+// - string の ゼロフィル関数
+
 /*
 // http://en.wikipedia.org/wiki/ANSI_escape_code
 https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
@@ -74,8 +79,8 @@ string check_odd(const string& s) {
 
     for (int i = 1; i < (s.size() - 1); ++i) {
         if (debug) {
-            cout << "[check_odd] i : " << i << ", max_score = " << max_score
-                 << endl;
+            // cout << "[check_odd] i : " << i << ", max_score = " << max_score
+            //      << endl;
         }
         // リセットされた。これから始まる
         int now_score = 3;  // 最初のこれが通ればスコアは 3　になる。
@@ -85,8 +90,19 @@ string check_odd(const string& s) {
             // 達成したらスコアをあげる。
             if (now_score > max_score) {
                 if (debug) {
-                    cout << "[check_odd] left: " << left << ", right: " << right
-                         << ", score up!" << endl;
+                    printf(
+                        "%s score up! i = %d, left: %d, right: %d, "
+                        "max_score(%d) to now_score(%d) substr: %s\n",
+                        "[check_odd]", i, left, right, max_score, now_score,
+                        s.substr(left, right - left + 1).c_str());
+
+                    // cout << "[check_odd] score up! i = " << i << ", ";
+                    // cout << "[check_odd] left: " << left << ", right: " <<
+                    // right
+                    //      << ", score: "
+                    //      << "max_score(" << max_score
+                    //      << ") -> now_score = " << now_score << ", "
+                    //      << ", score up!" << endl;
                 }
                 max_i = left;
                 max_j = right;
