@@ -62,7 +62,7 @@ bool is_good(const vector<int>& vec, double target_number) { return false; }
     問題の要求精度は -106 <= nums1[i], nums2[i] <= 106 であり、
     double の精度は 15ケタある。
 */
-double binary_search() {
+double binary_search_median(const vector<int>& vec, double target_number) {
     // FIXME
     return 0.0;
 }
@@ -145,6 +145,12 @@ class Solution {
         /*
             以下の条件を利用して、二分探索をしたいが、
             二分探索の条件としては、判定がO(1)でできる必要がある
+                  (
+                      判定については単調性が必要だが、
+                      上記の cを移動させると、さらに
+                      両側の要素の偏りが大きくなるので、
+                      単調性は存在するといえる。
+                  )
                  （必要はないが、O(log(m))でできるらしいので)
 
              以下のケースにおいて、 適当なインデックスを定めたとき、
@@ -161,6 +167,11 @@ class Solution {
                    o          x
              OOOOOOIIIIIIIIIIIIIIIIOOOOIIIII
         */
+        const double nums1 = 0.0;  // FIXME nums1 の 中央値
+        const double nums2 = 0.0;  // FIXME nums2 の 中央値
+        // swap してもいい。
+
+        // binary_search_median()
         return 0.0;
     }
 };
