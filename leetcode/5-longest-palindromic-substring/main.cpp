@@ -31,15 +31,6 @@ cyan         36         46
 white        37         47
 */
 
-struct max_st {
-    int max_score;
-    int max_i;
-    int max_j;
-    string answer;
-    max_st(int max_score, int max_i, int max_j, string answer)
-        : max_score(max_score), max_i(max_i), max_j(max_j), answer(answer) {}
-};
-
 string check_even(const string& s) {
     int max_score = 0;
     int max_i = 0;
