@@ -45,10 +45,6 @@ string check_even(const string& s) {
     //  left_i は 0 から 8まで動ける
     // right_j は 1 から 9まで動ける
     for (int i = 0; i < (s.size() - 1); ++i) {
-        if (debug) {
-            cout << "[check_even] i : " << i << ", max_score = " << max_score
-                 << endl;
-        }
         int now_score = 2;
         int left = i;
         int right = i + 1;
@@ -81,10 +77,6 @@ string check_odd(const string& s) {
     int max_j = 0;
 
     for (int i = 1; i < (s.size() - 1); ++i) {
-        if (debug) {
-            // cout << "[check_odd] i : " << i << ", max_score = " << max_score
-            //      << endl;
-        }
         // リセットされた。これから始まる
         int now_score = 3;  // 最初のこれが通ればスコアは 3　になる。
         int left = i - 1;
@@ -175,8 +167,9 @@ signed main() {
                            "これおちる？bab");  // x から p 文字
 
     test_eq_assert<string>(Solution().longestPalindrome("babad"), "bab",
-                           "bab or aba");
-    test_eq_assert<string>(Solution().longestPalindrome("cbbd"), "bb", "cbbd");
+                           "babad -> bab or aba");
+    test_eq_assert<string>(Solution().longestPalindrome("cbbd"), "bb",
+                           "cbbd -> bb");
 
     test_eq_assert<string>(check_odd("testse"), "estse",
                            "check odd のテスト1 testste");
