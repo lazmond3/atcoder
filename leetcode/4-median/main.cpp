@@ -53,7 +53,11 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
 }
 
 // 二分探索用判定関数
-bool is_good(const vector<int>& vec, double target_number) { return false; }
+
+bool is_good(const vector<int>& nums1, const vector<int>& nums2,
+             double target_number) {
+    return false;
+}
 
 /*
     struct かなんかで、結局最後の中央値の値を返したい。
@@ -161,7 +165,8 @@ class Solution {
                    インデックスの位置を計算することによって。
                 => b の中でさらに二分探索をして、
                    インデックスの位置を計算することによって。
-                それぞれのインデックスを ap, bq としたとき、
+                doubleの位置は計算できないが、それより大きい数が何個あり,,
+           というのは わかるはず。 それぞれのインデックスを ap, bq としたとき、
                 ap, bq の値から、両側に ある要素の個数は計算できるはずなので、
                 これを利用して判定できる。
                    o          x
