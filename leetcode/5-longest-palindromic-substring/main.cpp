@@ -165,11 +165,11 @@ signed main() {
     // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
     test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
                            "abcd substr 1,3");
-    test_eq_assert<string>(string("abcd").substr(0, 0), "__",
-                           "abcd substr 1,3");
-    test_eq_assert<string>(string("0123456789").substr(3, 5), "456",
+    // ❌ 345 ではない。
+    test_eq_assert<string>(string("0123456789").substr(3, 5), "34567",
                            "0-9 の substr 3-5");
-    test_eq_assert<string>(string("babad").substr(0, 2), "bab",
+    // ❌ substr(0,2)だと ba になってしまう
+    test_eq_assert<string>(string("babad").substr(0, 3), "bab",
                            "これおちる？bab");  // x から p 文字
 
     test_eq_assert<string>(Solution().longestPalindrome("babad"), "bab",
