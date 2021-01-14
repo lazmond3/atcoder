@@ -233,3 +233,20 @@ signed main() {
     // test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
     //                        "abcd substr 1,3");
 }
+
+/* TODO
+    - test_eq じゃなくて test_double_eq も必要そう。
+    abs を使えばいい？
+
+    - めぐる式にぶんたんさくをググル
+
+    - atcoder double の十分小さい数ってどうやって使ってる?
+    10^-10 くらい用意したほうがよさそう？
+
+    作れそうな関数
+    - count_left_right_item_number
+    - calc_median
+    - is_good
+    - めぐる式のあと: binary_search_median
+
+*/
