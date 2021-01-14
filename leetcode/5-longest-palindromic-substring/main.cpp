@@ -31,7 +31,20 @@ cyan         36         46
 white        37         47
 */
 
-void check_even(const string& s, int& max_score, int& max_i, int& max_j) {
+struct max_st {
+    int max_score;
+    int max_i;
+    int max_j;
+    string answer;
+    max_st(int max_score, int max_i, int max_j, string answer)
+        : max_score(max_score), max_i(max_i), max_j(max_j), answer(answer) {}
+};
+
+string check_even(const string& s) {
+    int max_score = 0;
+    int max_i = 0;
+    int max_j = 0;
+
     // 01234....789
     //  left_i は 0 から 8まで動ける
     // right_j は 1 から 9まで動ける
@@ -58,8 +71,16 @@ void check_even(const string& s, int& max_score, int& max_i, int& max_j) {
             now_score += 2;
         }
     }
+    // return max_st(max_score, max_i, max_j, s.substr(max_i, max_j - max_i +
+    // 1));
+    return s.substr(max_i, max_j - max_i + 1);
 }
-void check_odd(const string& s, int& max_score, int& max_i, int& max_j) {
+
+string check_odd(const string& s) {
+    int max_score = 0;
+    int max_i = 0;
+    int max_j = 0;
+
     for (int i = 1; i < (s.size() - 1); ++i) {
         if (debug) {
             cout << "[check_odd] i : " << i << ", max_score = " << max_score
@@ -86,6 +107,7 @@ void check_odd(const string& s, int& max_score, int& max_i, int& max_j) {
             now_score += 2;
         }
     }
+    return s.substr(max_i, max_j - max_i + 1);
 }
 
 // https://leetcode.com/problems/longest-palindromic-substring/
@@ -94,23 +116,9 @@ class Solution {
     string longestPalindrome(string s) {
         if (s.size() == 0) return "";
         if (s.size() == 1) return s;
-        int max_i = 0;
-        int max_j = 0;  // jも含めることにしよう。
-        int max_score = 1;
 
-        if (debug) cout << "this_string: " << s << endl;
-        check_odd(s, max_score, max_i, max_j);
-        if (debug) {
-            cout << "----- check odd -------" << endl;
-            cout << "max_i: " << max_i << endl;
-            cout << "max_j: " << max_j << ", max score: " << max_score << endl;
-        }
-        check_even(s, max_score, max_i, max_j);
-        if (debug) {
-            cout << "----- check even -------" << endl;
-            cout << "max_i: " << max_i << endl;
-            cout << "max_j: " << max_j << ", max score: " << max_score << endl;
-        }
+        // 初期のmax_string を用意する。0文字目から初めて1文字取得
+        string max_string = s.substr(0, 1);
 
         // i
         // abbcccddd
@@ -120,8 +128,14 @@ class Solution {
         // abbcccddd
         // このように歩んでいき、左右に分割していく。
         // 中央パターンと 偶数パターンがある。
+        string odd_string = check_odd(s);
+        string eve_string = check_even(s);
+        if (odd_string.size() > max_string.size()) {
+            max_string = odd_string;
+        } else
+            max_string = eve_string;
 
-        return s.substr(max_i, max_j - max_i + 1);
+        return max_string;
     }
 };
 
@@ -158,4 +172,7 @@ signed main() {
     test_eq_assert<string>(Solution().longestPalindrome("babad"), "bab",
                            "bab or aba");
     test_eq_assert<string>(Solution().longestPalindrome("cbbd"), "bb", "cbbd");
+
+    test_eq_assert<string>(check_odd("testse"), "estse",
+                           "check odd のテスト1 testste");
 }
