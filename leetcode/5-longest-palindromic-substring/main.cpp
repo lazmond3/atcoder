@@ -15,6 +15,7 @@ bool debug = false;
 // clang-format off
 template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
 #define RED "\033[1;31m"
+#define GRE "\033[1;32m"
 #define BLU "\033[34m"
 #define CLR "\033[0m"
 // clang-format on
@@ -136,7 +137,8 @@ class Solution {
 template <class T>
 void test_eq_assert(const T val, const T answer, const string& label) {
     if (debug && val == answer) {
-        cout << "--------- [[ " << label << "]] ---------" << endl;
+        cout << GRE << "--------- [[ " << label << "]] ---------" << CLR
+             << endl;
     }
     if (val != answer) {
         cout << RED;
