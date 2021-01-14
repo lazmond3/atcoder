@@ -50,19 +50,22 @@ string check_even(const string& s) {
                  << endl;
         }
         int now_score = 2;
-        int left_i = i;
+        int left = i;
         int right = i + 1;
-        while (0 <= left_i && right < s.size() && s[left_i] == s[right]) {
+        while (0 <= left && right < s.size() && s[left] == s[right]) {
             if (now_score > max_score) {
                 if (debug) {
-                    cout << "[check_even] left: " << left_i
-                         << ", right: " << right << ", score up!" << endl;
+                    printf(
+                        "%s score up! i = %d, left: %d, right: %d, "
+                        "max_score(%d) to now_score(%d) substr: %s\n",
+                        "[check_even]", i, left, right, max_score, now_score,
+                        s.substr(left, right - left + 1).c_str());
                 }
-                max_i = left_i;
+                max_i = left;
                 max_j = right;
                 max_score = now_score;
             }
-            left_i -= 1;
+            left -= 1;
             right += 1;
             now_score += 2;
         }
@@ -95,14 +98,6 @@ string check_odd(const string& s) {
                         "max_score(%d) to now_score(%d) substr: %s\n",
                         "[check_odd]", i, left, right, max_score, now_score,
                         s.substr(left, right - left + 1).c_str());
-
-                    // cout << "[check_odd] score up! i = " << i << ", ";
-                    // cout << "[check_odd] left: " << left << ", right: " <<
-                    // right
-                    //      << ", score: "
-                    //      << "max_score(" << max_score
-                    //      << ") -> now_score = " << now_score << ", "
-                    //      << ", score up!" << endl;
                 }
                 max_i = left;
                 max_j = right;
