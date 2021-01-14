@@ -66,10 +66,16 @@ bool is_good(const vector<int>& nums1, const vector<int>& nums2,
     問題の要求精度は -106 <= nums1[i], nums2[i] <= 106 であり、
     double の精度は 15ケタある。
 */
-double binary_search_median(const vector<int>& vec, double start, double end) {
+double binary_search_median(const vector<int>& vec, const double _start,
+                            const double _end) {
+    double start = _start;
+    double end = _end;
+
     // FIXME
     return 0.0;
 }
+
+double calc_median(const vector<int>& vec) { return 0.0; }
 
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 class Solution {
@@ -172,10 +178,11 @@ class Solution {
                    o          x
              OOOOOOIIIIIIIIIIIIIIIIOOOOIIIII
         */
-        double start = static_cast<double>(
-            nums1[nums1.size() / 2]);  // FIXME nums1 の 中央値
-        double end = static_cast<double>(
-            nums1[nums1.size() / 2]);  // FIXME nums2 の 中央値
+
+        // 8 の場合、インデックスは 4 となる。
+        // 9 の場合、インデックスは 4となる (中央値)
+        double start = calc_median(nums1);  // FIXME nums1 の 中央値
+        double end = calc_median(nums2);    // FIXME nums2 の 中央値
 
         if (start > end) {
             swap(start, end);
