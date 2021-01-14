@@ -120,21 +120,11 @@ class Solution {
         // abbcccddd
         // このように歩んでいき、左右に分割していく。
         // 中央パターンと 偶数パターンがある。
+
         return s.substr(max_i, max_j - max_i + 1);
     }
 };
 
-template <class T>
-void eq_assert(const T val, const T answer, const string& label) {
-    if (val != answer) {
-        cout << "Assertion failed: "
-             << "(val = " << val << ", label = " << label << ", "
-             << "answer = " << answer << ") " << endl
-             << flush;
-
-        exit(1);
-    }
-}
 template <class T>
 void test_eq_assert(const T val, const T answer, const string& label) {
     if (val != answer) {
