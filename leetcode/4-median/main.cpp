@@ -47,13 +47,25 @@ struct left_right {
     判定関数
 */
 struct left_right count_left_right_item_number(const vector<int>& vec,
-                                               int target_number) {
+                                               double target_number) {
     // FIXME
     return left_right(0, 100);
 }
 
 // 二分探索用判定関数
-bool is_good(const vector<int>& vec, int target_number) { return false; }
+bool is_good(const vector<int>& vec, double target_number) { return false; }
+
+/*
+    struct かなんかで、結局最後の中央値の値を返したい。
+    が、 double であるかどうかの判定というのもあるし..
+    最初から全部 double でやればよさそう。
+    問題の要求精度は -106 <= nums1[i], nums2[i] <= 106 であり、
+    double の精度は 15ケタある。
+*/
+double binary_search() {
+    // FIXME
+    return 0.0;
+}
 
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 class Solution {
