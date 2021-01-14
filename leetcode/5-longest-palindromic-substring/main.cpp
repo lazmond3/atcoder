@@ -175,4 +175,10 @@ signed main() {
 
     test_eq_assert<string>(check_odd("testse"), "estse",
                            "check odd のテスト1 testste");
+    test_eq_assert<string>(check_odd("te2stse"), "sts", "check odd のテスト2");
+
+    test_eq_assert<string>(check_even("testse"), "t",
+                           "check even のテスト1 testste");
+    test_eq_assert<string>(check_even("teetse"), "teet",
+                           "check even のテスト2 teet");
 }
