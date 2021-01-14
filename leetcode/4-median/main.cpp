@@ -71,6 +71,8 @@ double binary_search_median(const vector<int>& vec, const double _start,
     double start = _start;
     double end = _end;
 
+    // たしか二分探索ってn回くらい繰り返したほうがよかった気がする
+
     // FIXME
     return 0.0;
 }
