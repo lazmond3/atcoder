@@ -14,11 +14,12 @@ constexpr double eps = 1e-11;
 bool debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
+#define LAST(x) x[x.size() - 1]
+#define FAST(x) x[0]
 #define int long long
 // clang-format off
 template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
 template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
-#define LAST(x) x[x.size()-1]
 #define RED "\033[1;31m"
 #define GRE "\033[1;32m"
 #define BLU "\033[34m"
@@ -136,15 +137,65 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         // この場合は中間の値になっているので、
 
         // 2, 2.3, 3 のようになっている。
-        // ❌  [1, 2] , [3, 4] targe 2.5 というケースで失敗する！
-        // ❌  [1] [2, 5, 7] みたいなやつでもだめ
-        /*
-            [1] [2,4,6] -> 3
+        // ❌ [1, 2] , [3, 4] targe 2.5 というケースで失敗する！
+        // [1] [2, 5, 7] みたいなやつでもだめ -> 3.5 になる
+        // [1,3,5] [2,3,4]
+        // あるいは、　[1,2,3,6,7,9,] -> 4.5
+        // [1,3,6] [2,7,9]
+        // 4.5 だと、 6と 7 が表示される。
+        double min_edge = std::numeric_limits<double>::min();
+        double upper_edge = std::numeric_limits<double>::max();
 
-            [2,5,7][4] -> 4.5
-        */
-        double min_edge = 0;
-        double upper_edge = 0;
+        auto l1 = lower_bound(ALL(nums1), target_value);
+        auto l2 = lower_bound(ALL(nums2), target_value);
+        bool out1 =
+            l1 == nums1.end() || (l1 == nums1.begin() && *l1 > target_value);
+        bool out2 =
+            l2 == nums2.end() || (l2 == nums2.begin() && *l2 > target_value);
+        if (debug) {
+            printf("out1: %d l2 == nums2.end() : %d\n", out1, out2);
+        }
+
+        if (out1 && out2) {
+            auto larger = nums1;
+            auto smalle = nums2;
+
+            if (LAST(nums1) < LAST(nums2)) {
+                swap(larger, smalle);
+            }
+            return (LAST(smalle) + FAST(larger)) / 2.0;
+        }
+
+        if (out1) {
+            auto ll = lower_bound(ALL(nums2), target_value) - 1;
+            auto uu = lower_bound(ALL(nums2), target_value);
+            return (static_cast<double>(*ll) + *uu) / 2.0;
+        }
+
+        if (out2) {
+            auto ll = lower_bound(ALL(nums1), target_value) - 1;
+            auto uu = lower_bound(ALL(nums1), target_value);
+            return (static_cast<double>(*ll) + *uu) / 2.0;
+        }
+
+        if (debug) {
+            cout << "[sophis] target:  " << target_value << ", out1: " << out1
+                 << ", out2:  " << out2;
+            cout << endl;
+            cout << flush;
+        }
+
+        // もし out ではなかったら
+        l1 -= 1;
+        l2 -= 1;
+        return 1;
+        min_edge = max(*l1, *l2);
+
+        auto u1 = lower_bound(ALL(nums1), target_value);
+        auto u2 = lower_bound(ALL(nums2), target_value);
+
+        upper_edge = min(*u1, *u2);
+
         return (min_edge + upper_edge) / 2.0;
     } else if (t % 2 == 1) {
         // この場合はこのまま返せばよいのだよね？
@@ -263,6 +314,7 @@ void test_double_assert(const T& val, const T& answer, const string& label) {
              << flush;
         cout << CLR;
 
+        // cout << flush;
         exit(1);
     }
 }
