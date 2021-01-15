@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -23,6 +24,11 @@ template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } retu
 
 // 🎄⭐️🎅 欲しいもの
 // - string の ゼロフィル関数
+
+bool eq_double(double a, double b) {
+    if (abs(a - b) < eps) return true;
+    return false;
+}
 
 /*
 // http://en.wikipedia.org/wiki/ANSI_escape_code
