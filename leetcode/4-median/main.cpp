@@ -175,10 +175,10 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         double min_edge = -100;
         auto l1 = lower_bound(ALL(nums1), target_value);
         auto l2 = lower_bound(ALL(nums2), target_value);
-        if (l1 != nums1.begin()) {
+        if (l1 != nums1.begin() && !eq_double(*l1, target_value)) {
             l1 -= 1;
         }
-        if (l2 != nums2.begin()) {
+        if (l2 != nums2.begin() && !eq_double(*l2, target_value)) {
             l2 -= 1;
         }
         if (*l1 < target_value || eq_double(*l1, target_value)) {
@@ -196,15 +196,16 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
             upper_edge = *u1;
         }
         if (*u2 > target_value || eq_double(*u2, target_value)) {
-            chmin(upper_edge, *u2);
+            chmin<double>(upper_edge, *u2);
         }
 
         if (debug) {
             printf(
                 "[sophis] target = %f, t = %d, l1: %d, l2: %d, u1: %d, u2: %d, "
                 " min_edge: "
-                "%f, upper_edge: %f\n",
-                target_value, t, *l1, *l2, *u1, *u2, min_edge, upper_edge);
+                "%f, upper_edge: %f -> answer: %f\n",
+                target_value, t, *l1, *l2, *u1, *u2, min_edge, upper_edge,
+                (min_edge + upper_edge) / 2.0);
         }
 
         return (min_edge + upper_edge) / 2.0;
