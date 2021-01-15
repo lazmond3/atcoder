@@ -377,6 +377,9 @@ signed main() {
                             12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22},
                 vector<int>{0, 6}),
             10.50000, " solution test 5:  -> 10.50");
+        test_double_assert(Solution().findMedianSortedArrays(
+                               vector<int>{1, 3, 5}, vector<int>{2, 3, 4}),
+                           3.0, " solution test 6: [1,3,5][2,3,4] -> 3.0");
     }
 }
 
