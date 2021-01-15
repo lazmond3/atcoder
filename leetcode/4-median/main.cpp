@@ -75,7 +75,10 @@ struct left_right {
 struct left_right count_left_right_item_number(const vector<int>& vec,
                                                double target_number) {
     // FIXME
-    return left_right(0, 100);
+    // auto p = lower_bound(ALL(vec), target_number);
+    // int index = distance(vec.begin(), p);
+
+    // return left_right(, 100);
 }
 
 // 二分探索用判定関数
@@ -242,6 +245,7 @@ void test_eq_assert(const T val, const T answer, const string& label) {
         cout << GRE;
         cout << "--------- [[ " << label << "]] ---------" << endl;
         cout << CLR;
+        cout << flush;
     }
     if (val != answer) {
         cout << RED;
@@ -283,6 +287,14 @@ signed main() {
                             "lower bound テスト 2 4.00000000001 に対して");
         lbp = lower_bound(ALL(v), d3);
         test_eq_assert<int>(*lbp, 4, "lower bound テスト 3 3.99 に対して");
+        lbp = lower_bound(ALL(v), -1.1);
+        cout << "lbp distance -1.1: " << distance(v.begin(), lbp) << endl;
+        assert("lower bound テスト 4 -1.1 に対して. 存在しない値は？" &&
+               lbp == v.begin());
+
+        // test_eq_assert(lbp, v.end(),
+        //                "lower bound テスト 4 -1.1 に対して.
+        //                存在しない値は？");
     }
     // STL upper_bound という2分探索
     {
@@ -308,6 +320,14 @@ signed main() {
         test_eq_assert(calc_median(vec), 5.5, "calc median のテスト2 10要素");
         vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         test_eq_assert(calc_median(vec), 5.5, "calc median のテスト3 10要素");
+    }
+
+    // count_left_right_item_number のテスト
+    {
+        vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        // test_eq_assert(count_left_right_item_number(vec, 3.4), left_right(3,
+        // 6),
+        //                "count left のテスト1 3.4");
     }
 
     // // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
