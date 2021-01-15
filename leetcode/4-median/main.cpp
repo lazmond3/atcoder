@@ -125,16 +125,35 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
                 |
     OOIIIOOIIIIIOOOOOOOIIOOOIO
 */
-bool is_good(const vector<int>& nums1, const vector<int>& nums2,
-             double target_number) {
+/*
+    これが間違っている。
+    [1,3] [2]
+    のとき、
+    min = 1, max = 3 で mid = 2 だと ok 出してしまう。
+    mid = 2.5 でも ok　出してしまうのだが、
+    1,  3, => 2
+    2,  3  => 2.5 // mid が右にずれるが、 ok なので min_
+   のほうが出てしまう！全然ok じゃない！ 2.5 3 => 2.75 これだと、
+
+*/
+int is_good(const vector<int>& nums1, const vector<int>& nums2,
+            double target_number) {
     auto num1_lr = count_left_right_item_number(nums1, target_number);
     auto num2_lr = count_left_right_item_number(nums2, target_number);
     // 領域的な、単調性が必要なので、片側のほうが多いか一致する、という条件で組む必要がある。
     // target value が小さければ ok を出したいので、left のほうが少なければ ok.
-    if ((num1_lr.left + num1_lr.left) <= (num1_lr.right + num1_lr.right)) {
-        return true;
+    if (debug) {
+        cout << "\t[is good] target: " << target_number
+             << ",  num1_lr : " << num1_lr << ", num2_lr: " << num2_lr << endl;
+    }
+
+    if ((num1_lr.left + num1_lr.left) < (num1_lr.right + num1_lr.right)) {
+        return 1;
+    } else if ((num1_lr.left + num1_lr.left) ==
+               (num1_lr.right + num1_lr.right)) {
+        return 0;
     } else {
-        return false;
+        return -1;
     }
 }
 
@@ -146,140 +165,69 @@ bool is_good(const vector<int>& nums1, const vector<int>& nums2,
     double の精度は 15ケタある。
 */
 /*
-    考察を変えて、 min max の完全な二分探索でとりえあえずサンプル通らないか実験してみる。
+    考察を変えて、 min max
+   の完全な二分探索でとりえあえずサンプル通らないか実験してみる。
 */
-double binary_search_median(const vector<int>& nums1, const vector<int>& nums2,
-                            const double _start, const double _end) {
-    double min_ = min(nums1[0], nums2[0])
-    double 
+double binary_search_median(const vector<int>& nums1,
+                            const vector<int>& nums2) {
+    double min_ = min(nums1[0], nums2[0]);  // min は ok とする。
+    double max_ = max(nums1[nums1.size() - 1],
+                      nums2[nums2.size() - 1]);  // max は ng　とする。
 
+    double mid = 0;
+    for (int i = 0; i < 40; ++i) {
+        mid = (min_ + max_) / 2.0;
+        int ok = is_good(nums1, nums2, mid);
+        if (debug) {
+            printf("[binsearch] i = %d, min_: %f, max: %f, mid: %f ok: %d\n", i,
+                   min_, max_, mid, ok);
+        }
+
+        if (ok == 0) {
+            // 左右が等しい時にどちらにずらすか
+            min_ = mid;
+        } else if (ok == 1) {
+            max_ = mid;
+        } else {
+            min_ = mid;
+        }
+
+        // if (ok) {
+        //     min_ = mid;
+        //     // max_ = mid;
+        // } else {
+        //     max_ = mid;
+        // }
+    }
+    if (debug) {
+        printf("\t[bin search] final: min_ %f, max_: %f\n", min_, max_);
+    }
+    return (min_ + max_) / 2.0;
     // たしか二分探索ってn回くらい繰り返したほうがよかった気がする
 
     // FIXME
-    return 0.0;
+    // return 0.0;
 }
 
-double calc_median(const vector<int>& vec) {
-    if (vec.size() % 2 == 1) {
-        // 7 要素あったら index = 3 にしたい。
-        return vec[vec.size() / 2];
-    }
-    // 8 要素あったら、 3と4にしたい。
-    // 012 34 567
-    auto a = vec[vec.size() / 2 - 1];
-    auto b = vec[vec.size() / 2];
-    return static_cast<double>((a + b) / 2.0);
-}
+// double calc_median(const vector<int>& vec) {
+//     if (vec.size() % 2 == 1) {
+//         // 7 要素あったら index = 3 にしたい。
+//         return vec[vec.size() / 2];
+//     }
+//     // 8 要素あったら、 3と4にしたい。
+//     // 012 34 567
+//     auto a = vec[vec.size() / 2 - 1];
+//     auto b = vec[vec.size() / 2];
+//     return static_cast<double>((a + b) / 2.0);
+// }
 
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 class Solution {
    public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        /*
-            考察:
-            中央値の問題は、順序だけが大事なので、個別の数字は無視できる。
-            数字はあとから振り直すことができる。
-
-            O: 配列1に入っている数字
-            I: 配列2に入っている数字
-            OOOIIIOOOOOOOIIOOOOOIIOOOOIIOO : 1 が完全に2を包んでいる場合
-
-                              ○     ⭕️              ●
-            0   1   2   3   4   5   6   7   8   9  10  11  12
-            O   O   O   O   I   I   O   O   O   O   I   I   I
-
-            理想としては、         ●   ○
-    などで停止してほしい？(停止条件から決める) 0   1   2   3   4   5   6   7   8
-    9  10  11  12 O   O   O   O   I   I   O   O   O   O   I   I   I
-    相互にズレている場合。
-    O:      0   1   2   3           4   5   6   7
-    I:                      0   1                   2   3   4
-
-    STEP 1(7.25)                       ○ x
-
-
-            O の中央値は ○
-            I の中央値は ●
-            全体の中央値は ⭕️
-
-            エンドポイントの順番はそうだけど、中央値の順番は逆転するケース
-            0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 (16)
-            O I I I I I O O O O O O O O O O I
-    O:      0           1 2 3 4 5 6 7 8 9 0 (11)
-    I:        0 1 2 3 4                     5
-                   ●        ⭕️   ○
-
-             // endpoint でスワップしたほうがいい？
-            それぞれの中央値は簡単に計算できる。
-
-            n + m == 偶数のとき、中央値はdouble
-            奇数のとき、中央値はちょうど定まる。
-        */
-
-        /*
-            「a,bそれぞれの中央値の中間に全体の中央値が存在する」
-
-            このケースにも当てはまりそう
-            OOOOOOIIIIIIIIIIOOOOO
-
-            証明:
-            I にとってみると、中央値の右側のほう
-            O にとってみると、中央値より、やや左
-            必ず、2つの間に存在するか？ ( これに違反するケースを考える )
-            OOOOOOOOOIIIIIIII => 中間にある。
-            OIIIIIIIIIOO      => 中間にある。
-            ai ai+1,,... am
-            bi bi+1,,... bn   => ai, bj がそれぞれの中央値のとき、
-            ai,bj の双方の右側に全体の中央値 c があると仮定すると、
-            ai < c
-            bj < c かつ、
-              // ここ雑
-            ai の右側には、 M(a)/2 個のaの要素が存在する。
-            bj の右側には、 N / 2 個の bの要素が存在する。
-            ai,bj < c ということは、 c は
-                ai+1 <= c
-                bj+1 <= c
-            であるが、この場合、ai+1 の右側には、 M/2 - 1個のaの要素が、
-            bj+1 の右側には、多くても N/2 - 1 個の b の要素しか存在しない。
-            一方で、 ai+1 の左側には、 ai を含めて、 M/2+1 個のaの要素が、
-                    bj+1 の左側には、 bj を含めて、 N/2+1
-           個のbの要素が存在する。 両側で数に差があるので、 ai,bj < c
-           という中央値はありえない。◇
-        */
-        /*
-            以下の条件を利用して、二分探索をしたいが、
-            二分探索の条件としては、判定がO(1)でできる必要がある
-                  (
-                      判定については単調性が必要だが、
-                      上記の cを移動させると、さらに
-                      両側の要素の偏りが大きくなるので、
-                      単調性は存在するといえる。
-                  )
-                 （必要はないが、O(log(m))でできるらしいので)
-
-             以下のケースにおいて、 適当なインデックスを定めたとき、
-             どうやってそれを全体中央値だと判定する？
-
-            Ans.
-                => a の中で二分探索をして、
-                   インデックスの位置を計算することによって。
-                => b の中でさらに二分探索をして、
-                   インデックスの位置を計算することによって。
-                doubleの位置は計算できないが、それより大きい数が何個あり,,
-           というのは わかるはず。 それぞれのインデックスを ap, bq としたとき、
-                ap, bq の値から、両側に ある要素の個数は計算できるはずなので、
-                これを利用して判定できる。
-                   o          x
-             OOOOOOIIIIIIIIIIIIIIIIOOOOIIIII
-        */
-
-        // 8 の場合、インデックスは 4 となる。
-        // 9 の場合、インデックスは 4となる (中央値)
-        double nums1_med = calc_median(nums1);  // FIXME nums1 の 中央値
-        double nums2_med = calc_median(nums2);  // FIXME nums2 の 中央値
-
-        // binary_search_median()
-        return 0.0;
+    double findMedianSortedArrays(const vector<int>& nums1,
+                                  const vector<int>& nums2) {
+        // ❌ 考察を削除した。
+        return binary_search_median(nums1, nums2);
     }
 };
 
@@ -305,6 +253,27 @@ void test_eq_assert(const T& val, const T& answer, const string& label) {
     }
 }
 
+template <class T>
+void test_double_assert(const T& val, const T& answer, const string& label) {
+    if (debug && eq_double(val, answer)) {
+        cout << GRE;
+        cout << "--------- [[ " << label << "]] ---------" << endl;
+        cout << CLR;
+        cout << flush;
+    }
+    if (!eq_double(val, answer)) {
+        cout << RED;
+        cout << "--------- [[ " << label << "]] ---------" << endl;
+        cout << CLR;
+        cout << "Assertion failed: "
+             << "(val = " << RED << val << CLR << ", label = " << label << ", "
+             << "answer = " << BLU << answer << CLR << ") " << endl
+             << flush;
+        cout << CLR;
+
+        exit(1);
+    }
+}
 signed main() {
     const char* DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
@@ -357,14 +326,16 @@ signed main() {
     }
 
     // calc median のテスト
-    {
-        vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        test_eq_assert(calc_median(vec), 5.0, "calc median のテスト1 9要素");
-        vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 11};
-        test_eq_assert(calc_median(vec), 5.5, "calc median のテスト2 10要素");
-        vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        test_eq_assert(calc_median(vec), 5.5, "calc median のテスト3 10要素");
-    }
+    // 🚦 ❌ 廃止
+    // {
+    //     vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    //     test_eq_assert(calc_median(vec), 5.0, "calc median のテスト1 9要素");
+    //     vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 11};
+    //     test_eq_assert(calc_median(vec), 5.5, "calc median のテスト2
+    //     10要素"); vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    //     test_eq_assert(calc_median(vec), 5.5, "calc median のテスト3
+    //     10要素");
+    // }
 
     // count_left_right_item_number のテスト
     {
@@ -381,9 +352,21 @@ signed main() {
         //                "count left のテスト1 3.4");
     }
 
-    // // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
-    // test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
-    //                        "abcd substr 1,3");
+    // solution のテスト
+    {
+        test_double_assert(Solution().findMedianSortedArrays(vector<int>{1, 3},
+                                                             vector<int>{2}),
+                           2.00, " solution test 1: [1,3][2] -> 2.00");
+        test_double_assert(Solution().findMedianSortedArrays(vector<int>{1, 2},
+                                                             vector<int>{3, 4}),
+                           2.500, " solution test 2: [1,2][3,4] -> 2.500");
+        test_double_assert(Solution().findMedianSortedArrays(vector<int>{0, 0},
+                                                             vector<int>{0, 0}),
+                           0.0, " solution test 3: [0,0][0,0] -> 0.0");
+        test_double_assert(
+            Solution().findMedianSortedArrays(vector<int>{}, vector<int>{1}),
+            1.0, " solution test 4: [][1] -> 1.0");
+    }
 }
 
 /* TODO
