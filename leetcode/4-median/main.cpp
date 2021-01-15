@@ -11,7 +11,7 @@
 using namespace std;
 constexpr double eps = 1e-11;
 bool debug = false;
-#define REP(i, n) for (int i = 0;, i##_len = (n); i < i##_len; ++i)
+#define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
 // clang-format off
@@ -278,7 +278,29 @@ void test_double_assert(const T& val, const T& answer, const string& label) {
         exit(1);
     }
 }
+
 signed main() {
+    const char* DEBUG_p = std::getenv("DEBUG");
+    debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
+
+    int n, m;
+
+    cin >> n >> m;
+    vector<int> a(n), b(m);
+    REP(i, n) {
+        int p;
+        cin >> p;
+        a[i] = p;
+    }
+    REP(i, m) {
+        int p;
+        cin >> p;
+        b[i] = p;
+    }
+
+    cout << Solution().findMedianSortedArrays(a, b) << endl;
+}
+signed main2() {
     const char* DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
 
