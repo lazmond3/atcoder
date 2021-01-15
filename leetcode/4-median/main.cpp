@@ -161,6 +161,11 @@ int is_good(const vector<int>& nums1, const vector<int>& nums2,
     }
 }
 
+// 別関数によって、以下の挙動をサポートする。
+double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
+                        const double target_value) {
+    return 0.0;
+}
 /*
     struct かなんかで、結局最後の中央値の値を返したい。
     が、 double であるかどうかの判定というのもあるし..
@@ -205,10 +210,7 @@ double binary_search_median(const vector<int>& nums1,
         }
         if (flag == 2) {
             // mid だったら mid に一番近い 0.5 にしないといけない。
-            if (!eq_double(ceil(mid), mid)) {
-                return (ceil(mid) + floor(mid)) / 2.0;
-            }
-            return mid;
+            return sophisticate_mid(nums1, nums2, mid);
         } else if (flag == 1) {  // left < right
             min_ = mid;
         } else {
