@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 using namespace std;
-constexpr double eps = 1e-15;
+constexpr double eps = 1e-7;
 bool debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
@@ -49,6 +49,9 @@ struct left_right {
     int right;
 
     left_right(int l, int r) : left(l), right(r) {}
+    bool operator==(const left_right& rhs) const {
+        return (rhs.left == this->left && rhs.right == this->right);
+    }
 };
 /*
     判定関数
@@ -82,10 +85,27 @@ struct left_right {
 struct left_right count_left_right_item_number(const vector<int>& vec,
                                                double target_number) {
     // FIXME
-    // auto p = lower_bound(ALL(vec), target_number);
-    // int index = distance(vec.begin(), p);
+    auto p = lower_bound(ALL(vec), target_number);
+    // もし begin のときは、 0 になってしまう。
+    int left = -1;
+    int right = -1;
 
-    // return left_right(, 100);
+    if (p == vec.end()) {
+        left = vec.size();
+        right = 0;
+    } else if (eq_double(*p, target_number)) {
+        // [ 1, 2 ] のとき 2　だと distance = 1 になる。
+        // かといってright = 1というわけではない..
+        left = vec.size();
+        right = 0;
+    } else {
+        // このケースのとき、
+        // [1,2,3] で 2.5 が指定されると [3] に指されて、left = 2
+        int left = distance(vec.begin(), p);
+        int right = vec.size() - left;
+    }
+
+    return left_right(left, right);
 }
 
 // 二分探索用判定関数
@@ -331,8 +351,10 @@ signed main() {
 
     // count_left_right_item_number のテスト
     {
-        vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        // test_eq_assert(count_left_right_item_number(vec, 3.4), left_right(3,
+        vector<int> vec = {1, 2, 3};
+        test_eq_assert(count_left_right_item_number(vec, 2.5), left_right(2, 1),
+                       "count left のテスト 1 {1,2,3}, 2.5");
+
         // 6),
         //                "count left のテスト1 3.4");
     }
