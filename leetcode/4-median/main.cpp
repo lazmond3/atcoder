@@ -132,6 +132,7 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
                         const double target_value) {
     const int n = nums1.size();
     const int m = nums2.size();
+
     const int t = n + m;
     if (t % 2 == 0) {
         // この場合は中間の値になっているので、
@@ -148,10 +149,12 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
 
         auto l1 = lower_bound(ALL(nums1), target_value);
         auto l2 = lower_bound(ALL(nums2), target_value);
-        bool out1 =
-            l1 == nums1.end() || (l1 == nums1.begin() && *l1 > target_value);
-        bool out2 =
-            l2 == nums2.end() || (l2 == nums2.begin() && *l2 > target_value);
+        bool not_end1 = l1 != nums1.end();
+        bool not_end2 = l2 != nums2.end();
+        bool is_begin1 = l1 == nums1.begin();
+        bool is_begin2 = l2 == nums2.begin();
+        bool out1 = !not_end1 || (is_begin1 && *l1 > target_value);
+        bool out2 = !not_end2 || (is_begin2 && *l2 > target_value);
         if (debug) {
             printf("out1: %d l2 == nums2.end() : %d\n", out1, out2);
         }
@@ -192,10 +195,14 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
             printf("[sophis] l1 distance: %d, l2: %d\n",
                    distance(nums1.begin(), l1), distance(nums2.begin(), l2));
         }
-        if (!eq_double(*l1, target_value)) {
+
+        // end である or begin である or
+        if (!not_end1 ||
+            ((!is_begin1 || not_end1) && !eq_double(*l1, target_value))) {
             l1 -= 1;
         }
-        if (!eq_double(*l2, target_value)) {
+        if (!not_end2 ||
+            ((!is_begin2 || not_end2) && !eq_double(*l2, target_value))) {
             l2 -= 1;
         }
 
@@ -204,7 +211,19 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         auto u1 = lower_bound(ALL(nums1), target_value);
         auto u2 = lower_bound(ALL(nums2), target_value);
 
-        max_edge = min(*u1, *u2);
+        if (!not_end1 && !not_end2) {
+            max_edge = min(*u1, *u2);
+        } else if (not_end1) {
+            max_edge = *u1;
+        } else if (not_end2) {
+            max_edge = *u2;
+        }
+        if (debug) {
+            printf("[sophis] u1 distance: %d, u2: %d\n",
+                   distance(nums1.begin(), u1), distance(nums2.begin(), u2));
+            printf("[sophis]min_edge: %f\n", min_edge);
+            printf("[sophis]max_edge: %f\n", max_edge);
+        }
 
         return (min_edge + max_edge) / 2.0;
     } else if (t % 2 == 1) {
