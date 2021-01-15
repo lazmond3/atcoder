@@ -64,8 +64,8 @@ def main():
                     fin.write(f"{bb}\n")
                 for cc in c:
                     fin.write(f"{cc}\n")
-        with open(fdir + f"/sample-{i:04}.debug", "w") as fin:
-            fin.write(f"{a}\n")
+        # with open(fdir + f"/sample-{i:04}.debug", "w") as fin:
+        #     fin.write(f"{a}\n")
 
         if not debug:
             with open(fdir + f"/sample-{i:04}.out", "w") as fout:            
