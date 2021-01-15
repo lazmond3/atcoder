@@ -189,6 +189,13 @@ int is_good(const vector<int>& nums1, const vector<int>& nums2,
 */
 double binary_search_median(const vector<int>& nums1,
                             const vector<int>& nums2) {
+    if (nums2.size() == 0) {
+        return binary_search_median(nums1, nums1);
+    }
+    if (nums1.size() == 0) {
+        return binary_search_median(nums2, nums2);
+    }
+
     double min_ = min(nums1[0], nums2[0]);  // min は ok とする。
     double max_ = max(nums1[nums1.size() - 1],
                       nums2[nums2.size() - 1]);  // max は ng　とする。
@@ -307,7 +314,8 @@ signed main() {
         lbp = lower_bound(ALL(v), d3);
         test_eq_assert<int>(*lbp, 4, "lower bound テスト 3 3.99 に対して");
         lbp = lower_bound(ALL(v), -1.1);
-        cout << "lbp distance -1.1: " << distance(v.begin(), lbp) << endl;
+        if (debug)
+            cout << "lbp distance -1.1: " << distance(v.begin(), lbp) << endl;
         assert("lower bound テスト 4 -1.1 に対して. 存在しない値は？" &&
                lbp == v.begin());
 
