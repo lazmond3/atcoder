@@ -145,10 +145,13 @@ bool is_good(const vector<int>& nums1, const vector<int>& nums2,
     問題の要求精度は -106 <= nums1[i], nums2[i] <= 106 であり、
     double の精度は 15ケタある。
 */
+/*
+    考察を変えて、 min max の完全な二分探索でとりえあえずサンプル通らないか実験してみる。
+*/
 double binary_search_median(const vector<int>& nums1, const vector<int>& nums2,
                             const double _start, const double _end) {
-    double start = _start;
-    double end = _end;
+    double min_ = min(nums1[0], nums2[0])
+    double 
 
     // たしか二分探索ってn回くらい繰り返したほうがよかった気がする
 
