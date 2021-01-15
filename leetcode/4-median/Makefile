@@ -9,4 +9,7 @@ run: main.cpp
 	./a.out 
 ojtest: main.cpp
 	g++ -DTEST -std=c++17 -fsanitize=address main.cpp test.cpp
-	oj test -d $(ARGS)
+	oj test -d $(ARGS) --compare-mode double-match
+slimtest: slim.cpp
+	g++ -DTEST -std=c++17 -fsanitize=address slim.cpp test.cpp
+	oj test -d $(ARGS) --compare-mode double-match
