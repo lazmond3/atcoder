@@ -54,6 +54,15 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
 
 // 二分探索用判定関数
 
+/*
+    もし全体の合計が奇数個だとしたら、これは作れなくない？
+    [1,2,3,4,5]
+    で、4.00 だとしたら、厳密に 4 で止まってくれる？
+    // テストが必要
+          4.5   _  7.6 ここに止まりたい、ってことはできんのかね
+                |
+    OOIIIOOIIIIIOOOOOOOIIOOOIO
+*/
 bool is_good(const vector<int>& nums1, const vector<int>& nums2,
              double target_number) {
     return false;
@@ -229,6 +238,36 @@ signed main() {
         test_eq_assert<int>(b, 10, "swapテスト2 b == 10");
     }
 
+    // STL lower_bound という2分探索
+    {
+        vector<int> v = {1, 2, 3, 4, 5};
+        double d = 4.00;
+        double d2 = 4.00000000001;
+        double d3 = 3.99;
+        auto lbp = lower_bound(ALL(v), d);
+        test_eq_assert<int>(*lbp, 4, "lower bound テスト 1 4.00 に対して");
+        lbp = lower_bound(ALL(v), d2);
+        test_eq_assert<int>(*lbp, 5,
+                            "lower bound テスト 2 4.00000000001 に対して");
+        lbp = lower_bound(ALL(v), d3);
+        test_eq_assert<int>(*lbp, 4, "lower bound テスト 3 3.99 に対して");
+    }
+    // STL upper_bound という2分探索
+    {
+        vector<int> v = {1, 2, 3, 4, 5};
+        double d = 4.00;
+        double d2 = 4.00000000001;
+        double d3 = 3.99;
+        auto lbp = upper_bound(ALL(v), d);
+        // ❌ ここがポイントで、自分自身を入れない。
+        test_eq_assert<int>(*lbp, 5, "upper bound テスト 1 4.00 に対して");
+        lbp = upper_bound(ALL(v), d2);
+        test_eq_assert<int>(*lbp, 5,
+                            "upper bound テスト 2 4.00000000001 に対して");
+        lbp = upper_bound(ALL(v), d3);
+        test_eq_assert<int>(*lbp, 4, "upper bound テスト 3 3.99 に対して");
+    }
+
     // // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
     // test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
     //                        "abcd substr 1,3");
@@ -248,5 +287,7 @@ signed main() {
     - calc_median
     - is_good
     - めぐる式のあと: binary_search_median
+
+    - テストをかけるようになりたい。厳密解で。
 
 */
