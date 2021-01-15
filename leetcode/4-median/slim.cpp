@@ -151,13 +151,13 @@ double sophisticate_mid(vector<int> nums1, vector<int> nums2,
 
         // mid pattern
         if (l1_end) {
-            if (l2 == nums2.begin() && *l2 > target_value) {
+            if ((l2 == nums2.begin()) && (*l2 > target_value)) {
                 // mid pattern
                 return (*l2 + LAST(nums1)) / 2.0;
             }
         }
         if (l2_end) {
-            if (l1 == nums1.begin() && *l1 > target_value) {
+            if ((l1 == nums1.begin()) && (*l1 > target_value)) {
                 // mid pattern
                 return (*l1 + LAST(nums2)) / 2.0;
             }
@@ -165,11 +165,12 @@ double sophisticate_mid(vector<int> nums1, vector<int> nums2,
 
         double min_edge;
 
-        if (!l1_end && *l1 <= target_value) {
+        if (!l1_end && (*l1 <= target_value)) {
             min_edge = *l1;
         }
         if (debug) {
             cout << "[sop] l1end: " << l1_end << ", l2end:  " << l2_end << endl;
+            cout << "[sop] min_edge: " << min_edge << endl;
             // cout << "[sop] l1 : " << *l1;
             // cout << ", l2: " << *l2 << endl;
         }
@@ -183,12 +184,17 @@ double sophisticate_mid(vector<int> nums1, vector<int> nums2,
         }
 
         chmax<double>(min_edge,
-                      max(l1 != nums1.begin() && *(l1 - 1) <= target_value
+                      max(l1 != nums1.begin() && (*(l1 - 1) <= target_value)
                               ? *(l1 - 1)
                               : std::numeric_limits<double>::min(),
-                          l2 != nums2.begin() && *(l2 - 1) <= target_value
+                          l2 != nums2.begin() && (*(l2 - 1) <= target_value)
                               ? *(l2 - 1)
                               : std::numeric_limits<double>::min()));
+        if (debug) {
+            cout << "[sop] min_edge: " << min_edge << endl;
+            // cout << "[sop] l1 : " << *l1;
+            // cout << ", l2: " << *l2 << endl;
+        }
 
         double max_edge;
         max_edge = min(!l1_end && *l1 >= target_value
@@ -197,7 +203,11 @@ double sophisticate_mid(vector<int> nums1, vector<int> nums2,
                        !l2_end && *l2 >= target_value
                            ? *l2
                            : std::numeric_limits<double>::max());
-
+        if (debug) {
+            cout << "[sop] max_edge: " << max_edge << endl;
+            // cout << "[sop] l1 : " << *l1;
+            // cout << ", l2: " << *l2 << endl;
+        }
         return (min_edge + max_edge) / 2.0;
 
     } else {
