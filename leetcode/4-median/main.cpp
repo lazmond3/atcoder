@@ -144,7 +144,7 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         // [1,3,6] [2,7,9]
         // 4.5 だと、 6と 7 が表示される。
         double min_edge = std::numeric_limits<double>::min();
-        double upper_edge = std::numeric_limits<double>::max();
+        double max_edge = std::numeric_limits<double>::max();
 
         auto l1 = lower_bound(ALL(nums1), target_value);
         auto l2 = lower_bound(ALL(nums2), target_value);
@@ -169,13 +169,15 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         if (out1) {
             auto ll = lower_bound(ALL(nums2), target_value) - 1;
             auto uu = lower_bound(ALL(nums2), target_value);
-            return (static_cast<double>(*ll) + *uu) / 2.0;
+            min_edge = *ll;
+            max_edge = *uu;
         }
 
         if (out2) {
             auto ll = lower_bound(ALL(nums1), target_value) - 1;
             auto uu = lower_bound(ALL(nums1), target_value);
-            return (static_cast<double>(*ll) + *uu) / 2.0;
+            min_edge = *ll;
+            max_edge = *uu;
         }
 
         if (debug) {
@@ -202,9 +204,9 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         auto u1 = lower_bound(ALL(nums1), target_value);
         auto u2 = lower_bound(ALL(nums2), target_value);
 
-        upper_edge = min(*u1, *u2);
+        max_edge = min(*u1, *u2);
 
-        return (min_edge + upper_edge) / 2.0;
+        return (min_edge + max_edge) / 2.0;
     } else if (t % 2 == 1) {
         // この場合はこのまま返せばよいのだよね？
         return target_value;
