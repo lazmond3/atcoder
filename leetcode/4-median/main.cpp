@@ -186,9 +186,17 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         }
 
         // もし out ではなかったら
-        l1 -= 1;
-        l2 -= 1;
-        return 1;
+        if (debug) {
+            printf("[sophis] l1 distance: %d, l2: %d\n",
+                   distance(nums1.begin(), l1), distance(nums2.begin(), l2));
+        }
+        if (!eq_double(*l1, target_value)) {
+            l1 -= 1;
+        }
+        if (!eq_double(*l2, target_value)) {
+            l2 -= 1;
+        }
+
         min_edge = max(*l1, *l2);
 
         auto u1 = lower_bound(ALL(nums1), target_value);
