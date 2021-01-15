@@ -127,7 +127,13 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
 */
 bool is_good(const vector<int>& nums1, const vector<int>& nums2,
              double target_number) {
-    return false;
+    auto num1_lr = count_left_right_item_number(nums1, target_number);
+    auto num2_lr = count_left_right_item_number(nums2, target_number);
+    if ((num1_lr.left + num1_lr.left) == (num1_lr.right + num1_lr.right)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /*
