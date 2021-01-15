@@ -43,8 +43,11 @@ def main():
         if debug:
             print( "=== i : ", i, " ====== ")
         fdir = f"test-{m}"
+        ddir = f"debug-{m}"
         if not debug and not os.path.exists(fdir):
             os.mkdir(fdir)
+        if not debug and not os.path.exists(ddir):
+            os.mkdir(ddir)
 
         a,b,c = make_lst(m)
         if debug:
@@ -64,8 +67,8 @@ def main():
                     fin.write(f"{bb}\n")
                 for cc in c:
                     fin.write(f"{cc}\n")
-        # with open(fdir + f"/sample-{i:04}.debug", "w") as fin:
-        #     fin.write(f"{a}\n")
+        with open(ddir + f"/sample-{i:04}.debug", "w") as fin:
+            fin.write(f"{a}\n")
 
         if not debug:
             with open(fdir + f"/sample-{i:04}.out", "w") as fout:            
