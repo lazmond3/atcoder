@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 using namespace std;
+constexpr double eps = 1e-15;
 bool debug = false;
 #define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
