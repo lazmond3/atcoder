@@ -129,7 +129,9 @@ bool is_good(const vector<int>& nums1, const vector<int>& nums2,
              double target_number) {
     auto num1_lr = count_left_right_item_number(nums1, target_number);
     auto num2_lr = count_left_right_item_number(nums2, target_number);
-    if ((num1_lr.left + num1_lr.left) == (num1_lr.right + num1_lr.right)) {
+    // 領域的な、単調性が必要なので、片側のほうが多いか一致する、という条件で組む必要がある。
+    // target value が小さければ ok を出したいので、left のほうが少なければ ok.
+    if ((num1_lr.left + num1_lr.left) <= (num1_lr.right + num1_lr.right)) {
         return true;
     } else {
         return false;
