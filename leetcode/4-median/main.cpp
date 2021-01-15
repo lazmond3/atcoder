@@ -107,8 +107,8 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
     } else {
         // このケースのとき、
         // [1,2,3] で 2.5 が指定されると [3] に指されて、left = 2
-        int left = distance(vec.begin(), p);
-        int right = vec.size() - left;
+        left = distance(vec.begin(), p);
+        right = vec.size() - left;
     }
 
     return left_right(left, right);
