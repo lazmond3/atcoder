@@ -97,6 +97,7 @@ class Solution {
         }
         if (numRows >= 3) {
             vector<char> answer_vec;
+            // これ出た時点で、numRows == 1 を考えないのはダメすぎた..
             const int m2_wave_length = numRows * 2 - 2;
             const int size = s.size();
 
