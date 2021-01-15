@@ -140,6 +140,7 @@ int is_good(const vector<int>& nums1, const vector<int>& nums2,
             double target_number) {
     auto num1_lr = count_left_right_item_number(nums1, target_number);
     auto num2_lr = count_left_right_item_number(nums2, target_number);
+    // ❌
     // 領域的な、単調性が必要なので、片側のほうが多いか一致する、という条件で組む必要がある。
     // target value が小さければ ok を出したいので、left のほうが少なければ ok.
     int left = num1_lr.left + num2_lr.left;
@@ -192,13 +193,6 @@ double binary_search_median(const vector<int>& nums1,
         } else {  // left の方が重くなってしまった
             max_ = mid;
         }
-
-        // if (ok) {
-        //     min_ = mid;
-        //     // max_ = mid;
-        // } else {
-        //     max_ = mid;
-        // }
     }
     if (debug) {
         printf("\t[bin search] final: min_ %f, max_: %f\n", min_, max_);
@@ -209,18 +203,6 @@ double binary_search_median(const vector<int>& nums1,
     // FIXME
     // return 0.0;
 }
-
-// double calc_median(const vector<int>& vec) {
-//     if (vec.size() % 2 == 1) {
-//         // 7 要素あったら index = 3 にしたい。
-//         return vec[vec.size() / 2];
-//     }
-//     // 8 要素あったら、 3と4にしたい。
-//     // 012 34 567
-//     auto a = vec[vec.size() / 2 - 1];
-//     auto b = vec[vec.size() / 2];
-//     return static_cast<double>((a + b) / 2.0);
-// }
 
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 class Solution {
