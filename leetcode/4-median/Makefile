@@ -1,6 +1,9 @@
 debug: main.cpp
 	g++ -std=c++17 -fsanitize=address main.cpp
 	DEBUG=1 ./a.out
+slim: slim.cpp
+	g++ -std=c++17 -fsanitize=address slim.cpp
+	DEBUG=1 ./a.out
 run: main.cpp
 	g++ -std=c++17 -fsanitize=address main.cpp
 	./a.out 
