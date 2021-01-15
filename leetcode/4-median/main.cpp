@@ -101,28 +101,6 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
     return left_right(left, right);
 }
 
-// 二分探索用判定関数
-
-/*
-    もし全体の合計が奇数個だとしたら、これは作れなくない？
-    [1,2,3,4,5]
-    で、4.00 だとしたら、厳密に 4 で止まってくれる？
-    // テストが必要
-          4.5   _  7.6 ここに止まりたい、ってことはできんのかね
-                |
-    OOIIIOOIIIIIOOOOOOOIIOOOIO
-*/
-/*
-    これが間違っている。
-    [1,3] [2]
-    のとき、
-    min = 1, max = 3 で mid = 2 だと ok 出してしまう。
-    mid = 2.5 でも ok　出してしまうのだが、
-    1,  3, => 2
-    2,  3  => 2.5 // mid が右にずれるが、 ok なので min_
-   のほうが出てしまう！全然ok じゃない！ 2.5 3 => 2.75 これだと、
-
-*/
 int is_good(const vector<int>& nums1, const vector<int>& nums2,
             double target_number) {
     auto num1_lr = count_left_right_item_number(nums1, target_number);
@@ -130,23 +108,7 @@ int is_good(const vector<int>& nums1, const vector<int>& nums2,
     // ❌
     // 領域的な、単調性が必要なので、片側のほうが多いか一致する、という条件で組む必要がある。
     // target value が小さければ ok を出したいので、left のほうが少なければ ok.
-    /*
-        ケーススタディ
-        [1,2,3,8] [4,5,6,7,8]
 
-        4.5 は？
-        3 + 1 = 4   | 1 + 4 = 5
-        right の方が重いなら、 min_ を切り上げて、もっと大きい数にしたい -> [4.5
-       - 8]
-
-        6.25 ( 4.5 と 8 の平均 )は？
-        3+3 = 6 | 1+2 =3 で、全然左のほうが重い
-        -> [4.5, 6.25]
-        5.375 は？
-
-
-        -> 1,2,3,4,[5],6,7,8,8
-    */
     int left = num1_lr.left + num2_lr.left;
     int right = num1_lr.right + num2_lr.right;
     if (debug) {
