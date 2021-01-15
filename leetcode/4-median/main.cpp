@@ -458,6 +458,9 @@ signed main() {
         test_double_assert(Solution().findMedianSortedArrays(
                                vector<int>{2, 5, 7}, vector<int>{4}),
                            4.5, " solution test 9: [2,5,7][4] -> 4.5");
+        test_double_assert(Solution().findMedianSortedArrays(vector<int>{1, 2},
+                                                             vector<int>{3, 4}),
+                           2.5, " solution test 10: [1,2][3,4] -> 2.5");
     }
 }
 
