@@ -164,6 +164,32 @@ int is_good(const vector<int>& nums1, const vector<int>& nums2,
 // 別関数によって、以下の挙動をサポートする。
 double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
                         const double target_value) {
+    const int n = nums1.size();
+    const int m = nums2.size();
+    const int t = n + m;
+    if (t % 2 == 0) {
+        // この場合は中間の値になっているので、
+
+        // 2, 2.3, 3 のようになっている。
+        auto l1 = lower_bound(ALL(nums1), target_value);
+        auto l2 = lower_bound(ALL(nums2), target_value);
+        if (l1 != nums1.begin()) {
+            l1 -= 1;
+        }
+        if (l2 != nums2.begin()) {
+            l2 -= 1;
+        }
+
+        auto u1 = lower_bound(ALL(nums1), target_value);
+        auto u2 = lower_bound(ALL(nums2), target_value);
+        const double min_edge = static_cast<double>(max(*l1, *l2));
+        const double upper_edge = static_cast<double>(min(*u1, *u2));
+
+        return (min_edge + upper_edge) / 2.0;
+    } else if (t % 2 == 1) {
+        // この場合はこのまま返せばよいのだよね？
+        return target_value;
+    }
     return 0.0;
 }
 /*
