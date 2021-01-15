@@ -102,8 +102,8 @@ struct left_right count_left_right_item_number(const vector<int>& vec,
     } else if (eq_double(*p, target_number)) {
         // [ 1, 2 ] のとき 2　だと distance = 1 になる。
         // かといってright = 1というわけではない..
-        left = vec.size();
-        right = 0;
+        left = distance(vec.begin(), p);
+        right = vec.size() - left - 1;
     } else {
         // このケースのとき、
         // [1,2,3] で 2.5 が指定されると [3] に指されて、left = 2
@@ -363,6 +363,8 @@ signed main() {
         test_eq_assert<struct left_right>(
             count_left_right_item_number(vec, 2.5), left_right(2, 1),
             "count left のテスト 1 {1,2,3}, 2.5");
+        test_eq_assert(count_left_right_item_number(vec, 2), left_right(1, 1),
+                       "count left のテスト 2 {1,2,3}, 2.0");
 
         // 6),
         //                "count left のテスト1 3.4");
