@@ -16,6 +16,7 @@ bool debug = false;
 #define int long long
 // clang-format off
 template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
+template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
 #define RED "\033[1;31m"
 #define GRE "\033[1;32m"
 #define BLU "\033[34m"
@@ -171,6 +172,7 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         // この場合は中間の値になっているので、
 
         // 2, 2.3, 3 のようになっている。
+        double min_edge = -100;
         auto l1 = lower_bound(ALL(nums1), target_value);
         auto l2 = lower_bound(ALL(nums2), target_value);
         if (l1 != nums1.begin()) {
@@ -179,11 +181,31 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         if (l2 != nums2.begin()) {
             l2 -= 1;
         }
+        if (*l1 < target_value || eq_double(*l1, target_value)) {
+            min_edge = *l1;
+        }
+        if (*l2 < target_value || eq_double(*l2, target_value)) {
+            chmax<double>(min_edge, *l2);
+        }
 
+        double upper_edge = -100;
         auto u1 = lower_bound(ALL(nums1), target_value);
         auto u2 = lower_bound(ALL(nums2), target_value);
-        const double min_edge = static_cast<double>(max(*l1, *l2));
-        const double upper_edge = static_cast<double>(min(*u1, *u2));
+
+        if (*u1 > target_value || eq_double(*u1, target_value)) {
+            upper_edge = *u1;
+        }
+        if (*u2 > target_value || eq_double(*u2, target_value)) {
+            chmin(upper_edge, *u2);
+        }
+
+        if (debug) {
+            printf(
+                "[sophis] target = %f, t = %d, l1: %d, l2: %d, u1: %d, u2: %d, "
+                " min_edge: "
+                "%f, upper_edge: %f\n",
+                target_value, t, *l1, *l2, *u1, *u2, min_edge, upper_edge);
+        }
 
         return (min_edge + upper_edge) / 2.0;
     } else if (t % 2 == 1) {
