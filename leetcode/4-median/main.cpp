@@ -11,7 +11,7 @@
 using namespace std;
 constexpr double eps = 1e-11;
 bool debug = false;
-#define REP(i, n) for (int i = 0, i##_len = (n); i < i##_len; ++i)
+#define REP(i, n) for (int i = 0;, i##_len = (n); i < i##_len; ++i)
 #define ALL(x) x.begin(), x.end()
 #define int long long
 // clang-format off
@@ -201,15 +201,17 @@ double binary_search_median(const vector<int>& nums1,
                       nums2[nums2.size() - 1]);  // max は ng　とする。
 
     double mid = 0;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 100; ++i) {
         mid = (min_ + max_) / 2.0;
         int flag = is_good(nums1, nums2, mid);
         if (debug) {
             string label;
-            if (flag == true) {
+            if (flag == 1) {
                 label = "みぎの方が重い";
-            } else {
+            } else if (flag == 0) {
                 label = "左がおもい";
+            } else if (flag == 2) {
+                label = "右 == 左";
             }
             printf(
                 "[binsearch] i = %d, min_: %f, max: %f, mid: %f flag: %d ( %s "
@@ -217,6 +219,10 @@ double binary_search_median(const vector<int>& nums1,
                 i, min_, max_, mid, flag, label.c_str());
         }
         if (flag == 2) {
+            // mid だったら mid に一番近い 0.5 にしないといけない。
+            if (!eq_double(ceil(mid), mid)) {
+                return (ceil(mid) + floor(mid)) / 2.0;
+            }
             return mid;
         } else if (flag == 1) {  // left < right
             min_ = mid;
@@ -380,6 +386,12 @@ signed main() {
         test_double_assert(
             Solution().findMedianSortedArrays(vector<int>{}, vector<int>{1}),
             1.0, " solution test 4: [][1] -> 1.0");
+        test_double_assert(
+            Solution().findMedianSortedArrays(
+                vector<int>{1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
+                            12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22},
+                vector<int>{0, 6}),
+            10.50000, " solution test 5:  -> 10.50");
     }
 }
 
