@@ -52,7 +52,13 @@ struct left_right {
     bool operator==(const left_right& rhs) const {
         return (rhs.left == this->left && rhs.right == this->right);
     }
+    bool operator!=(const left_right& rhs) const { return !(*this == rhs); }
 };
+ostream& operator<<(ostream& os,
+                    const left_right& dt) {  //}, const left_right& dt) {
+    os << "(left: " << dt.left << ", right: " << dt.right << ")";
+    return os;
+}
 /*
     判定関数
     左側に何要素、右側に何要素
@@ -267,7 +273,7 @@ class Solution {
 };
 
 template <class T>
-void test_eq_assert(const T val, const T answer, const string& label) {
+void test_eq_assert(const T& val, const T& answer, const string& label) {
     if (debug && val == answer) {
         cout << GRE;
         cout << "--------- [[ " << label << "]] ---------" << endl;
@@ -352,8 +358,11 @@ signed main() {
     // count_left_right_item_number のテスト
     {
         vector<int> vec = {1, 2, 3};
-        test_eq_assert(count_left_right_item_number(vec, 2.5), left_right(2, 1),
-                       "count left のテスト 1 {1,2,3}, 2.5");
+        assert(left_right(0, 0) == left_right(0, 0));
+
+        test_eq_assert<struct left_right>(
+            count_left_right_item_number(vec, 2.5), left_right(2, 1),
+            "count left のテスト 1 {1,2,3}, 2.5");
 
         // 6),
         //                "count left のテスト1 3.4");
