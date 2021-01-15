@@ -197,25 +197,31 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         }
 
         // end である or begin である or
-        if (!not_end1 ||
-            ((!is_begin1 || not_end1) && !eq_double(*l1, target_value))) {
+        if (!not_end1 || ((!is_begin1 && !eq_double(*l1, target_value)))) {
             l1 -= 1;
         }
-        if (!not_end2 ||
-            ((!is_begin2 || not_end2) && !eq_double(*l2, target_value))) {
+        if (!not_end2 || ((!is_begin2 && !eq_double(*l2, target_value)))) {
             l2 -= 1;
         }
 
-        min_edge = max(*l1, *l2);
+        min_edge =
+            max(*l1 <= target_value ? *l1 : std::numeric_limits<double>::min(),
+                *l2 <= target_value ? *l2 : std::numeric_limits<double>::min());
 
         auto u1 = lower_bound(ALL(nums1), target_value);
         auto u2 = lower_bound(ALL(nums2), target_value);
+        bool unot_end1 = u1 != nums1.end();
+        bool unot_end2 = u2 != nums2.end();
 
-        if (!not_end1 && !not_end2) {
+        if (debug) {
+            printf("[sophis] unotend1: %d, unotend2: %d\n", unot_end1,
+                   unot_end2);
+        }
+        if (unot_end1 && unot_end2) {
             max_edge = min(*u1, *u2);
-        } else if (not_end1) {
+        } else if (unot_end1) {
             max_edge = *u1;
-        } else if (not_end2) {
+        } else if (unot_end2) {
             max_edge = *u2;
         }
         if (debug) {
@@ -232,6 +238,17 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
     }
     return 0.0;
 }
+
+/* calc median の復活 */
+double calc_median(const vector<int>& vec) {
+    int n = vec.size();
+    int m = n / 2;
+    if (n % 2 == 0) {
+        return ((double)vec[m] + vec[m - 1]) / 2.0;
+    } else {
+        return (double)(vec[m]);
+    }
+}
 /*
     struct かなんかで、結局最後の中央値の値を返したい。
     が、 double であるかどうかの判定というのもあるし..
@@ -246,10 +263,12 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
 double binary_search_median(const vector<int>& nums1,
                             const vector<int>& nums2) {
     if (nums2.size() == 0) {
-        return binary_search_median(nums1, nums1);
+        return calc_median(nums1);
+        // return binary_search_median(nums1, nums1);
     }
     if (nums1.size() == 0) {
-        return binary_search_median(nums2, nums2);
+        return calc_median(nums2);
+        // return binary_search_median(nums2, nums2);
     }
 
     double min_ = min(nums1[0], nums2[0]);  // min は ok とする。
@@ -465,6 +484,13 @@ signed main() {
         test_double_assert(Solution().findMedianSortedArrays(
                                vector<int>{1}, vector<int>{2, 3, 4}),
                            2.5, " solution test 10: [1,2][3,4] -> 2.5");
+        test_double_assert(Solution().findMedianSortedArrays(
+                               vector<int>{1, 3, 4, 6, 9}, vector<int>{8}),
+                           5.0, " solution test 11: [1,3,4,6,9][8] -> 5.0");
+        test_double_assert(
+            Solution().findMedianSortedArrays(vector<int>{1, 4, 5, 8, 9},
+                                              vector<int>{2, 6, 7}),
+            5.5, " solution test 12: [1,4,5,8,9][2,6,7] -> 5.5");
     }
 }
 
