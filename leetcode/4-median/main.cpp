@@ -183,17 +183,22 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
             min_edge = *l2;
         }
 
-        if (l1 != nums1.begin() && !eq_double(*l1, target_value)) {
+        if (l1 != nums1.begin() && (l1 != nums1.end()) &&
+            !eq_double(*l1, target_value)) {
             l1 -= 1;
         }
 
-        if (l2 != nums2.begin() && !eq_double(*l2, target_value)) {
+        if (l2 != nums2.begin() && (l2 != nums2.end()) &&
+            !eq_double(*l2, target_value)) {
             l2 -= 1;
         }
-        if (*l1 < target_value || eq_double(*l1, target_value)) {
+
+        if (l1 != nums1.end() && *l1 < target_value ||
+            eq_double(*l1, target_value)) {
             min_edge = *l1;
         }
-        if (*l2 < target_value || eq_double(*l2, target_value)) {
+        if (l2 != nums2.end() && *l2 < target_value ||
+            eq_double(*l2, target_value)) {
             chmax<double>(min_edge, *l2);
         }
 
@@ -201,18 +206,26 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         auto u1 = lower_bound(ALL(nums1), target_value);
         auto u2 = lower_bound(ALL(nums2), target_value);
 
-        if (u1 == nums1.end()) {
-            upper_edge = *u2;
-        }
-
-        if (*u1 > target_value || eq_double(*u1, target_value)) {
+        if (u1 != nums1.end()) {
             upper_edge = *u1;
         }
-        if (*u2 > target_value || eq_double(*u2, target_value)) {
+
+        if (u1 != nums1.end() && *u1 > target_value ||
+            eq_double(*u1, target_value)) {
+            upper_edge = *u1;
+        }
+        if (u2 != nums2.end() && *u2 > target_value ||
+            eq_double(*u2, target_value)) {
             chmin<double>(upper_edge, *u2);
         }
 
         if (debug) {
+            int _l1 = -111, _l2 = -111, _u1 = -111, _u2 = -111;
+            if (l1 != nums1.end()) _l1 = *l1;
+            if (l2 != nums2.end()) _l2 = *l2;
+            if (u1 != nums1.end()) _u1 = *u1;
+            if (u2 != nums2.end()) _u2 = *u2;
+
             printf(
                 "[sophis] target = %f, t = %d, l1: %d, l2: %d, u1: %d, u2: %d, "
                 " min_edge: "
