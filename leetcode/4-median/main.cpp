@@ -279,28 +279,11 @@ void test_double_assert(const T& val, const T& answer, const string& label) {
     }
 }
 
-signed main() {
-    const char* DEBUG_p = std::getenv("DEBUG");
-    debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
-
-    int n, m;
-
-    cin >> n >> m;
-    vector<int> a(n), b(m);
-    REP(i, n) {
-        int p;
-        cin >> p;
-        a[i] = p;
-    }
-    REP(i, m) {
-        int p;
-        cin >> p;
-        b[i] = p;
-    }
-
-    cout << Solution().findMedianSortedArrays(a, b) << endl;
-}
+#ifdef TEST
 signed main2() {
+#else
+signed main() {
+#endif
     const char* DEBUG_p = std::getenv("DEBUG");
     debug = DEBUG_p != NULL && strnlen(DEBUG_p, 1) > 0;
 
