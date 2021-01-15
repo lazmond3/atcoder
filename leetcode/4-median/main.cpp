@@ -75,8 +75,8 @@ bool is_good(const vector<int>& nums1, const vector<int>& nums2,
     問題の要求精度は -106 <= nums1[i], nums2[i] <= 106 であり、
     double の精度は 15ケタある。
 */
-double binary_search_median(const vector<int>& vec, const double _start,
-                            const double _end) {
+double binary_search_median(const vector<int>& nums1, const vector<int>& nums2,
+                            const double _start, const double _end) {
     double start = _start;
     double end = _end;
 
@@ -86,7 +86,17 @@ double binary_search_median(const vector<int>& vec, const double _start,
     return 0.0;
 }
 
-double calc_median(const vector<int>& vec) { return 0.0; }
+double calc_median(const vector<int>& vec) {
+    if (vec.size() % 2 == 1) {
+        // 7 要素あったら index = 3 にしたい。
+        return vec[vec.size() / 2];
+    }
+    // 8 要素あったら、 3と4にしたい。
+    // 012 34 567
+    auto a = vec[vec.size() / 2 - 1];
+    auto b = vec[vec.size() / 2];
+    return static_cast<double>((a + b) / 2.0);
+}
 
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 class Solution {
@@ -192,12 +202,8 @@ class Solution {
 
         // 8 の場合、インデックスは 4 となる。
         // 9 の場合、インデックスは 4となる (中央値)
-        double start = calc_median(nums1);  // FIXME nums1 の 中央値
-        double end = calc_median(nums2);    // FIXME nums2 の 中央値
-
-        if (start > end) {
-            swap(start, end);
-        }
+        double nums1_med = calc_median(nums1);  // FIXME nums1 の 中央値
+        double nums2_med = calc_median(nums2);  // FIXME nums2 の 中央値
 
         // binary_search_median()
         return 0.0;
