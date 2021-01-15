@@ -175,9 +175,18 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         double min_edge = -100;
         auto l1 = lower_bound(ALL(nums1), target_value);
         auto l2 = lower_bound(ALL(nums2), target_value);
+        if (debug) {
+            printf("[sophis] distance: l1: %d, l2: %d\n",
+                   distance(nums1.begin(), l1), distance(nums2.begin(), l2));
+        }
+        if (l1 == nums1.end()) {
+            min_edge = *l2;
+        }
+
         if (l1 != nums1.begin() && !eq_double(*l1, target_value)) {
             l1 -= 1;
         }
+
         if (l2 != nums2.begin() && !eq_double(*l2, target_value)) {
             l2 -= 1;
         }
@@ -191,6 +200,10 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         double upper_edge = -100;
         auto u1 = lower_bound(ALL(nums1), target_value);
         auto u2 = lower_bound(ALL(nums2), target_value);
+
+        if (u1 == nums1.end()) {
+            upper_edge = *u2;
+        }
 
         if (*u1 > target_value || eq_double(*u1, target_value)) {
             upper_edge = *u1;
@@ -439,6 +452,12 @@ signed main() {
         test_double_assert(Solution().findMedianSortedArrays(vector<int>{3, 6},
                                                              vector<int>{2, 8}),
                            4.5, " solution test 7: [3,6][2,8] -> 4.5");
+        test_double_assert(Solution().findMedianSortedArrays(
+                               vector<int>{1, 2, 3}, vector<int>{5, 7, 8}),
+                           4.0, " solution test 8: [1,2,3][5,7,8] -> 4");
+        test_double_assert(Solution().findMedianSortedArrays(
+                               vector<int>{2, 5, 7}, vector<int>{4}),
+                           4.5, " solution test 9: [2,5,7][4] -> 4.5");
     }
 }
 
