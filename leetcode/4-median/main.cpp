@@ -142,15 +142,16 @@ int is_good(const vector<int>& nums1, const vector<int>& nums2,
     auto num2_lr = count_left_right_item_number(nums2, target_number);
     // 領域的な、単調性が必要なので、片側のほうが多いか一致する、という条件で組む必要がある。
     // target value が小さければ ok を出したいので、left のほうが少なければ ok.
+    int left = num1_lr.left + num2_lr.left;
+    int right = num1_lr.right + num2_lr.right;
     if (debug) {
         cout << "\t[is good] target: " << target_number
              << ",  num1_lr : " << num1_lr << ", num2_lr: " << num2_lr << endl;
     }
 
-    if ((num1_lr.left + num1_lr.left) < (num1_lr.right + num1_lr.right)) {
+    if (left < right) {
         return 1;
-    } else if ((num1_lr.left + num1_lr.left) ==
-               (num1_lr.right + num1_lr.right)) {
+    } else if (left == right) {
         return 0;
     } else {
         return -1;
@@ -187,9 +188,9 @@ double binary_search_median(const vector<int>& nums1,
             // 左右が等しい時にどちらにずらすか
             min_ = mid;
         } else if (ok == 1) {
-            max_ = mid;
-        } else {
             min_ = mid;
+        } else {  // left の方が重くなってしまった
+            max_ = mid;
         }
 
         // if (ok) {
