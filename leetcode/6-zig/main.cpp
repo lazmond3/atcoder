@@ -57,6 +57,11 @@ white        37         47
         E G       O
         F         P
 
+        ACE
+        BDF
+
+
+
         row = 6
         1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
         A B C D E F G H I  J  K  L  M  N  O  P  Q  R  S  T
@@ -70,38 +75,77 @@ class Solution {
    public:
     string convert(string s, int numRows) {
         // string answer;
-        vector<char> answer_vec;
-        const int m2_wave_length = numRows * 2 - 2;
-        const int size = s.size();
-        for (int i = 0; i < numRows; ++i) {
-            if (i == 0) {
-                int j = 0;
-                while (j < size) {
-                    answer_vec.push_back(s[j]);
-                    j += m2_wave_length;
-                }
-                continue;
+        if (numRows == 1) {
+            return s;
+        }
+        if (numRows == 2) {
+            string answer;
+            const int size = s.size();
+            vector<char> answer_vec;
+            int j = 0;
 
-            } else if (i == numRows - 1) {
-                int j = numRows - 1;
-                while (j < size) {
-                    answer_vec.push_back(s[j]);
-                    j += m2_wave_length;
-                }
-            } else {
-                int j1 = i;
-                int j2 = m2_wave_length - i;
-                while (j1 < size) {
-                    answer_vec.push_back(s[j1]);
-                    if (j2 < size) {
-                        answer_vec.push_back(s[j2]);
+            while (j < size) {
+                answer_vec.push_back(s[j]);
+                j += 2;
+            }
+            j = 1;
+            while (j < size) {
+                answer_vec.push_back(s[j]);
+                j += 2;
+            }
+            return string(ALL(answer_vec));
+        }
+        if (numRows >= 3) {
+            vector<char> answer_vec;
+            const int m2_wave_length = numRows * 2 - 2;
+            const int size = s.size();
+
+            // size = 2,
+            // m2 = 1 * 2 - 2 == 0;
+            for (int i = 0; i < numRows; ++i) {
+                if (i == 0) {
+                    if (debug) {
+                        cout << "i == 0" << endl;
                     }
-                    j1 += m2_wave_length;
-                    j2 += m2_wave_length;
+                    int j = 0;
+                    while (j < size) {
+                        answer_vec.push_back(s[j]);
+                        j += m2_wave_length;
+                    }
+                }
+
+                if (i == numRows - 1) {
+                    if (debug) {
+                        cout << "here ! i : " << i << endl;
+                    }
+                    int j = numRows - 1;
+                    while (j < size) {
+                        if (debug) {
+                            cout << "size: " << size << ", j : " << j
+                                 << ", i: " << i << "numRows: " << numRows
+                                 << endl;
+                        }
+                        answer_vec.push_back(s[j]);
+                        if (m2_wave_length == 0) break;
+                        j += m2_wave_length;
+                    }
+                }
+
+                if (i != 0 && i != numRows - 1) {
+                    int j1 = i;
+                    int j2 = m2_wave_length - i;
+                    while (j1 < size) {
+                        answer_vec.push_back(s[j1]);
+                        if (j2 < size) {
+                            answer_vec.push_back(s[j2]);
+                        }
+                        j1 += m2_wave_length;
+                        j2 += m2_wave_length;
+                    }
                 }
             }
+            return string(ALL(answer_vec));
         }
-        return string(ALL(answer_vec));
     }
 };
 
@@ -162,6 +206,8 @@ signed main() {
                        string("PAHNAPLSIIGYIR"), "test 1: PAHNAPLSIIGYIR");
         test_eq_assert(Solution().convert("PAYPALISHIRING", 4),
                        string("PINALSIGYAHRPI"), "test 2: PINALSIGYAHRPI");
+        test_eq_assert(Solution().convert("A", 1), string("A"), "test 3: A");
+        test_eq_assert(Solution().convert("AB", 1), string("AB"), "test 4: AB");
     }
 }
 
