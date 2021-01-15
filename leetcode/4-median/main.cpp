@@ -274,6 +274,16 @@ signed main() {
         test_eq_assert<int>(*lbp, 4, "upper bound テスト 3 3.99 に対して");
     }
 
+    // calc median のテスト
+    {
+        vector<int> vec = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        test_eq_assert(calc_median(vec), 5.0, "calc median のテスト1 9要素");
+        vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 11};
+        test_eq_assert(calc_median(vec), 5.5, "calc median のテスト2 10要素");
+        vec = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        test_eq_assert(calc_median(vec), 5.5, "calc median のテスト3 10要素");
+    }
+
     // // ❌ 使う部分の範囲だけっぽい x から n文字目だった。 .substr(x, n)
     // test_eq_assert<string>(string("abcd").substr(1, 3), "bcd",
     //                        "abcd substr 1,3");
