@@ -18,6 +18,7 @@ bool debug = false;
 // clang-format off
 template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } return 0; }
 template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
+#define LAST(x) x[x.size()-1]
 #define RED "\033[1;31m"
 #define GRE "\033[1;32m"
 #define BLU "\033[34m"
@@ -135,80 +136,15 @@ double sophisticate_mid(const vector<int>& nums1, const vector<int>& nums2,
         // この場合は中間の値になっているので、
 
         // 2, 2.3, 3 のようになっている。
-        // ❌ 1, 2 , 3, 4 targe 2.5 というケースで失敗する！
-        double min_edge = std::numeric_limits<double>::min();
-        double upper_edge = std::numeric_limits<double>::max();
-        if (nums1[nums1.size() - 1] < nums2[0]) {
-            min_edge = nums1[nums1.size() - 1];
-            upper_edge = nums2[0];
+        // ❌  [1, 2] , [3, 4] targe 2.5 というケースで失敗する！
+        // ❌  [1] [2, 5, 7] みたいなやつでもだめ
+        /*
+            [1] [2,4,6] -> 3
 
-        } else if (nums2[nums2.size() - 1] < nums1[0]) {
-            min_edge = nums2[nums2.size() - 1];
-            upper_edge = nums1[0];
-
-        } else if (1) {
-            auto l1 = lower_bound(ALL(nums1), target_value);
-            auto l2 = lower_bound(ALL(nums2), target_value);
-            if (debug) {
-                printf("[sophis] distance: l1: %d, l2: %d\n",
-                       distance(nums1.begin(), l1),
-                       distance(nums2.begin(), l2));
-            }
-            if (l1 == nums1.end()) {
-                min_edge = *l2;
-            }
-
-            if (l1 != nums1.begin() && (l1 != nums1.end()) &&
-                !eq_double(*l1, target_value)) {
-                l1 -= 1;
-            }
-
-            if (l2 != nums2.begin() && (l2 != nums2.end()) &&
-                !eq_double(*l2, target_value)) {
-                l2 -= 1;
-            }
-
-            if (l1 != nums1.end() &&
-                ((*l1 < target_value) || eq_double(*l1, target_value))) {
-                min_edge = *l1;
-            }
-            if (l2 != nums2.end() &&
-                (*l2 < target_value || eq_double(*l2, target_value))) {
-                chmax<double>(min_edge, *l2);
-            }
-
-            auto u1 = lower_bound(ALL(nums1), target_value);
-            auto u2 = lower_bound(ALL(nums2), target_value);
-
-            if (u1 != nums1.end()) {
-                upper_edge = *u1;
-            }
-
-            if (u1 != nums1.end() &&
-                (*u1 > target_value || eq_double(*u1, target_value))) {
-                upper_edge = *u1;
-            }
-            if (u2 != nums2.end() &&
-                (*u2 > target_value || eq_double(*u2, target_value))) {
-                chmin<double>(upper_edge, *u2);
-            }
-            if (debug) {
-                int _l1 = -111, _l2 = -111, _u1 = -111, _u2 = -111;
-                if (l1 != nums1.end()) _l1 = *l1;
-                if (l2 != nums2.end()) _l2 = *l2;
-                if (u1 != nums1.end()) _u1 = *u1;
-                if (u2 != nums2.end()) _u2 = *u2;
-
-                printf(
-                    "[sophis] target = %f, t = %d, l1: %d, l2: %d, u1: %d, u2: "
-                    "%d, "
-                    " min_edge: "
-                    "%f, upper_edge: %f -> answer: %f\n",
-                    target_value, t, _l1, _l2, _u1, _u2, min_edge, upper_edge,
-                    (min_edge + upper_edge) / 2.0);
-            }
-        }
-
+            [2,5,7][4] -> 4.5
+        */
+        double min_edge = 0;
+        double upper_edge = 0;
         return (min_edge + upper_edge) / 2.0;
     } else if (t % 2 == 1) {
         // この場合はこのまま返せばよいのだよね？
