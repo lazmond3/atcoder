@@ -56,6 +56,8 @@ class Solution {
     でも同じスコア来ることはあんまりないから、無視してもいいんじゃないか？
     0 が来てしまうと... ?
 
+    => ヒントもらい、両端からしゃくとるかんじ。
+
 */
 int max_inner(const vector<int> &height) {
     const int size = height.size();
@@ -91,8 +93,9 @@ int max_inner(const vector<int> &height) {
                 // ❌ 最大値 8,18,17,9,3 のケースで jを現象させるのをギリギリまでやめたい。
                 // ❌
                 // clang-format on
+                // 17 で止めておけば、次8->18に来た時に利用できる
                 if (height[j] >= height[i]) {
-                    // 本当はここでとめちゃだめ！！
+                    // ~~本当はここでとめちゃだめ！！~~
                     break;
                 }
                 j -= 1;
