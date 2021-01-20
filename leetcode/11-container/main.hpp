@@ -5,9 +5,6 @@ using namespace std;
 extern bool debug;
 class Solution {
    public:
-    string convert(string s, int numRows) {}
-    // public:
-    //  double findMedianSortedArrays(const vector<int>& nums1,
-    //                                const vector<int>& nums2);
+    int maxArea(const vector<int> &height);
 };
 #endif
