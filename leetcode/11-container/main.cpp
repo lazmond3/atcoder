@@ -96,6 +96,7 @@ int max_inner(const vector<int> &height) {
                 // 17 で止めておけば、次8->18に来た時に利用できる
                 if (height[j] >= height[i]) {
                     // ~~本当はここでとめちゃだめ！！~~
+                    // これはウソで、ここで止めるのが正解
                     break;
                 }
                 j -= 1;
