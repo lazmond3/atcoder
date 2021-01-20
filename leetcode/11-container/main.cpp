@@ -57,90 +57,51 @@ class Solution {
     0 が来てしまうと... ?
 
 */
-int Solution::maxArea(const vector<int> &height) {
-    int p1 = 0;
-    int h1 = height[p1];
-    int p2 = 1;
-    int h2 = height[p2];
-    int score = min(h1, h2) * abs(p1 - p2);
-    int now_score_1 = 0;
-    int now_score_2 = 0;
-    for (int i = 2; i < height.size(); ++i) {
+int max_inner(const vector<int> &height) {
+    const int size = height.size();
+    int i = 0;
+    int j = size - 1;
+    int max_i = i;
+    int max_j = j;
+    int max_score = min(height[i], height[j]) * (j - i);
+    while (i < j) {
+        // now_hi を超える高さのやつに出会いたい
+        int old_i = i;
         if (debug) {
-            cout << "pair: [" << i << "] : p1 : " << p1 << ", p2: " << p2
-                 << endl;
+            cout << "[debug] i: " << i << ", j: " << j << endl;
         }
-        now_score_1 = min(height[i], h2) * abs(i - p2);
-        now_score_2 = min(h1, height[i]) * abs(p1 - i);
-
-        if (now_score_1 > score && now_score_2 > score) {
-            if (now_score_1 > now_score_2) {
-                p1 = i;
-                h1 = height[i];
-                if (debug) {
-                    cout << "score1: " << now_score_1 << "[" << i << "]"
-                         << "is larger than score: " << score << endl;
+        while (i < j && height[i] <= height[old_i]) {
+            i += 1;
+        }
+        int old_j = j;
+        if (i < j) {
+            // now_hi を超える高さのやつに出会ったら、
+            // j を現在のスコアを超えるように
+            int now_score = min(height[i], height[j]) * (j - i);
+            while (i < j) {
+                now_score = min(height[i], height[j]) * (j - i);
+                if (now_score > max_score) {
+                    chmax(max_score, now_score);
+                    max_i = i;
+                    max_j = j;
+                    break;
                 }
-                score = now_score_1;
-            } else {
-                p2 = i;
-                h2 = height[i];
-                if (debug) {
-                    cout << "score2: " << now_score_2 << "[" << i << "]"
-                         << "is larger than score: " << score << endl;
+                // もし、自分以上のheight j に到達したら、それも。..
+                if (height[j] >= height[i]) {
+                    break;
                 }
-                score = now_score_2;
+                j -= 1;
             }
-            continue;
-        }
-
-        // 高い方に変えていけば？
-        if (now_score_1 >= score) {
-            if (now_score_1 > score) {
-                p1 = i;
-                h1 = height[i];
-                if (debug) {
-                    cout << "score1: " << now_score_1 << "[" << i << "]"
-                         << "is larger than score: " << score << endl;
-                }
-                score = now_score_1;
-            } else if (now_score_1 == score && h1 < height[i]) {
-                p1 = i;
-                h1 = height[i];
-                if (debug) {
-                    cout << "score1: " << now_score_1 << "[" << i << "]"
-                         << "is larger than score: " << score << endl;
-                }
-                score = now_score_1;
-            }
-        }
-        now_score_1 = min(height[i], h2) * abs(i - p2);
-        now_score_2 = min(h1, height[i]) * abs(p1 - i);
-
-        if (now_score_2 >= score) {
-            if (now_score_2 > score) {
-                p2 = i;
-                h2 = height[i];
-                if (debug) {
-                    cout << "score2: " << now_score_2 << "[" << i << "]"
-                         << "is larger than score: " << score << endl;
-                }
-                score = now_score_2;
-            } else if (now_score_2 == score && h2 < height[i]) {
-                p2 = i;
-                h2 = height[i];
-                if (debug) {
-                    cout << "score2: " << now_score_2 << "[" << i << "]"
-                         << "is larger than score: " << score << endl;
-                }
-                score = now_score_2;
-            }
-        }
-
-        if (debug) {
-            cout << "pair: [" << i << "] : p1 : " << p1 << ", p2: " << p2
-                 << endl;
         }
     }
-    return score;
+    if (debug) {
+        printf("[debug] last max_score: %d, max_i: %d, max_j: %d\n", max_score,
+               max_i, max_j);
+    }
+    return max_score;
+}
+int Solution::maxArea(const vector<int> &height) {
+    vector<int> reversed(height);
+    reverse(ALL(reversed));
+    return max(max_inner(height), max_inner(reversed));
 }

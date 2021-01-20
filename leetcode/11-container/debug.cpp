@@ -47,5 +47,13 @@ signed main() {
                        (int)9, "{3,2,1,3,}), (int)9,");
         test_eq_assert(Solution().maxArea(vector<int>{1, 2, 4, 3}), (int)4,
                        "1,2,4,3 -> 4");
+        test_eq_assert(Solution().maxArea(vector<int>{2, 3, 4, 5, 18, 17, 6}),
+                       (int)17, ">{2,3,4,5,18,17,6}), (int)17");
+        test_eq_assert(
+            Solution().maxArea(vector<int>{1, 8, 100, 2, 100, 4, 8, 3, 7}),
+            (int)200, "{1,8,100,2,100,4,8,3,7}),(int)200");
+        test_eq_assert(
+            Solution().maxArea(vector<int>{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}),
+            (int)25, "{10,9,8,7,6,5,4,3,2,1}),(int)25");
     }
 }
