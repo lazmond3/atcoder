@@ -24,6 +24,11 @@ template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } retu
 
 #ifdef DEBUG
 #include "main.hpp"
+#else
+class Solution {
+   public:
+    int maxArea(const vector<int> &height);
+};
 #endif
 
 /*
@@ -39,6 +44,10 @@ template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } retu
     一つみて、　 p1, p2, h1, h2 でスワップする戦略
     -> もうすでに使われなくなってしまったやつを使える可能性がある。
     [ 1,2,4,3 -> 4]] というケース
+    1-4 , と 2-4 で 1-4 やるんだが、
+    正解は 2-3 にならなきゃいけないので、更新しておく必要があった！
+    // しかし最大ではないものだとしたら...?
+    //
 
 */
 int Solution::maxArea(const vector<int> &height) {
@@ -51,45 +60,45 @@ int Solution::maxArea(const vector<int> &height) {
         int now_score_1 = min(height[i], h2) * abs(i - p2);
         int now_score_2 = min(h1, height[i]) * abs(p1 - i);
 
-        if (now_score_1 > score && now_score_2 > score) {
-            if (now_score_1 > now_score_2) {
+        // 高い方に変えていけば？
+        if (now_score_1 >= score) {
+            if (now_score_1 > score) {
                 p1 = i;
                 h1 = height[i];
                 if (debug) {
                     cout << "score1: " << now_score_1 << "[" << i << "]"
-                         << " is larger than score: " << score << endl;
+                         << "is larger than score: " << score << endl;
                 }
                 score = now_score_1;
-            } else {
+            } else if (now_score_1 == score && h1 < height[i]) {
+                p1 = i;
+                h1 = height[i];
+                if (debug) {
+                    cout << "score1: " << now_score_1 << "[" << i << "]"
+                         << "is larger than score: " << score << endl;
+                }
+                score = now_score_1;
+            }
+        }
+
+        if (now_score_2 >= score) {
+            if (now_score_2 > score) {
                 p2 = i;
                 h2 = height[i];
                 if (debug) {
                     cout << "score2: " << now_score_2 << "[" << i << "]"
-                         << " is larger than score: " << score << endl;
+                         << "is larger than score: " << score << endl;
+                }
+                score = now_score_2;
+            } else if (now_score_2 == score && h2 < height[i]) {
+                p2 = i;
+                h2 = height[i];
+                if (debug) {
+                    cout << "score2: " << now_score_2 << "[" << i << "]"
+                         << "is larger than score: " << score << endl;
                 }
                 score = now_score_2;
             }
-            continue;
-        }
-
-        if (now_score_1 > score) {
-            p1 = i;
-            h1 = height[i];
-            if (debug) {
-                cout << "score1: " << now_score_1 << "[" << i << "]"
-                     << "is larger than score: " << score << endl;
-            }
-            score = now_score_1;
-        }
-
-        if (now_score_2 > score) {
-            p2 = i;
-            h2 = height[i];
-            if (debug) {
-                cout << "score2: " << now_score_2 << "[" << i << "]"
-                     << "is larger than score: " << score << endl;
-            }
-            score = now_score_2;
         }
     }
     return score;
