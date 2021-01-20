@@ -22,7 +22,10 @@ template<class T>bool chmax(T &a, const T &b) { if (a<b) { a=b; return 1; } retu
 template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } return 0; }
 // clang-format on
 
+#ifdef DEBUG
 #include "main.hpp"
+#endif
+
 /*
     全探索はできる。
     高速化は、だいたいオーダーを改善しないといけない。
@@ -34,7 +37,6 @@ template<class T>bool chmin(T &a, const T &b) { if (a>b) { a=b; return 1; } retu
 
     2つめに、パターンを
 */
-
 int Solution::maxArea(const vector<int> &height) {
     int p1 = 0;
     int h1 = height[p1];
