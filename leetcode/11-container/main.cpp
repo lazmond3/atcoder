@@ -88,6 +88,7 @@ int max_inner(const vector<int> &height) {
                 }
                 // もし、自分以上のheight j に到達したら、それも。..
                 if (height[j] >= height[i]) {
+                    // 本当はここでとめちゃだめ！！
                     break;
                 }
                 j -= 1;
