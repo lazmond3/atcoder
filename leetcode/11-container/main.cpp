@@ -78,6 +78,9 @@ int max_inner(const vector<int> &height) {
             // now_hi を超える高さのやつに出会ったら、
             // j を現在のスコアを超えるように
             int now_score = min(height[i], height[j]) * (j - i);
+            if (now_score > max_score) {
+                chmax(max_score, now_score);
+            }
             while (i < j) {
                 now_score = min(height[i], height[j]) * (j - i);
                 if (now_score > max_score) {
@@ -104,5 +107,8 @@ int max_inner(const vector<int> &height) {
 int Solution::maxArea(const vector<int> &height) {
     vector<int> reversed(height);
     reverse(ALL(reversed));
-    return max(max_inner(height), max_inner(reversed));
+    // return max(max_inner(height), max_inner(reversed));
+    int a = max_inner(height);
+    int b = max_inner(reversed);
+    return max(a, b);
 }
