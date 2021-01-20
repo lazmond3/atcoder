@@ -65,22 +65,18 @@ int max_inner(const vector<int> &height) {
     int max_j = j;
     int max_score = min(height[i], height[j]) * (j - i);
     while (i < j) {
-        // now_hi を超える高さのやつに出会いたい
+        // h[i] で now_hi を超える高さのやつに出会いたい
         int old_i = i;
-        if (debug) {
-            cout << "[debug] i: " << i << ", j: " << j << endl;
-        }
         while (i < j && height[i] <= height[old_i]) {
             i += 1;
         }
-        int old_j = j;
         if (i < j) {
             // now_hi を超える高さのやつに出会ったら、
             // j を現在のスコアを超えるように
             int now_score = min(height[i], height[j]) * (j - i);
-            if (now_score > max_score) {
-                chmax(max_score, now_score);
-            }
+            // ❌ : now_scoreが高い可能性があるので更新。最後に詰まったのはここ。
+            chmax(max_score, now_score);
+
             while (i < j) {
                 now_score = min(height[i], height[j]) * (j - i);
                 if (now_score > max_score) {
@@ -89,7 +85,12 @@ int max_inner(const vector<int> &height) {
                     max_j = j;
                     break;
                 }
-                // もし、自分以上のheight j に到達したら、それも。..
+                // clang-format off
+                // ❌: もし、自分以上のheight j に到達したら、それも。..
+                // ❌ ここは非直感的(つまりわかってない)だったが、jとiが同じところで止める。
+                // ❌ 最大値 8,18,17,9,3 のケースで jを現象させるのをギリギリまでやめたい。
+                // ❌
+                // clang-format on
                 if (height[j] >= height[i]) {
                     // 本当はここでとめちゃだめ！！
                     break;
@@ -109,6 +110,7 @@ int Solution::maxArea(const vector<int> &height) {
     reverse(ALL(reversed));
     // return max(max_inner(height), max_inner(reversed));
     int a = max_inner(height);
+    // return a;
     int b = max_inner(reversed);
     return max(a, b);
 }
