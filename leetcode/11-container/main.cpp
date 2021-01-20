@@ -47,7 +47,14 @@ class Solution {
     1-4 , と 2-4 で 1-4 やるんだが、
     正解は 2-3 にならなきゃいけないので、更新しておく必要があった！
     // しかし最大ではないものだとしたら...?
-    //
+
+    状態と知識について
+    新しい要素を見て、確実にこれまでよりも更新したほうがいい、というのを作れるか？
+    p1, p2, h1, h2 -> 完全に内包する場合
+
+    同じスコアが来ちゃうと大変
+    でも同じスコア来ることはあんまりないから、無視してもいいんじゃないか？
+    0 が来てしまうと... ?
 
 */
 int Solution::maxArea(const vector<int> &height) {
@@ -56,9 +63,36 @@ int Solution::maxArea(const vector<int> &height) {
     int p2 = 1;
     int h2 = height[p2];
     int score = min(h1, h2) * abs(p1 - p2);
+    int now_score_1 = 0;
+    int now_score_2 = 0;
     for (int i = 2; i < height.size(); ++i) {
-        int now_score_1 = min(height[i], h2) * abs(i - p2);
-        int now_score_2 = min(h1, height[i]) * abs(p1 - i);
+        if (debug) {
+            cout << "pair: [" << i << "] : p1 : " << p1 << ", p2: " << p2
+                 << endl;
+        }
+        now_score_1 = min(height[i], h2) * abs(i - p2);
+        now_score_2 = min(h1, height[i]) * abs(p1 - i);
+
+        if (now_score_1 > score && now_score_2 > score) {
+            if (now_score_1 > now_score_2) {
+                p1 = i;
+                h1 = height[i];
+                if (debug) {
+                    cout << "score1: " << now_score_1 << "[" << i << "]"
+                         << "is larger than score: " << score << endl;
+                }
+                score = now_score_1;
+            } else {
+                p2 = i;
+                h2 = height[i];
+                if (debug) {
+                    cout << "score2: " << now_score_2 << "[" << i << "]"
+                         << "is larger than score: " << score << endl;
+                }
+                score = now_score_2;
+            }
+            continue;
+        }
 
         // 高い方に変えていけば？
         if (now_score_1 >= score) {
@@ -80,6 +114,8 @@ int Solution::maxArea(const vector<int> &height) {
                 score = now_score_1;
             }
         }
+        now_score_1 = min(height[i], h2) * abs(i - p2);
+        now_score_2 = min(h1, height[i]) * abs(p1 - i);
 
         if (now_score_2 >= score) {
             if (now_score_2 > score) {
@@ -99,6 +135,11 @@ int Solution::maxArea(const vector<int> &height) {
                 }
                 score = now_score_2;
             }
+        }
+
+        if (debug) {
+            cout << "pair: [" << i << "] : p1 : " << p1 << ", p2: " << p2
+                 << endl;
         }
     }
     return score;
